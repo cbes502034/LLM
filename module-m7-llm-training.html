@@ -1,0 +1,367 @@
+<title>語言模型煉成</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M7・必修・核心</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M7 · 面試熱度 ★★★★★</p>
+    <h1>語言模型煉成——從機率預測到 RLHF 對齊</h1>
+    <p class="lede">M6 拆開了 Attention 怎麼「算」出一個位置的輸出向量；這個模組要接著回答：這整套 Transformer 具體是怎麼被「訓練」出來的——從一堆網路文字，怎麼變成 GPT／BERT／T5，又怎麼被 SFT 跟 RLHF／DPO 調教成一個聽得懂指令、講話有分寸的 Claude。這是你目前只會「呼叫」API、答不出訓練原理的最大缺口。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>M6 已經拆開 Attention 怎麼「算」；這個模組要接著回答：這整套架構具體是「怎麼被訓練」出來的——從一堆網路文字，怎麼變成會接龍的 GPT、會理解的 BERT、統一處理任務的 T5，又怎麼再被 SFT 跟 RLHF／DPO，調教成一個聽得懂指令、講話有分寸的 Claude。這是你「只會呼叫 Claude API、答不出訓練原理」的最大知識缺口，也是面試被電最兇的一塊。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念（先不談任何架構、任何案例）</span>
+    <p>完全先不談 GPT、不談 BERT、更不談你的 Threat Intel Agent，只談一件最底層的事：<b>語言模型的本質，是在做條件機率預測</b>。給一句殘缺的話：「今天天氣真___」，問你「空格最可能填什麼字」，人腦其實就是在對候選字各自估一個機率，選機率最高的那個。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>候選字</th><th class="mono">直覺機率</th><th>意義</th></tr></thead>
+        <tbody>
+          <tr><td>好</td><td class="mono">0.40</td><td>最常見的接法，機率最高</td></tr>
+          <tr><td>棒</td><td class="mono">0.30</td><td>次常見，語意接近「好」</td></tr>
+          <tr><td>差</td><td class="mono">0.05</td><td>語法通，但不是多數人會選的字</td></tr>
+          <tr><td>爛</td><td class="mono">0.02</td><td>可能但少見</td></tr>
+          <tr><td>（其他所有字）</td><td class="mono">0.23</td><td>剩下機率分給詞彙表裡其他幾萬個字</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>寫成數學符號就是 <span class="mono" style="background:var(--mono-bg); padding:2px 6px; border-radius:2px;">P(x&#7529; | x&#8321;, x&#8322;, ..., x&#7529;&#8331;&#8321;)</span>——給定前面已經出現的字，估計下一個字的機率分布。語言模型做的事，本質上就是一直在重複這個機率預測的動作，只是它不是靠人腦直覺，而是用一個巨大的神經網路（M4／M5 學過的那套）去估計這個分布，而且候選字不是 4 個，是幾萬個 token。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　逐層往上疊——三層「調整機率分布」的方式</span>
+    <p>地基蓋好了（預測下一字的機率分布），接下來要疊的三層，做的都是同一件事：<b>調整這個機率分布</b>，一層比一層更貼近人類想要的樣子：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 720 150" role="img" aria-label="LLM訓練三階段疊加流程圖：地基是預測下一字的條件機率分布，往上依序疊加預訓練學會語言通用知識、SFT監督微調調整成像在回答問題、對齊RLHF或DPO調整成人類更喜歡的回答方式">
+          <defs>
+            <marker id="arrowM7a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="10" y="38" width="150" height="68" rx="3"></rect>
+          <text class="t1" x="85" y="64" text-anchor="middle">地基：機率預測</text>
+          <text class="t2" x="85" y="84" text-anchor="middle">P(x&#7529;│context)</text>
+          <line class="arrow" x1="160" y1="72" x2="185" y2="72" marker-end="url(#arrowM7a)"></line>
+          <rect class="box" x="185" y="38" width="150" height="68" rx="3"></rect>
+          <text class="t1" x="260" y="64" text-anchor="middle">①預訓練</text>
+          <text class="t2" x="260" y="84" text-anchor="middle">學會語言通用知識</text>
+          <line class="arrow" x1="335" y1="72" x2="360" y2="72" marker-end="url(#arrowM7a)"></line>
+          <rect class="box" x="360" y="38" width="150" height="68" rx="3"></rect>
+          <text class="t1" x="435" y="64" text-anchor="middle">②SFT微調</text>
+          <text class="t2" x="435" y="84" text-anchor="middle">調成「像在回答問題」</text>
+          <line class="arrow" x1="510" y1="72" x2="535" y2="72" marker-end="url(#arrowM7a)"></line>
+          <rect class="box accentbox" x="535" y="38" width="175" height="68" rx="3"></rect>
+          <text class="t1 accenttext" x="622" y="64" text-anchor="middle">③對齊 RLHF/DPO</text>
+          <text class="t2" x="622" y="84" text-anchor="middle">調成人類更喜歡的回答</text>
+        </svg>
+      </div>
+      <figcaption>同一個機率分布，在三個階段被連續重新加工：預訓練學語言、SFT 學問答格式、對齊學人類偏好。</figcaption>
+    </figure>
+    <p>再往下拆開第③層「對齊」：RLHF 本身也是一個有嚴格先後順序的三步驟流程：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 700 170" role="img" aria-label="RLHF內部三步驟流程圖：第一步SFT用人工理想問答對訓練出初始模型，第二步訓練Reward Model用人類對多組回答的偏好排序訓練出預測偏好的模型，第三步PPO強化學習優化用Reward Model打分當獎勵訊號並加入KL散度懲罰限制模型偏離原本SFT模型太多">
+          <defs>
+            <marker id="arrowM7b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="10" y="30" width="200" height="100" rx="3"></rect>
+          <text class="t1" x="110" y="56" text-anchor="middle">①SFT</text>
+          <text class="t2" x="110" y="78" text-anchor="middle">人工理想問答對</text>
+          <text class="t2" x="110" y="96" text-anchor="middle">訓練出初始模型</text>
+          <line class="arrow" x1="210" y1="80" x2="235" y2="80" marker-end="url(#arrowM7b)"></line>
+          <rect class="box" x="235" y="30" width="210" height="100" rx="3"></rect>
+          <text class="t1" x="340" y="56" text-anchor="middle">②訓練Reward Model</text>
+          <text class="t2" x="340" y="78" text-anchor="middle">人類對多組回答偏好排序</text>
+          <text class="t2" x="340" y="96" text-anchor="middle">學出預測偏好的模型</text>
+          <line class="arrow" x1="445" y1="80" x2="470" y2="80" marker-end="url(#arrowM7b)"></line>
+          <rect class="box accentbox" x="470" y="30" width="220" height="100" rx="3"></rect>
+          <text class="t1 accenttext" x="580" y="56" text-anchor="middle">③PPO強化學習優化</text>
+          <text class="t2" x="580" y="78" text-anchor="middle">RM打分當獎勵訊號</text>
+          <text class="t2" x="580" y="96" text-anchor="middle">+KL懲罰限制偏離SFT模型</text>
+        </svg>
+      </div>
+      <figcaption>用「排序」而非直接打分收集人類偏好（更穩定客觀），訓練出 Reward Model，再用 PPO 把這個分數變成更新模型參數的訊號。</figcaption>
+    </figure>
+    <p>再回頭看第①層「預訓練」：GPT／BERT／T5 三種架構，其實是在「猜什麼」這件事上做了不同選擇——</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>架構</th><th>預訓練在猜什麼</th><th>代表模型</th><th>擅長任務</th></tr></thead>
+        <tbody>
+          <tr><td>GPT（Decoder-only）</td><td>CLM：只看左邊，猜下一個字（自迴歸接龍）</td><td>GPT系列、ChatGPT</td><td>生成、對話、續寫</td></tr>
+          <tr><td>BERT（Encoder-only）</td><td>MLM：遮 15% 的字猜回來，＋NSP 判斷兩句是否連貫（雙向）</td><td>BERT、RoBERTa</td><td>分類、理解、抽取（情感分析、NER）</td></tr>
+          <tr><td>T5（Encoder-Decoder）</td><td>Span-corruption：整段挖空猜整段，任務前綴統一成文字轉文字</td><td>T5、BART</td><td>摘要、翻譯、跨任務統一處理</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>延伸一種目標函數：Contrastive Loss（如 CLIP），猜的不是「字」而是「這兩者搭不搭」——判斷一張圖跟一段文字是否相符，用在圖文配對任務。</p>
+    <p>順帶一提，GPT 生成時每一步都要從步驟 02 那張機率分布表裡「抽一個字出來」，抽法本身也有好幾種策略：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>策略</th><th>做法</th><th>特性</th></tr></thead>
+        <tbody>
+          <tr><td>Greedy Search</td><td>每一步都選機率最高的字</td><td>簡單快速，但容易單調重複</td></tr>
+          <tr><td>Beam Search</td><td>同時保留 k 條候選序列，最後選整體機率最高的</td><td>品質較穩，但計算成本隨 k 倍增</td></tr>
+          <tr><td>Top-K 採樣</td><td>只從機率最高的 k 個字裡隨機抽</td><td>保留隨機性，但 k 固定，可能漏掉合理的字</td></tr>
+          <tr><td>Top-P（Nucleus）採樣</td><td>從累積機率達 P 的字集合裡隨機抽</td><td>候選集合大小動態變化，比 Top-K 更靈活</td></tr>
+          <tr><td>Temperature</td><td>調整機率分布的平滑程度</td><td>越高越隨機有創意，越低越保守貼近最高機率選項</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　現在才代入具體案例——非結構化文字版</span>
+    <p>三層機率調整都疊好了，這時候才代入你的貫穿案例——但這次要換成 M1-M5 處理不了的版本。前面的結構化特徵（WHOIS 欄位、IP 信譽分數、國別代碼）都是現成的數值／類別欄位，丟進分類器就能訓練。現在丟給你一段真實世界常見的 Abuse Report 全文：</p>
+    <div class="stepline">「該IP過去30天內被回報多次嘗試SSH暴力破解，地理位置與過去合法登入紀錄不符，但WHOIS顯示為知名雲端服務商IP段。」</div>
+    <p>這段話沒有任何現成的數值欄位可以直接餵給 M1-M5 那種分類器——「過去30天內被回報多次」「地理位置不符」「但是知名雲端服務商」這幾個線索之間的因果與轉折關係（「但」字帶來的語意反轉）必須靠「讀得懂上下文語意」的能力才抓得出來。這正是需要一個已經在海量文字上做過預訓練、具備語言理解能力的 LLM 才處理得了的輸入型態——而這正是你的 Threat Intel Agent 目前在做的事：Claude 接住這段非結構化文字，直接判斷風險。但要老實面對一個事實：你只是在「呼叫」一個別人已經預訓練＋SFT＋對齊好的模型，你自己完全沒有做過微調或 RLHF——這正是這個模組要幫你補的原理缺口。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">05　類比鎖記憶——用你熟悉的部署／維運類比</span>
+    <p>機制都懂了，現在才用後端工程師的語言幫記憶打結：</p>
+    <div class="stepline">預訓練 Pre-training  ≈ 建置一個通用 Base Image　　什麼服務都懂一點，但沒特化任何業務邏輯
+SFT 監督微調      ≈ 從 Base Image 客製化出服務 Image　灌進特定的 API 合約（問答/指令格式）
+RLHF/DPO 對齊     ≈ 上線前的 Code Review + Staging 驗收　依人類偏好調整最終要 deploy 的版本</div>
+    <p>再往下一層：Reward Model ≈ 一個學會模仿人類 Reviewer 打分的自動化 Linter／CI Gate，它自己不是真理，只是預測「人類大概會怎麼評」。PPO 裡的 KL 散度懲罰項 ≈ 你做 Canary Rollout 時設的「變更幅度限制」——新版本（對齊後的模型）不能跟舊版本（SFT 模型）差太多，差太多代表可能有破壞性變更（模型為了拿高分亂講話、脫離常識）。而 DPO 最大的意義，是把「Reward Model + PPO」這一整套要同時維護 Actor／Critic／Reward／Reference 四個模型的複雜 Pipeline，簡化成「Chosen vs Rejected」的 pairwise 比較，直接算一個 loss 更新——像是把一條要維護四個微服務的 CI/CD Pipeline，簡化成一支直接算勝負的 A/B Test 腳本。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">06　整體視覺總覽</span>
+    <p>合起來看，下面這張圖是整個模組的骨架——地基是條件機率，往上疊三階段，而 GPT／BERT／T5 的差異其實只發生在「第①層預訓練在猜什麼」這一個節點上：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 700 300" role="img" aria-label="語言模型煉成整體心智圖：根節點是三階段疊加總覽，往下分出預訓練、SFT微調、對齊三個分支，預訓練分支再往下分出GPT、BERT、T5三種架構，SFT分支往下連到多輪對話能力來自訓練資料格式，對齊分支往下分出RLHF與DPO兩種做法">
+          <defs>
+            <marker id="arrowM7c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <line class="arrow" x1="350" y1="60" x2="130" y2="110" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="350" y1="60" x2="350" y2="110" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="350" y1="60" x2="570" y2="110" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="130" y1="160" x2="45" y2="210" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="130" y1="160" x2="135" y2="210" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="130" y1="160" x2="225" y2="210" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="350" y1="160" x2="350" y2="210" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="570" y1="160" x2="520" y2="210" marker-end="url(#arrowM7c)"></line>
+          <line class="arrow" x1="570" y1="160" x2="630" y2="210" marker-end="url(#arrowM7c)"></line>
+          <rect class="box accentbox" x="250" y="10" width="200" height="50" rx="3"></rect>
+          <text class="t1 accenttext" x="350" y="32" text-anchor="middle">語言模型煉成</text>
+          <text class="t2" x="350" y="50" text-anchor="middle">三階段疊加總覽</text>
+          <rect class="box" x="40" y="110" width="180" height="50" rx="3"></rect>
+          <text class="t1" x="130" y="132" text-anchor="middle">①預訓練</text>
+          <text class="t2" x="130" y="150" text-anchor="middle">學通用語言知識</text>
+          <rect class="box" x="260" y="110" width="180" height="50" rx="3"></rect>
+          <text class="t1" x="350" y="132" text-anchor="middle">②SFT微調</text>
+          <text class="t2" x="350" y="150" text-anchor="middle">學會像在回答</text>
+          <rect class="box" x="480" y="110" width="180" height="50" rx="3"></rect>
+          <text class="t1" x="570" y="132" text-anchor="middle">③對齊</text>
+          <text class="t2" x="570" y="150" text-anchor="middle">RLHF / DPO</text>
+          <rect class="box" x="5" y="210" width="80" height="60" rx="3"></rect>
+          <text class="t1" x="45" y="234" text-anchor="middle">GPT</text>
+          <text class="t2" x="45" y="254" text-anchor="middle">Decoder-only</text>
+          <rect class="box" x="95" y="210" width="80" height="60" rx="3"></rect>
+          <text class="t1" x="135" y="234" text-anchor="middle">BERT</text>
+          <text class="t2" x="135" y="254" text-anchor="middle">Encoder-only</text>
+          <rect class="box" x="185" y="210" width="80" height="60" rx="3"></rect>
+          <text class="t1" x="225" y="234" text-anchor="middle">T5</text>
+          <text class="t2" x="225" y="254" text-anchor="middle">Enc-Decoder</text>
+          <rect class="box" x="290" y="210" width="120" height="60" rx="3"></rect>
+          <text class="t1" x="350" y="234" text-anchor="middle">多輪對話能力</text>
+          <text class="t2" x="350" y="254" text-anchor="middle">來自訓練資料格式</text>
+          <rect class="box" x="470" y="210" width="100" height="60" rx="3"></rect>
+          <text class="t1" x="520" y="234" text-anchor="middle">RLHF</text>
+          <text class="t2" x="520" y="254" text-anchor="middle">人類排序+PPO</text>
+          <rect class="box" x="580" y="210" width="100" height="60" rx="3"></rect>
+          <text class="t1" x="630" y="234" text-anchor="middle">DPO</text>
+          <text class="t2" x="630" y="254" text-anchor="middle">Chosen/Rejected</text>
+        </svg>
+      </div>
+      <figcaption>三階段疊加是主幹；GPT/BERT/T5 只是第①層節點上的不同選擇，RLHF/DPO 只是第③層節點上的不同做法。</figcaption>
+    </figure>
+    <p>另一張面試常考、M9 專案還原模組也會直接引用的表格——「LLM 應用四法」的取捨。你的 Threat Intel Agent 目前走的其實是最左邊這一格（Prompt Engineering + Tool Use），這張表能幫你答出「為什麼不做微調」這種問題：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>方法</th><th>成本</th><th>適合情境</th><th>取捨考量</th></tr></thead>
+        <tbody>
+          <tr><td>Prompt Engineering</td><td>最低，只要設計提示詞</td><td>任務單純、當下不需要外部即時資料</td><td>高度依賴提示品質，遇到模型不知道的知識或需要即時資料時容易失準</td></tr>
+          <tr><td>RAG</td><td>中，需建置檢索與向量資料庫</td><td>需要模型參考外部／即時／私有知識（如公司內部文件）</td><td>額外維運成本（向量資料庫、檢索 pipeline），檢索品質直接影響輸出品質</td></tr>
+          <tr><td>Fine-Tuning</td><td>較高，需標註資料＋訓練資源</td><td>需要模型穩定學會特定格式、語氣或領域任務</td><td>資料與運算成本高，且可能有對齊稅、忘記舊能力的風險</td></tr>
+          <tr><td>從頭訓練模型</td><td>最高，需海量語料＋龐大算力</td><td>幾乎只有大型企業／研究機構會做的選項</td><td>成本以千萬美元計，一般團隊不可能自己做</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">07　業界實際應用案例</span>
+    <p>你的資安分類只是一個練手案例；面試被問「這技術實際用在哪裡」，要答得出真實產品：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>技術</th><th>具體產品／系統</th><th>解決了什麼問題</th></tr></thead>
+        <tbody>
+          <tr><td>GPT 系列（Decoder-only）</td><td>ChatGPT、GitHub Copilot</td><td>自迴歸生成讓模型能連續產出完整文章、對話、程式碼，而不只是分類或抽取。</td></tr>
+          <tr><td>BERT（Encoder-only）</td><td>Google 搜尋排序</td><td>雙向理解查詢語意（例如「銀行」是金融機構還是河岸），改善搜尋結果排序準確度。</td></tr>
+          <tr><td>T5（Encoder-Decoder）</td><td>Google 的摘要／翻譯類服務</td><td>統一用「文字轉文字」格式處理多種任務，同一套模型不用為每個任務重新設計架構。</td></tr>
+          <tr><td>RLHF 對齊</td><td>ChatGPT、Claude、Gemini</td><td>幾乎所有主流對話式 AI 都用 RLHF 或類似技術做對齊，避免模型亂講話或講出危險內容。</td></tr>
+          <tr><td>你的 Threat Intel Agent</td><td>tool_choice 強制輸出結構化 JSON</td><td>Claude 能穩定生成結構化風險報告而不是亂回答，某種程度上正是依賴 Anthropic 已經做過的 SFT 與對齊訓練，讓它拿到強制指令時能可靠照格式輸出。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">08　名詞卡（後端翻譯詞典）</span>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="tt"><span class="zh">預訓練</span><span class="en">Pre-training</span></div>
+        <p class="analogy">建置一個通用 <b>Base Image</b> 的階段——什麼服務都懂一點，但還沒特化任何業務邏輯。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">監督微調</span><span class="en">SFT</span></div>
+        <p class="analogy">從 Base Image 客製化出服務 Image，灌進「問答／指令」這套 <b>API 合約</b>，讓模型從「接龍」變成「聽得懂需求」。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">人類反饋強化學習</span><span class="en">RLHF</span></div>
+        <p class="analogy">上線前的 <b>Code Review + Staging 驗收</b>——用人類偏好調整最終要 deploy 的版本。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">直接偏好優化</span><span class="en">DPO</span></div>
+        <p class="analogy">把「Reward Model + PPO」四個模型的 Pipeline，簡化成一支直接算 <b>Chosen vs Rejected</b> 勝負的 A/B Test 腳本。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">獎勵模型</span><span class="en">Reward Model</span></div>
+        <p class="analogy">學會模仿人類 Reviewer 打分的自動化 <b>Linter</b>，自己不是真理，只是預測「人類大概怎麼評」。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">KL 散度懲罰</span><span class="en">KL Penalty</span></div>
+        <p class="analogy"><b>Canary Rollout</b> 時設的「變更幅度限制」——新版本不能跟舊版本（SFT 模型）差太多，避免破壞性變更。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">上下文學習</span><span class="en">In-Context Learning</span></div>
+        <p class="analogy">不用重新 deploy、不用 retrain，只靠這次 request 裡帶的 <b>Few-shot 範例</b>，模型現學現賣。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">對齊稅</span><span class="en">Alignment Tax</span></div>
+        <p class="analogy">跑完一輪「安全性 <b>regression 測試</b>」後，某些原本正常的功能（常識／翻譯）效能反而下降的副作用。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">09　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：RLHF 跟 DPO 的差別是什麼？為什麼近期很多團隊改用 DPO？</p>
+      <p class="a">A（草稿）：「RLHF 是三階段流程：先 SFT 訓練出一個聽得懂指令的初始模型，再讓人類對同一輸入的多組回答做偏好排序，拿排序資料訓練一個 Reward Model 去預測人類偏好，最後用 PPO，讓 LLM（當作 policy）生成文字，由 Reward Model 打分當獎勵訊號更新參數，同時加一個 KL 散度懲罰項限制新模型跟原本 SFT 模型差太多。整套流程要同時維護 Actor、Critic、Reward、Reference 四個模型，訓練複雜也不穩定。DPO 則是跳過『訓練獨立 Reward Model + PPO 強化學習』這一整套，直接拿人類標好 Chosen／Rejected 的成對資料，用一個交叉熵損失函數同時拉高好答案、壓低壞答案被生成的機率，只需要正在訓練的模型加一個 Reference 模型共兩個，把 2-3 個訓練階段簡化成 1 個，而且實驗上同等 KL 散度水準下 Reward 反而更高。拉回我自己的 Threat Intel Agent——我目前完全沒有自己做微調或對齊，是直接呼叫 Claude API，靠的是 Anthropic 已經幫我做好的 SFT + 對齊。我用 tool_choice 強制它在第二輪一定要呼叫 submit_report，能穩定拿到結構化 JSON 而不是模型亂回答，某種程度上就是在吃 Claude 背後 SFT 訓練的紅利——它已經被訓練成『看到明確指令格式，就會照做』，而不是還停留在『純接龍，想到哪寫到哪』的預訓練模型狀態。」</p>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">10　效率檢查點</span>
+    <p>合上這頁，只憑步驟 06 那張心智圖（不看文字），把「地基→預訓練→SFT→對齊」以及 GPT／BERT／T5 各自差在哪個節點，重新講一次給自己聽。RLHF 三步驟（SFT→RM→PPO）跟 DPO 省略了哪兩個模型，也要能脫稿講出來，才算真的疊上去了。</p>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M7・依 LLM課程投影片(2)(3)(4)(5) 整理</span>
+  </footer>
+</div>

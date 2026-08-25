@@ -1,0 +1,578 @@
+<title>AI橋接手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916;
+    --surface:#1B2320;
+    --surface-soft:#212B26;
+    --ink:#E7ECE2;
+    --ink-soft:#A6B3A3;
+    --ink-faint:#71806F;
+    --line:#2B352E;
+    --accent:#E38A4D;
+    --accent-ink:#F3B685;
+    --accent-soft:#3A2A1B;
+    --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916;
+  --surface:#1B2320;
+  --surface-soft:#212B26;
+  --ink:#E7ECE2;
+  --ink-soft:#A6B3A3;
+  --ink-faint:#71806F;
+  --line:#2B352E;
+  --accent:#E38A4D;
+  --accent-ink:#F3B685;
+  --accent-soft:#3A2A1B;
+  --mono-bg:#1E2620;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 120px;}
+
+/* ---------- top nav ---------- */
+.topnav{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.topnav-inner{
+  max-width:800px; margin:0 auto; padding:12px 24px;
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+}
+.topnav a{
+  font-family:var(--font-head);
+  font-size:12.5px; letter-spacing:.02em;
+  color:var(--ink-soft); text-decoration:none;
+  padding:5px 10px; border-radius:2px;
+  border:1px solid transparent;
+}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{
+  font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);
+  margin-right:auto; padding:5px 0;
+}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{
+  font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em;
+  color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;
+}
+h1{
+  font-family:var(--font-head); font-weight:700;
+  font-size:clamp(30px,5vw,42px); line-height:1.15;
+  margin:0 0 18px; text-wrap:balance; letter-spacing:-.01em;
+}
+.hero p.lede{
+  font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0 0 6px;
+}
+.hero .meta{
+  margin-top:22px; display:flex; gap:22px; flex-wrap:wrap;
+  font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);
+}
+.hero .meta b{color:var(--ink-soft); font-weight:500;}
+
+section{padding:52px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+
+.eyebrow{
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.09em;
+  color:var(--accent-ink); text-transform:uppercase; margin:0 0 8px;
+}
+h2{
+  font-family:var(--font-head); font-weight:700;
+  font-size:26px; margin:0 0 10px; text-wrap:balance;
+}
+h3{
+  font-family:var(--font-head); font-weight:600;
+  font-size:18px; margin:0 0 8px;
+}
+p{margin:0 0 16px; max-width:66ch;}
+.section-intro{color:var(--ink-soft); max-width:64ch;}
+
+/* ---------- gap compare ---------- */
+.gap-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px;
+}
+@media(max-width:640px){.gap-grid{grid-template-columns:1fr;}}
+.gap-card{
+  border:1px solid var(--line); border-radius:3px; padding:20px 22px;
+  background:var(--surface);
+}
+.gap-card.have{border-left:3px solid var(--ink-faint);}
+.gap-card.gap{border-left:3px solid var(--accent);}
+.gap-card .tag{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:10px;
+}
+.gap-card.gap .tag{color:var(--accent-ink);}
+.gap-card ul{margin:0; padding-left:18px;}
+.gap-card li{margin-bottom:8px; font-size:15.5px; color:var(--ink);}
+.gap-card li b{font-weight:600;}
+
+/* ---------- strategy cards ---------- */
+.strategy-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px;
+}
+@media(max-width:640px){.strategy-grid{grid-template-columns:1fr;}}
+.strategy-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:3px;
+  padding:20px 22px;
+}
+.strategy-card .num{
+  font-family:var(--font-mono); font-size:13px; color:var(--accent-ink);
+  display:block; margin-bottom:6px;
+}
+.strategy-card p{font-size:15px; color:var(--ink-soft); margin-bottom:0;}
+
+/* ---------- diagram ---------- */
+figure.diagram{margin:28px 0 8px;}
+.diagram-frame{
+  border:1px solid var(--line); border-radius:3px; background:var(--surface);
+  padding:20px 8px;
+}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{
+  font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;
+}
+
+/* ---------- module table ---------- */
+.table-wrap{overflow-x:auto; margin-top:22px; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:640px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--ink-faint); background:var(--surface-soft); font-weight:500;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--surface-soft);}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+.pill{
+  display:inline-block; font-family:var(--font-mono); font-size:11px; letter-spacing:.03em;
+  padding:2px 8px; border-radius:2px; border:1px solid var(--line); color:var(--ink-soft);
+}
+.pill.must{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft);}
+.stars{color:var(--accent); letter-spacing:1px;}
+.stars .off{color:var(--line);}
+
+.budget-note{
+  margin-top:16px; padding:14px 16px; border:1px dashed var(--line); border-radius:3px;
+  font-size:14.5px; color:var(--ink-soft); background:var(--surface);
+}
+.budget-note b{color:var(--ink);}
+
+/* ---------- linkout (module file card) ---------- */
+.linkout{
+  margin-top:24px; border:1px solid var(--accent); border-radius:4px; background:var(--accent-soft);
+  padding:22px 24px; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+}
+.linkout .lo-tag{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--accent-ink); display:block; margin-bottom:8px;
+}
+.linkout h3{font-family:var(--font-head); font-weight:700; font-size:19px; margin:0 0 6px; color:var(--ink);}
+.linkout p{font-size:14.5px; color:var(--ink-soft); margin:0; max-width:52ch;}
+.linkout .lo-btn{
+  flex:0 0 auto; font-family:var(--font-mono); font-size:13px; color:var(--surface);
+  background:var(--accent-ink); padding:10px 18px; border-radius:2px; text-decoration:none; white-space:nowrap;
+}
+.linkout .lo-btn:hover{background:var(--ink);}
+.status-pending{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);}
+.status-done{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink); text-decoration:none;}
+
+/* ---------- template module demo ---------- */
+.module-card{
+  border:1px solid var(--line); border-radius:4px; background:var(--surface);
+  margin-top:24px; overflow:hidden;
+}
+.module-card > .mhead{
+  background:var(--surface-soft); padding:18px 24px; border-bottom:1px solid var(--line);
+  display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;
+}
+.module-card > .mhead .mtitle{font-family:var(--font-head); font-weight:700; font-size:19px;}
+.module-card > .mhead .mtag{font-family:var(--font-mono); font-size:12px; color:var(--accent-ink);}
+.mstep{padding:22px 24px; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--accent-ink); margin:0 0 10px; display:block;
+}
+.mstep p{margin-bottom:10px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{
+  font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft);
+  background:var(--mono-bg); border-radius:2px; padding:10px 12px; margin:10px 0;
+  white-space:pre-wrap; line-height:1.6;
+}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:6px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+
+/* ---------- glossary ---------- */
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+
+/* ---------- checklist ---------- */
+.checklist{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
+.checklist li{
+  display:flex; gap:12px; align-items:flex-start; font-size:15.5px; color:var(--ink);
+  border:1px solid var(--line); border-radius:3px; padding:12px 16px; background:var(--surface);
+}
+.checklist .box{
+  flex:0 0 auto; width:16px; height:16px; margin-top:3px; border:1.5px solid var(--ink-faint); border-radius:2px;
+}
+
+footer.doc-footer{
+  padding:40px 0 0; color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);
+}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="brand">AI橋接手冊</span>
+    <a href="#gap">起點盤點</a>
+    <a href="#strategy">核心策略</a>
+    <a href="#roadmap">路線圖</a>
+    <a href="#modules">模組總覽</a>
+    <a href="#template">模組示範</a>
+    <a href="#glossary">名詞詞典</a>
+    <a href="#next">進度</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="kicker">全九模組已完成・v1.0</p>
+  <h1>從後端工程師到 AI 工程師的橋接手冊</h1>
+  <p class="lede">
+    這不是一份「從頭學 AI」的教材，而是一份針對你的背景量身裁切的<b>知識補完計畫</b>：
+    目的是讓你在面試桌上，不只能說出「我做過 Threat Intel Agent」，
+    還能把它背後每一個技術選擇的原理講清楚——為什麼是 Prompt Engineering 而不是微調、
+    Attention 到底在算什麼、你的 TQC+ 機器學習證照背後的演算法實際上做了什麼決策。
+  </p>
+  <div class="meta">
+    <span><b>學習者</b>　邱冠文・明新科大資工系・4-5年後端經驗</span>
+    <span><b>目標</b>　AI 工程師求職面試 + 知識底氣</span>
+    <span><b>核心原則</b>　效率優先，只補真正的缺口</span>
+  </div>
+</header>
+
+<section id="gap">
+  <p class="eyebrow">Step 0 · 效率的起點</p>
+  <h2>先算清楚：什麼不用教，什麼才是真缺口</h2>
+  <p class="section-intro">
+    效率的第一步不是「教得快」，是「不教你已經會的」。這份框架先把你履歷裡已經驗證過的能力
+    劃出來——省下的每一小時，都留給右邊那欄。
+  </p>
+  <div class="gap-grid">
+    <div class="gap-card have">
+      <span class="tag">已經會・這份文件不重教</span>
+      <ul>
+        <li><b>Python 與非同步架構</b>：FastAPI + Uvicorn、Flask、Decorator、路由設計</li>
+        <li><b>資料庫實戰</b>：MySQL 交易設計、Redis 高併發鎖（SET NX）、MongoDB／Firebase NoSQL 建模</li>
+        <li><b>系統落地</b>：Docker 容器化、Git 協作、Railway／Heroku／Render 部署</li>
+        <li><b>LLM 應用層</b>：Anthropic Tool Use 兩輪架構、tool_choice 強制結構化輸出、多外部 API 整合</li>
+        <li><b>ML 操作層</b>：TQC+ 機器學習證照代表你會「呼叫」sklearn——這份文件不重講怎麼呼叫</li>
+      </ul>
+    </div>
+    <div class="gap-card gap">
+      <span class="tag">真缺口・這份文件要補的</span>
+      <ul>
+        <li><b>傳統 ML 為什麼 work</b>：決策樹怎麼選分裂點、集成學習為何比單一模型準</li>
+        <li><b>DL 的訓練機制</b>：Autograd／反向傳播／為什麼要梯度下降而非解方程式</li>
+        <li><b>Transformer 內部</b>：你只會「呼叫」Claude，還不懂 Attention 在裡面算什麼</li>
+        <li><b>對齊三部曲</b>：SFT／RLHF／DPO 的差異，以及 Prompt／RAG／微調／自訓模型怎麼取捨</li>
+        <li><b>把理論講回自己專案</b>：面試最常問「你的專案為什麼這樣設計」，現在缺的是這條連線</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="strategy">
+  <p class="eyebrow">設計依據</p>
+  <h2>六個核心策略，對應你說的學習特質</h2>
+  <p class="section-intro">每一條策略都直接回應你提到的學習方式，不是通用的教學法模板。其中 05、06 是根據你的補充修正過的版本——順序比類比更重要。</p>
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <span class="num">01 — 對應「喜歡具體、離散」</span>
+      <h3>先給步驟表，不先給連續公式</h3>
+      <p>每個機制都先拆成一張「第1步做什麼、第2步做什麼」的離散表格，數字帶入實際跑一次；連續的數學推導放在最後，當作「想更深挖再看」的選讀。</p>
+    </div>
+    <div class="strategy-card">
+      <span class="num">02 — 對應「用簡單應用解釋深問題」</span>
+      <h3>一個案例貫穿到底，但案例晚一點才出現</h3>
+      <p>全程只用一個問題：「這個 IP／這篇留言是不是威脅？」直接延伸你 Threat Intel Agent 的真實資料。但案例只在地基蓋好、元件疊完之後才代入——案例是拿來驗證你懂了，不是拿來替代理解。</p>
+    </div>
+    <div class="strategy-card">
+      <span class="num">03 — 對應「專有名詞記憶弱」</span>
+      <h3>後端工程師翻譯詞典</h3>
+      <p>新名詞第一次出現就配一句你熟悉的系統類比（Attention ≈ 加權版 SQL JOIN），之後全文重複用同一個類比，不重新定義。但類比放在機制講完「之後」，當記憶的鉤子，不是理解的捷徑。</p>
+    </div>
+    <div class="strategy-card">
+      <span class="num">04 — 對應「面試 + 工作，要懂不只要會做」</span>
+      <h3>每個模組收尾都是一題面試模擬</h3>
+      <p>不會停在「這個技術是什麼」，而是逼近「面試官問你為什麼這樣做，你答不答得出設計依据」，草稿直接連回你的三個真實專案，讓你有話術也有底氣。</p>
+    </div>
+    <div class="strategy-card">
+      <span class="num">05 — 對應「要從最基礎的底層概念開始」</span>
+      <h3>先蓋地基，再一層層往上疊</h3>
+      <p>每個機制都先講一個跟任何案例、任何應用都無關的最原始概念（例如 Attention 之前，先搞懂「兩個向量的相似度」是什麼），再一步一步疊加元件到完整機制。地基不蓋好，案例跟類比都只是背下來的表演。</p>
+    </div>
+    <div class="strategy-card">
+      <span class="num">06 — 對應「表格／流程圖／心智圖／架構圖」</span>
+      <h3>依內容性質挑對的視覺呈現，不是每次都套同一種</h3>
+      <p>有嚴格先後順序的機制用流程圖；互相比較、彼此獨立的選項用表格；元件之間互相關聯但沒有固定順序的全貌用心智圖；系統組件與資料流用架構圖。下面模組總覽表後面有一張對照表說明怎麼選。</p>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <p class="eyebrow">全貌</p>
+  <h2>學習路線圖：同一個案例，走過三個世代</h2>
+  <p class="section-intro">
+    下圖是整份文件的骨架——不是九個獨立主題，是同一個分類問題被重新解四次，
+    每次重解對應一組模組，最後全部收斂回你自己的專案。
+  </p>
+  <figure class="diagram">
+    <div class="diagram-frame">
+      <svg class="pathway" viewBox="0 0 620 640" role="img" aria-label="學習路線圖：從現有後端與LLM應用基礎出發，透過『這個IP是不是威脅』這一個案例，依序用傳統機器學習、深度學習、LLM核心理論重新求解，最後收斂回Threat Intel Agent專案與面試問答">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+          </marker>
+        </defs>
+
+        <rect class="box" x="60" y="16" width="500" height="66" rx="3"></rect>
+        <text class="t1" x="310" y="42" text-anchor="middle">起點：你已經會的</text>
+        <text class="t2" x="310" y="62" text-anchor="middle">Python 後端・REST API・資料庫・LLM Tool Use 應用層</text>
+
+        <line class="arrow" x1="310" y1="82" x2="310" y2="122" marker-end="url(#arrow)"></line>
+        <text class="lbl" x="330" y="106">貫穿案例啟動</text>
+
+        <rect class="box" x="60" y="126" width="500" height="60" rx="3"></rect>
+        <text class="t1" x="310" y="150" text-anchor="middle">案例 v1・結構化特徵</text>
+        <text class="t2" x="310" y="169" text-anchor="middle">AbuseIPDB 分數／地理位置／PortScan 次數 → 這個 IP 危不危險？</text>
+
+        <line class="arrow" x1="310" y1="186" x2="310" y2="226" marker-end="url(#arrow)"></line>
+        <text class="lbl" x="330" y="203">M1–M3　傳統 ML：分類器怎麼學</text>
+
+        <rect class="box" x="60" y="230" width="500" height="60" rx="3"></rect>
+        <text class="t1" x="310" y="254" text-anchor="middle">案例 v2・換神經網路做</text>
+        <text class="t2" x="310" y="273" text-anchor="middle">同一組特徵，改用 PyTorch 訓練一個小型神經網路</text>
+
+        <line class="arrow" x1="310" y1="290" x2="310" y2="330" marker-end="url(#arrow)"></line>
+        <text class="lbl" x="330" y="307">M4–M5　深度學習：自動抽特徵、梯度下降</text>
+
+        <rect class="box" x="60" y="334" width="500" height="60" rx="3"></rect>
+        <text class="t1" x="310" y="358" text-anchor="middle">案例 v3・換成非結構化文字</text>
+        <text class="t2" x="310" y="377" text-anchor="middle">分析師備註／Abuse Report 全文 → 為什麼結構化模型做不到，要靠 LLM</text>
+
+        <line class="arrow" x1="310" y1="394" x2="310" y2="434" marker-end="url(#arrow)"></line>
+        <text class="lbl" x="330" y="411">M6–M8　LLM 核心：Transformer／Attention／微調／對齊</text>
+
+        <rect class="box accentbox" x="60" y="438" width="500" height="90" rx="3"></rect>
+        <text class="t1 accenttext" x="310" y="468" text-anchor="middle">M9・回到 Threat Intel Agent</text>
+        <text class="t2" x="310" y="488" text-anchor="middle">用 M1–M8 的原理，逐一解釋自己專案的技術決策</text>
+        <text class="t2" x="310" y="506" text-anchor="middle">＋ 面試問答草稿庫</text>
+      </svg>
+    </div>
+    <figcaption>
+      同一個資安分類問題，隨著模組推進被更複雜的技術重新解一次；每次重解直接對應一組模組，
+      最後全部收斂回你自己的 Threat Intel Agent 專案與面試問答，而不是九個互不相干的主題。
+    </figcaption>
+  </figure>
+</section>
+
+<section id="modules">
+  <p class="eyebrow">模組總覽</p>
+  <h2>九個模組，標好哪些要精讀、哪些查閱就好</h2>
+  <p class="section-intro">
+    「面試熱度」是根據你要應徵的後端／資料工程師轉 AI 工程師職缺，估計被問到的機率。
+    熱度越高，代表這是「不懂會被抓包」的範圍，優先投入時間。
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>模組</th><th>主題</th><th>分級</th><th>對應原始素材</th><th>面試熱度</th><th>檔案</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">M1</td><td>分類問題、資料切分、混淆矩陣與評估指標</td><td><span class="pill must">必修</span></td><td class="mono">Classification.pdf</td><td class="stars">★★★<span class="off">★★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/624f74dd-7a54-4c10-9f2d-a3b610d6991f">已完成 →</a></td></tr>
+        <tr><td class="mono">M2</td><td>決策樹（資訊獲利／Gini）→ 隨機森林 → AdaBoost</td><td><span class="pill must">必修</span></td><td class="mono">Scikit-learn.pdf</td><td class="stars">★★★★<span class="off">★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/5510c06e-b887-4c26-aa12-5f221a259efb">已完成 →</a></td></tr>
+        <tr><td class="mono">M3</td><td>KNN／SVM／貝氏分類器（概念層，不深究推導）</td><td><span class="pill">選修・略讀</span></td><td class="mono">Scikit-learn.pdf</td><td class="stars">★★<span class="off">★★★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/e6908587-c7da-417c-b218-6789686f510a">已完成 →</a></td></tr>
+        <tr><td class="mono">M4</td><td>Tensor、梯度下降、Autograd 自動微分</td><td><span class="pill must">必修</span></td><td class="mono">pytorch.pdf</td><td class="stars">★★★★<span class="off">★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/5fee32be-2dec-46f3-ba50-09dd65e2d2d5">已完成 →</a></td></tr>
+        <tr><td class="mono">M5</td><td>nn.Module、Loss、Optimizer、訓練迴圈、Dropout</td><td><span class="pill must">必修</span></td><td class="mono">pytorch.pdf</td><td class="stars">★★★<span class="off">★★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/56f260ed-dade-4cd3-bd53-a02e09f98e75">已完成 →</a></td></tr>
+        <tr><td class="mono">M6</td><td>Tokenization／Embedding／Self-Attention／Multi-Head</td><td><span class="pill must">必修・核心</span></td><td class="mono">LLM(1) 投影片</td><td class="stars">★★★★★</td><td><a class="status-done" href="https://claude.ai/code/artifact/62daeffb-efdc-4008-9b09-84a31ed59aa9">已完成 →</a></td></tr>
+        <tr><td class="mono">M7</td><td>GPT／BERT／T5、預訓練與微調、RLHF／DPO</td><td><span class="pill must">必修・核心</span></td><td class="mono">LLM(2)(3)(4)(5)</td><td class="stars">★★★★★</td><td><a class="status-done" href="https://claude.ai/code/artifact/206c90ce-02b5-4f1a-8a0a-12bd347faa60">已完成 →</a></td></tr>
+        <tr><td class="mono">M8</td><td>強化學習基礎：MDP／Bellman／PPO（只求懂 RLHF 那一步）</td><td><span class="pill">選修・查閱</span></td><td class="mono">Reinforcement Learning.pdf</td><td class="stars">★★<span class="off">★★★</span></td><td><a class="status-done" href="https://claude.ai/code/artifact/7d599cc6-6994-40f7-94d9-b431fbcd7f9f">已完成 →</a></td></tr>
+        <tr><td class="mono">M9</td><td>專案還原：用理論解釋 Threat Intel Agent 的每個決策</td><td><span class="pill must">必修・收尾</span></td><td class="mono">你的專案 + M1–M8</td><td class="stars">★★★★★</td><td><a class="status-done" href="https://claude.ai/code/artifact/35ac6f10-cb83-4e85-990d-41fd19a27636">已完成 →</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="budget-note">
+    <b>時間分配建議：</b>M1、M2、M4、M5、M6、M7、M9（必修）投入約 80% 時間精讀到「能手算、能講給別人聽」；
+    M3、M8（選修）只求「一句話定義＋一個判斷情境」，能應付面試追問即可，不必精讀原始推導。
+    <b>每個模組都是獨立檔案</b>，這份總覽只負責導覽跟連結，正式內容請點「檔案」欄開啟。
+  </div>
+</section>
+
+<section id="template">
+  <p class="eyebrow">每個技術主題・一個獨立檔案</p>
+  <h2>模組標準版型</h2>
+  <p class="section-intro">
+    這份總覽本身<b>不放正式教學內容</b>——M1～M9 每個都是自己的獨立檔案，這裡只說明所有檔案共用的版型，
+    跟每個檔案裡「呈現方式」要怎麼選。版型固定走十步：電梯簡報 → <b>底層概念（無案例）</b> → 逐層疊加（流程圖）→
+    代入具體案例 → 類比鎖記憶 → 整體視覺總覽 → <b>業界實際應用案例</b> → 名詞卡 → 面試模擬 → 效率檢查點。
+    地基永遠在案例前面；業界案例則是為了讓你不只知道「自己這個小案例怎麼解」，還知道這技術實際被用在哪些真實產品裡，
+    面試被問「這個技術有什麼應用」才有話講，不會只講得出自己那一個玩具例子。
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>內容性質</th><th>對應呈現方式</th><th>模組舉例</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>有嚴格先後順序的計算/流程</td><td class="mono">流程圖</td><td>M6 Attention 計算步驟、M7 RLHF 三階段</td></tr>
+        <tr><td>互相比較、彼此獨立的選項</td><td class="mono">表格</td><td>M2 各集成方法比較、M7 Prompt／RAG／微調／自訓模型取捨</td></tr>
+        <tr><td>組件之間有關聯但沒有固定順序</td><td class="mono">心智圖</td><td>M1 NLP 的組成要素、M7 LLM 的四種分類方式</td></tr>
+        <tr><td>系統組件與資料流</td><td class="mono">架構圖</td><td>M6 Attention 在 Transformer 裡的位置、M9 你的 Agent 系統架構</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="linkout">
+    <div>
+      <span class="lo-tag">已產出範例檔案</span>
+      <h3>M6　Attention 機制——LLM 的引擎</h3>
+      <p>完整十步版型的第一個實例：向量內積地基 → 流程圖疊加 → 案例代入 → SQL JOIN 類比 → 架構圖總覽 → 業界實際應用案例 → 名詞卡 → 面試模擬。</p>
+    </div>
+    <a class="lo-btn" href="https://claude.ai/code/artifact/62daeffb-efdc-4008-9b09-84a31ed59aa9">開啟檔案 →</a>
+  </div>
+
+  <p style="margin-top:20px; color:var(--ink-soft); font-size:15px;">
+    M1、M2、M4、M5、M7、M9 會照同一套「地基 → 疊加 → 案例 → 類比 → 整體圖 → <b>業界實際應用案例</b> → 名詞卡 → 面試模擬 → 檢查點」的十步版型展開；
+    差別只在地基的原始概念、疊加的元件、整體圖的類型（流程圖／心智圖／架構圖），還有換成該模組對應的實際應用案例。
+  </p>
+</section>
+
+<section id="glossary">
+  <p class="eyebrow">持續累積</p>
+  <h2>後端工程師翻譯詞典（節錄）</h2>
+  <p class="section-intro">
+    正式產出各模組內容時，每個新名詞都會加進這本詞典，最終會附在文件最前面當速查表——
+    這是專門針對你「專有名詞記憶弱」設計的外部記憶，不需要背，需要查。
+  </p>
+  <div class="term-grid">
+    <div class="term-card">
+      <div class="tt"><span class="zh">梯度下降</span><span class="en">Gradient Descent</span></div>
+      <p class="analogy">不是解方程式直接求出答案，是像<b>二分搜尋</b>一樣每次朝誤差變小的方向挪一小步，挪到誤差不再明顯下降為止。</p>
+    </div>
+    <div class="term-card">
+      <div class="tt"><span class="zh">過擬合</span><span class="en">Overfitting</span></div>
+      <p class="analogy">模型把<b>訓練資料的雜訊背下來</b>，就像寫死一堆 if/else 硬 hardcode 每一筆測試資料，換一批新資料就全部失準。</p>
+    </div>
+    <div class="term-card">
+      <div class="tt"><span class="zh">微調</span><span class="en">Fine-tuning</span></div>
+      <p class="analogy">不是重寫整個系統，是對一個<b>已經上線的服務做 config override</b>——用少量新資料，在既有權重基礎上小幅調整。</p>
+    </div>
+    <div class="term-card">
+      <div class="tt"><span class="zh">人類反饋強化學習</span><span class="en">RLHF</span></div>
+      <p class="analogy">像是先訓練一支<b>自動化 Code Review 機器人</b>（Reward Model）學會人類的偏好排序，再讓它去打分數，取代真人一筆一筆審查。</p>
+    </div>
+    <div class="term-card">
+      <div class="tt"><span class="zh">檢索增強生成</span><span class="en">RAG</span></div>
+      <p class="analogy">跟你在 API 裡先 <b>query DB 拿資料再組 response</b> 是同一套邏輯——先檢索正確資料，再交給模型生成回答，而不是純靠模型記憶亂猜。</p>
+    </div>
+    <div class="term-card">
+      <div class="tt"><span class="zh">批次量／訓練週期</span><span class="en">Batch Size / Epoch</span></div>
+      <p class="analogy">Batch Size 像<b>分頁查詢的 page size</b>，Epoch 像<b>對整張表跑完一次 for 迴圈</b>——訓練就是重複跑很多個 Epoch。</p>
+    </div>
+  </div>
+</section>
+
+<section id="interview">
+  <p class="eyebrow">收尾設計</p>
+  <h2>為什麼每個模組都要接一題面試模擬</h2>
+  <p class="section-intro">
+    你說目標是面試跟工作，不只是學會操作。這份框架把「懂」直接定義成
+    「講得出設計依据、答得出取捨」，而不是「跑得出程式碼」。舉一個 M7 的例子：
+  </p>
+  <div class="qa" style="margin-top:8px;">
+    <p class="q">Q：為什麼你的 Threat Intel Agent 不直接微調一個 LLM 來做資安分類，而是用 Prompt + Tool Use？</p>
+    <p class="a">A（草稿）：「微調需要標註資料、GPU 資源跟版本維運成本，而我的情資來源是即時查詢、判斷規則也常在變，Prompt Engineering 加 Tool Use 能用很低的成本快速迭代。如果之後判斷邏輯穩定下來、資料量也夠大，可能會考慮用微調或訓練一個小型分類器（回到 M1、M2 的做法）取代持續調 Prompt——這就是 Prompt Engineering、RAG、微調、自訓模型這四種應用方式的取捨依据，不是哪個絕對比較好，是看資料量、成本跟需求穩定度。」</p>
+  </div>
+  <p style="margin-top:16px;">
+    這類問答會在每個必修模組收尾累積成一份「面試問答草稿庫」，最後彙整成 M9 的附錄，
+    面試前只需要重看這一份，不用重翻九個模組。
+  </p>
+</section>
+
+<section id="next">
+  <p class="eyebrow">目前狀態</p>
+  <h2>九個模組全數完成</h2>
+  <p class="section-intro">
+    貫穿案例維持「這個 IP／這篇留言是不是威脅」延伸自 Threat Intel Agent；M3、M8 走選修略讀的精簡版版型；
+    效率檢查點已內建在每個檔案的最後一步，沒有另外做測驗附件。M1～M9 全部連結請見上方「模組總覽」表格，
+    <b>M9 專案還原</b>是整套教材真正收斂的地方——用前面八個模組的理論，逐一對照你 Threat Intel Agent 的每一個技術決策，
+    並附上專案層級的面試問答總彙。
+  </p>
+  <p class="section-intro">
+    建議讀法：先照 M1→M9 順序整體掃過一次建立地圖，面試前只需要重看每個檔案最後的「面試模擬」段落跟 M9 整份，
+    不用重讀整套教材。
+  </p>
+</section>
+
+<footer class="doc-footer">
+  AI 橋接手冊・框架設計稿・依據 邱冠文 履歷與 LLM／ML／DL 課程素材整理
+</footer>
+
+</div>

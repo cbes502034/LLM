@@ -1,0 +1,320 @@
+<title>分類判官</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M1・必修</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M1 · 面試熱度 ★★★☆☆</p>
+    <h1>分類判官——用一個閾值決定機器怎麼判你有罪</h1>
+    <p class="lede">你的 Threat Intel Agent 最後一定要做出一個二元判斷：這個 IP 要不要寫進黑名單。這個模組要讓你不只會呼叫 <span class="mono" style="font-family:var(--font-mono);">.score()</span>，還能在面試上解釋為什麼有時候該選 Precision、有時候該選 Recall，以及閾值到底是怎麼設出來的。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>面試官幾乎必問「你怎麼評估一個分類模型好不好」，如果只回答「看 accuracy 高不高」，很容易被追問到答不出來。你的 Threat Intel Agent 裡「風險分數超過某個門檻就判定為威脅」這個動作，其實就是一個分類器在某個 threshold 上做決策——這個模組把這句話拆成完整、能在面試上站得住腳的評估語言。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念（完全不談案例，只談最原始的東西）</span>
+    <p>先把「猜對猜錯」這件事本身拆開來看。假設有一個粗略的判斷器，要對 20 個樣本各做一次「是否符合某條件」的猜測，猜完之後跟真實答案對一下，猜對猜錯其實不是只有「對／錯」兩種結果，而是可以拆成四種組合：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>實際為「是」</th><th>實際為「否」</th></tr></thead>
+        <tbody>
+          <tr><td><b>判斷為「是」</b></td><td class="mono">TP 真陽性 = 8</td><td class="mono">FP 偽陽性 = 3</td></tr>
+          <tr><td><b>判斷為「否」</b></td><td class="mono">FN 偽陰性 = 2</td><td class="mono">TN 真陰性 = 7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>四個象限的意思：<b>TP</b>＝猜「是」而且真的是；<b>FP</b>＝猜「是」但其實不是（誤判）；<b>FN</b>＝猜「否」但其實是（漏判）；<b>TN</b>＝猜「否」而且真的不是。這張 2×2 表格就是整個模組的地基，完全還沒牽扯到任何分類問題的實際場景，純粹是「猜測 vs 事實」的四種組合。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　逐層往上疊——從流程到公式</span>
+    <p>地基蓋好之後，一步一步加元件。首先是監督式學習最基本的三段流程：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 640 140" role="img" aria-label="監督式學習流程圖：訓練樣本建模，接著用測試樣本評估準確性，最後用於預測新資料">
+          <defs>
+            <marker id="arrowM1a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="20" y="30" width="170" height="64" rx="3"></rect>
+          <text class="t1" x="105" y="56" text-anchor="middle">訓練樣本建模</text>
+          <text class="t2" x="105" y="76" text-anchor="middle">用已知答案的資料學規律</text>
+          <line class="arrow" x1="190" y1="62" x2="220" y2="62" marker-end="url(#arrowM1a)"></line>
+          <rect class="box" x="220" y="30" width="180" height="64" rx="3"></rect>
+          <text class="t1" x="310" y="56" text-anchor="middle">測試樣本評估</text>
+          <text class="t2" x="310" y="76" text-anchor="middle">用沒看過的資料驗證準確性</text>
+          <line class="arrow" x1="400" y1="62" x2="430" y2="62" marker-end="url(#arrowM1a)"></line>
+          <rect class="box accentbox" x="430" y="30" width="190" height="64" rx="3"></rect>
+          <text class="t1 accenttext" x="525" y="56" text-anchor="middle">預測新資料</text>
+          <text class="t2" x="525" y="76" text-anchor="middle">上線後真正拿來用的階段</text>
+        </svg>
+      </div>
+      <figcaption>分類 vs 迴歸的差異：分類預測的是「離散類別」（例如是／否），迴歸預測的是「連續數值」（例如風險分數本身）。這個模組談的是前者。</figcaption>
+    </figure>
+    <p>「測試樣本」從哪裡切出來，有三種常見做法：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>切分方法</th><th>做法</th><th>適合情境</th></tr></thead>
+        <tbody>
+          <tr><td>訓練測試法</td><td>一次切分，常見 75/25 比例</td><td>樣本數大，切一次就有代表性</td></tr>
+          <tr><td>k 疊交互驗證法<br><span class="mono" style="font-size:12px; color:var(--ink-faint);">k-fold cross-validation</span></td><td>資料切成 k 份，輪流當測試集，其餘當訓練集</td><td>樣本數中等，想更穩定地估計效能</td></tr>
+          <tr><td>自助法<br><span class="mono" style="font-size:12px; color:var(--ink-faint);">bootstrap</span></td><td>取後放回抽樣，重複產生訓練集</td><td>樣本數極小，經不起切一刀</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>模型好不好，光看「準不準」也不夠，面試官期待你從五個面向去講：<b>準確度</b>（猜對的比例）、<b>速度</b>（訓練/預測要多久）、<b>可詮釋性</b>（能不能講出為什麼這樣判）、<b>健全性</b>（面對雜訊或缺值容不容易失準）、<b>擴展性</b>（資料變大能不能撐得住）。</p>
+    <p>接著把 02 步驟的四象限疊成公式。還是用同一組抽象數字（TP=8, FP=3, FN=2, TN=7，共 20 筆）：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>指標</th><th class="mono">公式</th><th>白話意義</th><th class="mono">代入計算</th></tr></thead>
+        <tbody>
+          <tr><td>Accuracy 準確度</td><td class="mono">(TP+TN)/All</td><td>全部猜對的比例</td><td class="mono">(8+7)/20 = 0.75</td></tr>
+          <tr><td>Precision 精確率</td><td class="mono">TP/(TP+FP)</td><td>你猜「是」的裡面，猜對幾成</td><td class="mono">8/(8+3) ≈ 0.73</td></tr>
+          <tr><td>Recall 召回率</td><td class="mono">TP/(TP+FN)</td><td>所有真正「是」的裡面，你抓到幾成</td><td class="mono">8/(8+2) = 0.80</td></tr>
+          <tr><td>F1-Score</td><td class="mono">2·P·R/(P+R)</td><td>Precision 與 Recall 的調和平均</td><td class="mono">2(.73×.80)/(.73+.80) ≈ 0.76</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>再往上疊一層：如果把「判斷為是」的門檻（threshold）從高調到低，這組 TP/FP/FN/TN 會整組跟著變，也就會產生一整串不同的 Precision/Recall 組合。把這串組合畫成「橫軸 FPR（偽陽性率）、縱軸 TPR（真陽性率）」的曲線，就是 <b>ROC 曲線</b>；曲線下面積叫 <b>AUC</b>，用來衡量「不管門檻設在哪，這個模型整體有多好」。</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 400 300" role="img" aria-label="ROC曲線示意圖：橫軸為偽陽性率FPR，縱軸為真陽性率TPR，一條對角虛線代表AUC等於0.5的亂猜模型，一條往左上角彎曲的實線代表AUC約0.9的優秀模型">
+          <line class="arrow" x1="40" y1="20" x2="40" y2="260"></line>
+          <line class="arrow" x1="40" y1="260" x2="360" y2="260"></line>
+          <text class="lbl" x="200" y="286" text-anchor="middle">FPR（偽陽性率）→</text>
+          <text class="lbl" x="26" y="140" text-anchor="middle" transform="rotate(-90 26 140)">TPR（真陽性率）→</text>
+          <line x1="40" y1="260" x2="360" y2="20" stroke="var(--ink-faint)" stroke-width="1.4" stroke-dasharray="4 4"></line>
+          <text class="t2" x="255" y="150" text-anchor="middle">AUC=0.5（亂猜）</text>
+          <path d="M40,260 Q70,50 360,20" fill="none" stroke="var(--accent)" stroke-width="2.2"></path>
+          <text class="t2 accenttext" x="150" y="55" text-anchor="middle" fill="var(--accent-ink)">AUC≈0.9（優秀模型）</text>
+        </svg>
+      </div>
+      <figcaption>閾值從高掃到低，會畫出一整條曲線；曲線越貼近左上角，代表用同樣的偽陽性率能換到更高的真陽性率，AUC 也就越接近 1。</figcaption>
+    </figure>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　現在才代入具體案例</span>
+    <p>地基跟公式都蓋好了，這時候才套進「這個 IP 是不是威脅」的貫穿案例。假設你的 Threat Intel Agent 對 10 個 IP 做威脅判斷，其中 7 個真的是威脅、3 個是安全的，模型判斷結果如下：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>實際為威脅（7個）</th><th>實際為安全（3個）</th></tr></thead>
+        <tbody>
+          <tr><td><b>判斷為威脅</b></td><td class="mono">TP = 6</td><td class="mono">FP = 2</td></tr>
+          <tr><td><b>判斷為安全</b></td><td class="mono">FN = 1</td><td class="mono">TN = 1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stepline">Accuracy  = (6+1)/10        = 0.70
+Precision = 6/(6+2)         = 0.75    ← 判定為威脅的8個裡，6個真的是
+Recall    = 6/(6+1)         ≈ 0.86    ← 7個真威脅裡，抓到了6個
+F1-Score  = 2×.75×.86/(.75+.86) ≈ 0.80</div>
+    <p>如果把判定門檻（threshold）調低，會有更多 IP 被歸類成「威脅」，FN 會變少、Recall 會上升，但同時 FP 也會變多、Precision 會下降——這就是 07 步驟裡黑名單機制那個真實的取捨。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">05　類比鎖記憶——用 API／SQL 掛住指標</span>
+    <p>機制都懂了之後，才用你熟悉的後端類比把它釘進長期記憶：</p>
+    <div class="stepline">混淆矩陣 ≈ 一張「預測結果 vs 正確答案」的交叉對帳表（pivot table）
+Precision ≈ API回傳結果的「精準度」：你的API吐回8筆，裡面真正是使用者要的有幾筆（訊噪比）
+Recall    ≈ API的「覆蓋率」：資料庫裡真正符合條件的7筆，你的查詢撈出了幾筆（有沒有漏抓）
+Threshold ≈ WHERE risk_score > X 這行SQL裡的X，X越低撈出越多（Recall高）但雜訊也越多（Precision低）
+AUC       ≈ 不看單一次查詢，而是看這支API在「所有可能的X」下平均表現多好</div>
+    <p>Precision 跟 Recall 永遠是一組互相拉扯的關係，就像你不能同時把 API 的「準」跟「全」都調到最高——這正是 09 步驟面試題要你講清楚的取捨。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">06　整體視覺總覽——這些指標彼此怎麼串起來</span>
+    <p>資料切分、混淆矩陣、衍生指標、ROC/AUC、五面向評估，這五塊彼此關聯，但沒有固定的先後順序，適合用心智圖總覽一次：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 660 450" role="img" aria-label="心智圖：中央為分類模型評估，向外連結資料切分方法、混淆矩陣TP FP FN TN、衍生指標Precision Recall F1、ROC與AUC、模型評估五面向，五個分支彼此關聯但沒有固定順序">
+          <line class="arrow" x1="280" y1="190" x2="190" y2="76"></line>
+          <line class="arrow" x1="380" y1="190" x2="470" y2="76"></line>
+          <line class="arrow" x1="400" y1="220" x2="470" y2="228"></line>
+          <line class="arrow" x1="330" y1="250" x2="330" y2="380"></line>
+          <line class="arrow" x1="260" y1="220" x2="190" y2="228"></line>
+          <rect class="box" x="20" y="20" width="170" height="56" rx="3"></rect>
+          <text class="t1" x="105" y="42" text-anchor="middle">資料切分方法</text>
+          <text class="t2" x="105" y="60" text-anchor="middle">Train/Test・k-fold・Bootstrap</text>
+          <rect class="box" x="470" y="20" width="170" height="56" rx="3"></rect>
+          <text class="t1" x="555" y="42" text-anchor="middle">混淆矩陣</text>
+          <text class="t2" x="555" y="60" text-anchor="middle">TP／FP／FN／TN 四象限</text>
+          <rect class="box" x="470" y="200" width="170" height="56" rx="3"></rect>
+          <text class="t1" x="555" y="222" text-anchor="middle">衍生指標</text>
+          <text class="t2" x="555" y="240" text-anchor="middle">Precision・Recall・F1</text>
+          <rect class="box" x="245" y="380" width="170" height="56" rx="3"></rect>
+          <text class="t1" x="330" y="402" text-anchor="middle">ROC ／ AUC</text>
+          <text class="t2" x="330" y="420" text-anchor="middle">閾值變化下的整體表現</text>
+          <rect class="box" x="20" y="200" width="170" height="56" rx="3"></rect>
+          <text class="t1" x="105" y="222" text-anchor="middle">模型評估五面向</text>
+          <text class="t2" x="105" y="240" text-anchor="middle">準確度・速度・可詮釋性…</text>
+          <rect class="box accentbox" x="260" y="190" width="140" height="60" rx="3"></rect>
+          <text class="t1 accenttext" x="330" y="214" text-anchor="middle">分類模型評估</text>
+          <text class="t2" x="330" y="232" text-anchor="middle">Model Evaluation</text>
+        </svg>
+      </div>
+      <figcaption>沒有哪一塊一定要先看，實務上通常是先看混淆矩陣抓出 Precision/Recall，再依業務需求決定 threshold，最後用 ROC/AUC 做模型之間的整體比較。</figcaption>
+    </figure>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">07　業界實際應用案例</span>
+    <p>不是只有你的 Threat Intel Agent 在用這套邏輯，面試被問「這個技術有什麼應用」時要答得出真實產品：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>應用領域</th><th>具體場景</th><th>為什麼看重的指標不一樣</th></tr></thead>
+        <tbody>
+          <tr><td>垃圾郵件過濾</td><td>Gmail 垃圾信分類</td><td>誤判正常信＝FP，會讓使用者漏看重要郵件，所以 Precision 比 Recall 更被看重。</td></tr>
+          <tr><td>醫療篩檢</td><td>癌症篩檢初篩</td><td>漏掉真陽性＝FN，後果是延誤治療，所以 Recall 比 Precision 更被看重，寧可多做一次複檢。</td></tr>
+          <tr><td>金融詐騙偵測</td><td>信用卡即時攔截</td><td>同樣偏向 Recall 優先，但 FP 太多會炸掉客服量，需要在兩者間找一個可營運的平衡點。</td></tr>
+          <tr><td>你的 Threat Intel Agent</td><td>高風險 IP 自動寫入黑名單</td><td>這其實就是一個分類器在某個 threshold 上做判斷：threshold 設太低＝Recall 高但 Precision 低，容易誤擋正常 IP，這是你在設計時要跟面試官講清楚的取捨。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">08　名詞卡（後端翻譯詞典）</span>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="tt"><span class="zh">混淆矩陣</span><span class="en">Confusion Matrix</span></div>
+        <p class="analogy">一張「預測結果 vs 正確答案」的<b>交叉對帳表</b>，四個象限就像資料庫查詢結果跟正解逐筆對帳後的四種結果。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">精確率</span><span class="en">Precision</span></div>
+        <p class="analogy">API 回傳結果的<b>精準度</b>：吐回的資料裡，真正是使用者要的有幾筆（訊噪比）。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">召回率</span><span class="en">Recall</span></div>
+        <p class="analogy">API 的<b>覆蓋率</b>：資料庫裡本來就符合條件的資料，你的查詢撈出了幾筆，有沒有漏抓。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">F1 分數</span><span class="en">F1-Score</span></div>
+        <p class="analogy">幫 Precision 跟 Recall 做<b>負載平衡</b>的綜合分數，其中一個掉太低，F1 就會被拉低，不能用另一個高分護航。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">ROC 曲線</span><span class="en">ROC Curve</span></div>
+        <p class="analogy">把 <span class="mono" style="font-family:var(--font-mono);">WHERE score &gt; X</span> 裡的 X 從 0 掃到 1 畫出來的召回率／誤判率曲線，X 就是可調的 threshold 參數。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">曲線下面積</span><span class="en">AUC</span></div>
+        <p class="analogy">幫整條 ROC 曲線打一個總分，用來比較「不看單一 threshold、看整體品質」時哪個模型比較好，像是跨參數組合的平均表現。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">09　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：如果你的分類模型 Recall 很高、但 Precision 偏低，這代表什麼？你會怎麼處理？</p>
+      <p class="a">A（草稿）：「代表模型抓到了大部分真正的正樣本，但同時誤判了不少負樣本。以我做的 Threat Intel Agent 為例，如果把判定威脅的 threshold 調低，會有更多 IP 被標記成威脅，這時候像案例裡 TP=6、FP=2 那組數字，FP 就會繼續往上跑，Recall 提高但 Precision 下降。要怎麼處理要看下游代價：如果誤判的後果只是多發一次告警給人工複查，影響不大；但如果是自動把 IP 寫進防火牆黑名單、會直接擋掉正常流量，那我會傾向拉高 threshold、犧牲一點 Recall 換 Precision，或是在自動化流程前面加一層人工複核，而不是讓分類器直接落地執行高風險動作。」</p>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">10　效率檢查點</span>
+    <p>合上這頁，只憑 02 步驟那張 2×2 表格（TP/FP/FN/TN），把 Precision、Recall、F1 的公式跟白話意思重新推一次，再用 04 步驟的 10 個 IP 案例（TP=6, FP=2, FN=1, TN=1）親手算一次三個指標。算得出來、講得出白話意思，才算真的疊上去了。</p>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M1・依 Classification.pdf 整理</span>
+  </footer>
+</div>

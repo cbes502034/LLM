@@ -1,0 +1,178 @@
+<title>邊界與鄰居</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M3・選修・略讀</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M3 · 面試熱度 ★★☆☆☆・選修略讀</p>
+    <h1>邊界與鄰居——KNN・SVM・貝氏分類器速覽</h1>
+    <p class="lede">這個模組是選修略讀版，不用像 M1、M2 那樣走完整 10 步。目標只求：面試被問到「還知道哪些分類演算法」時，能講出三者的核心邏輯差異跟各自的決策情境，不需要手推數學。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>這三個是傳統 ML 課程一定會提到、但在面試中出現頻率不算最高的分類演算法。學這個模組的目標很單純：聽得懂、答得出「什麼情況該選哪一個」，不用像決策樹或評估指標那樣深挖公式推導。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念——三句話比喻</span>
+    <p><b>KNN（K-Nearest Neighbors）</b>：「問問離你最近的幾個鄰居意見」——沒有真正的訓練過程，預測時單純找特徵空間裡距離最近的 k 個樣本，用多數決決定新樣本的類別。距離常用歐幾里德距離，事前要把類別特徵轉成數值（dummy variable）並做標準化。</p>
+    <p><b>SVM（Support Vector Machine）</b>：「找一條讓兩邊陣營都盡量退開的中線」——尋找一個最佳超平面，使它跟兩類別之間的邊界間隔（margin）最大化；最靠近邊界、決定這條分界線的樣本點叫「支持向量」。如果資料本身沒辦法用直線分開（例如 XOR 型態），可以用 Kernel trick 把資料映射到更高維度，讓它在那個維度變得線性可分。</p>
+    <p><b>貝氏分類器（Naive Bayes）</b>：「純粹靠機率算牌，不管距離也不管邊界」——基於貝氏定理 <span class="mono" style="font-family:var(--font-mono);">P(C|X)=P(X|C)P(C)/P(X)</span>，搭配「條件獨立假設」簡化計算，直接算出每個類別的機率，機率最高的就是預測結果。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　決策情境比較表</span>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>方法</th><th>核心比喻</th><th>適合的資料型態</th><th>優點</th><th>缺點</th><th>什麼時候該選它</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>KNN</td>
+            <td>問離你最近的幾個鄰居</td>
+            <td>特徵維度不高、數值型特徵</td>
+            <td>邏輯直覺、不用訓練</td>
+            <td>資料量大時預測很慢（每次都要跟全部訓練資料算距離）</td>
+            <td>已累積大量歷史 IP 記錄，且新 IP 的行為模式明顯貼近過去某一群集群時</td>
+          </tr>
+          <tr>
+            <td>SVM</td>
+            <td>找一條讓兩邊盡量退開的中線</td>
+            <td>特徵維度高、樣本數不算多</td>
+            <td>邊界最大化，抗雜訊能力不錯；Kernel trick 能處理非線性</td>
+            <td>資料量大時訓練慢，且不容易直接輸出機率/可解釋性較弱</td>
+            <td>把多個情資來源組合成高維特徵向量，且分類邊界明顯不是簡單直線可分時</td>
+          </tr>
+          <tr>
+            <td>貝氏分類器</td>
+            <td>純粹靠機率算牌</td>
+            <td>離散特徵、文字型資料（詞頻）</td>
+            <td>訓練預測都極快，天生適合文字分類</td>
+            <td>條件獨立假設常不成立，機率估計可能不準</td>
+            <td>有大量離散特徵，或想對文字型情資（例如可疑留言內容）做分類時</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>經驗法則補充：KNN 的 k 值通常不超過訓練樣本數的 20%，常見取 3~5，有時 8~12 區間準確率反而較高；k 太小邊界會很鋸齒狀（容易 overfitting），k 太大邊界會過度平滑。SVM 常見核函數：Linear（線性可分、速度快）、Polynomial、Sigmoid、RBF（scikit-learn 預設，適合非線性資料）。貝氏分類器裡 Gaussian NB 假設特徵服從常態分佈（只需估平均值與標準差），Multinomial NB 適合離散詞頻特徵，常搭配 TF-IDF（詞頻×逆文件頻率）把文字轉成數字向量。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　業界實際應用案例</span>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>方法</th><th>知名應用</th><th>在該應用中做什麼</th></tr></thead>
+        <tbody>
+          <tr><td>KNN</td><td>推薦系統的「相似用戶／相似商品」推薦</td><td>找出特徵空間裡離目標用戶或商品最近的幾個鄰居，作為推薦候選。</td></tr>
+          <tr><td>SVM</td><td>早期人臉辨識、文字分類系統</td><td>在高維度、小樣本的任務裡找出最大間隔的分類邊界，深度學習普及前是主流方法。</td></tr>
+          <tr><td>貝氏分類器</td><td>垃圾郵件過濾的經典始祖（例如早期 SpamAssassin 這類系統）</td><td>用詞頻機率快速判斷一封信是垃圾信還是正常信，至今仍是教科書等級的 baseline。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">05　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：KNN、SVM、貝氏分類器這三個方法，能不能簡單講一下差異，以及各自適合的情境？</p>
+      <p class="a">A（草稿）：「這三個的核心邏輯完全不一樣：KNN 沒有訓練過程，靠『離你最近的幾個鄰居』多數決，適合資料量不大、特徵維度不高的情境，但資料量一大，每次預測都要跟全部訓練資料算距離，速度會是問題。SVM 是找一條邊界間隔最大化的分界線，靠 Kernel trick 能處理非線性資料，比較適合特徵維度高但樣本數不算太多的情況，例如把多個情資來源組合出的高維特徵向量。貝氏分類器完全不管距離也不管邊界，純粹算機率，訓練預測都很快，特別適合文字型資料，像是要對留言或情資內容做文字分類時，天生跟 TF-IDF 搭配得很好。在我自己的專案裡，結構化特徵分類我會優先考慮決策樹或 Random Forest，因為可解釋性跟訓練速度更好，但如果之後要加入文字型的留言分類，貝氏分類器會是我第一個想到的 baseline。」</p>
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M3・依 KNN／SVM／Naive Bayes.pdf 整理（選修略讀版）</span>
+  </footer>
+</div>

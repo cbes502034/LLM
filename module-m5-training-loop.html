@@ -1,0 +1,310 @@
+<title>訓練迴圈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M5・必修</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M5 · 面試熱度 ★★★☆☆</p>
+    <h1>訓練迴圈——把引擎裝進一台跑得動的車</h1>
+    <p class="lede">M4 學會了梯度下降怎麼調整一個參數；但一顆真正能訓練、能重複執行的神經網路，需要有組織的結構（nn.Module）、明確的評分標準（Loss）、決定怎麼調的策略（Optimizer），還有一個標準化、可以重複跑一萬次的迴圈。這個模組把這台車組裝起來，也是你實際能寫出訓練程式碼、而不只是懂原理的關鍵一步。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>面試官問完梯度下降的原理，下一句通常是「那你有沒有實際訓練過模型」——這題考的不是背原理，是你會不會寫 nn.Module、選對 loss function、挑對 optimizer、寫出正確順序的訓練迴圈。這個模組把這些 PyTorch 裡最常被拿來出考題、也是你真的想做本地端小型分類器時一定要會寫的元件，一次補齊。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念（先不談案例，只談最原始的東西）——一個函數的三個角色</span>
+    <p>完全先不談 PyTorch、不談神經網路。回到國中數學：y = wx + b。這個式子裡有三種角色——<b>輸入</b>（x）、<b>參數</b>（w 跟 b）、<b>輸出</b>（y）。給定一個 x 跟一組 w、b，就能算出一個 y。而「訓練」這件事，說穿了就是：固定 x，調整 w 跟 b，讓算出來的 y 越來越接近你心裡的正解。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>階段</th><th class="mono">w（權重）</th><th class="mono">b（偏差）</th><th class="mono">x（輸入）</th><th class="mono">y = wx+b（預測）</th><th class="mono">正解</th><th class="mono">差距</th></tr></thead>
+        <tbody>
+          <tr><td>一開始瞎猜</td><td class="mono">0.50</td><td class="mono">0.00</td><td class="mono">3</td><td class="mono">1.50</td><td class="mono">7.00</td><td class="mono">5.50</td></tr>
+          <tr><td>調整一次後</td><td class="mono">1.80</td><td class="mono">0.50</td><td class="mono">3</td><td class="mono">5.90</td><td class="mono">7.00</td><td class="mono">1.10</td></tr>
+          <tr><td>再調整一次</td><td class="mono">2.00</td><td class="mono">1.00</td><td class="mono">3</td><td class="mono">7.00</td><td class="mono">7.00</td><td class="mono">0.00（此例正解剛好是 y=2x+1）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>這就是 nn.Module 最底層的地基——不管神經網路疊了幾百層、幾千萬個參數，每一層做的事情本質上都還是這個式子的變形：輸入、參數、輸出。M4 學的是「怎麼調整 w、b 這兩個參數」（梯度下降）；M5 要學的是「怎麼把很多個這樣的函數一層一層組織起來、怎麼系統化地重複這個調整過程」。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　逐層往上疊——從函數到訓練迴圈</span>
+    <p>把很多個 y = wx + b 疊起來，中間插入一個非線性轉換（活化函數），就變成了神經網路。PyTorch 裡用 <b>nn.Module</b> 組織這件事：繼承 nn.Module，在 __init__ 裡宣告要用到哪些層，在 forward() 裡定義資料實際怎麼流過這些層。呼叫 model(x) 會自動觸發 forward()——不要直接呼叫 model.forward(x)。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="mono">元件</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">nn.Flatten</td><td>把多維資料（例如影像）攤平成一維向量</td></tr>
+          <tr><td class="mono">nn.Linear</td><td>線性變換，就是 wx + b</td></tr>
+          <tr><td class="mono">nn.ReLU</td><td>非線性活化函數</td></tr>
+          <tr><td class="mono">nn.Sequential</td><td>把多個層依序包成一個容器</td></tr>
+          <tr><td class="mono">nn.Softmax</td><td>把輸出轉成加總為 1 的機率分布，常用在多分類的最後一層</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>光有網路結構還不夠，還需要兩個東西：<b>Loss Function</b>（這次預測差多少）跟 <b>Optimizer</b>（知道差多少之後，參數具體怎麼調）。這三個東西合起來，依照固定的五個步驟跑，就是訓練迴圈——這個迴圈有嚴格先後順序，每個 batch 都要重複一次：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 760 200" role="img" aria-label="訓練迴圈流程圖：optimizer.zero_grad清空上一輪梯度，前向傳播算出預測值，計算loss，loss.backward反向傳播算梯度，optimizer.step更新參數，然後回到zero_grad重複下一個batch">
+          <defs>
+            <marker id="arrowL1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box accentbox" x="10" y="20" width="140" height="70" rx="3"></rect>
+          <text class="t1 accenttext" x="80" y="50" text-anchor="middle">清空梯度</text>
+          <text class="t2" x="80" y="70" text-anchor="middle">optimizer.zero_grad()</text>
+          <line class="arrow" x1="150" y1="55" x2="160" y2="55" marker-end="url(#arrowL1)"></line>
+          <rect class="box" x="160" y="20" width="140" height="70" rx="3"></rect>
+          <text class="t1" x="230" y="50" text-anchor="middle">前向傳播</text>
+          <text class="t2" x="230" y="70" text-anchor="middle">model(x) 算出predicted</text>
+          <line class="arrow" x1="300" y1="55" x2="310" y2="55" marker-end="url(#arrowL1)"></line>
+          <rect class="box" x="310" y="20" width="140" height="70" rx="3"></rect>
+          <text class="t1" x="380" y="50" text-anchor="middle">計算 Loss</text>
+          <text class="t2" x="380" y="70" text-anchor="middle">predicted 跟 label 比對</text>
+          <line class="arrow" x1="450" y1="55" x2="460" y2="55" marker-end="url(#arrowL1)"></line>
+          <rect class="box" x="460" y="20" width="140" height="70" rx="3"></rect>
+          <text class="t1" x="530" y="50" text-anchor="middle">反向傳播</text>
+          <text class="t2" x="530" y="70" text-anchor="middle">loss.backward()</text>
+          <line class="arrow" x1="600" y1="55" x2="610" y2="55" marker-end="url(#arrowL1)"></line>
+          <rect class="box" x="610" y="20" width="140" height="70" rx="3"></rect>
+          <text class="t1" x="680" y="50" text-anchor="middle">更新參數</text>
+          <text class="t2" x="680" y="70" text-anchor="middle">optimizer.step()</text>
+          <line class="arrow" x1="680" y1="90" x2="680" y2="150"></line>
+          <line class="arrow" x1="680" y1="150" x2="80" y2="150"></line>
+          <line class="arrow" x1="80" y1="150" x2="80" y2="90" marker-end="url(#arrowL1)"></line>
+          <text class="lbl" x="380" y="145" text-anchor="middle">重複到收斂 / Epoch 跑完</text>
+        </svg>
+      </div>
+      <figcaption>先 zero_grad() 是因為 PyTorch 預設會把新算出的梯度「累加」到 .grad 上，不清空的話會跟上一輪的梯度疊加在一起，等於算錯。</figcaption>
+    </figure>
+    <p>決定「怎麼調」的 optimizer 有好幾種策略，彼此是互相獨立的選項：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>優化器</th><th>核心邏輯</th><th>優點</th><th>缺點／限制</th><th>什麼情境選它</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">SGD</td><td>weight = weight − lr×gradient，最基本版本</td><td>邏輯簡單、好理解、好除錯</td><td>容易在山谷型 loss 地形震盪，收斂慢</td><td>教學、簡單模型，或想手動精細控制</td></tr>
+          <tr><td class="mono">Momentum</td><td>模擬物理慣性，同方向加速、反覆方向減速</td><td>減少震盪，收斂比 SGD 快</td><td>多一個要調的超參數（動量係數）</td><td>loss 地形有明顯山谷／峽谷狀時</td></tr>
+          <tr><td class="mono">AdaGrad</td><td>依每個參數的歷史梯度平方和，自動調整各自學習率</td><td>常變動的參數自動變穩、不常變動的參數學快一點</td><td>訓練後期分母越加越大，學習率趨近 0，容易停滯</td><td>特徵稀疏、各參數更新頻率差很大</td></tr>
+          <tr><td class="mono">Adam</td><td>結合 Momentum＋AdaGrad，再加偏差校正</td><td>大多數情境下收斂快又穩，不太需要手調</td><td>相對吃記憶體（要存動量與二階矩）</td><td>業界預設選擇，常見預設 lr=0.001</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　現在才代入具體案例</span>
+    <p>把上面的元件套進「這個 IP 是不是威脅」的貫穿案例。跟 M1／M2 用的是同一組結構化特徵——AbuseIPDB 分數、地理位置、PortScan 次數——這次用 nn.Module 定義一個很小的網路：</p>
+    <div class="stepline">model = nn.Sequential(
+    nn.Linear(3, 16),   # 輸入3個特徵 → 16個隱藏神經元
+    nn.ReLU(),
+    nn.Linear(16, 2)    # 輸出2個類別的分數(safe / threat)
+)</div>
+    <p>forward 時，一批 IP 的 3 個特徵（AbuseIPDB 分數／地理位置編碼／PortScan 次數）流進去，經過第一層線性轉換變成 16 個神經元，ReLU 做非線性轉換，再經過第二層線性轉換，輸出 2 個分數。loss 用 <b>CrossEntropyLoss</b>（分類任務的標準選擇，不用 MSE，因為分類問題交叉熵的梯度表現跟收斂速度都更好）；optimizer 用 <b>Adam</b>，不特別調參，先用預設 lr=0.001。訓練迴圈跑起來：每個 batch 都執行一次 zero_grad → forward → loss → backward → step，重複幾個 epoch，loss 理論上會像 M4 步驟 03 的疊代表格一樣一路下降。</p>
+    <p>這就是「換神經網路做」這個階段真正落地的樣子——特徵沒有變，變的是不用你手動設計 IF-ELSE 規則或決策樹分支，而是讓 nn.Module 裡的權重透過訓練迴圈自動學出這三個特徵該怎麼組合。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">05　類比鎖記憶——用後端維運場景掛住六個名詞</span>
+    <div class="stepline">nn.Module（繼承+定義__init__/forward） ≈ 寫一個class繼承基底類別
+                  　在__init__宣告要注入哪些元件（像FastAPI用Depends宣告依賴）
+                  　在forward定義request怎麼依序流過這些元件（像middleware pipeline）
+呼叫model(x)而非model.forward(x) ≈ 呼叫公開entry point、不繞過routing直接呼叫底層function
+                  　框架在model(x)背後還掛了其他hook要跑
+Loss Function   ≈ health check / 監控指標，量化「目前系統狀態離預期差多遠」
+Optimizer(如Adam) ≈ 自動調參的auto-scaling策略
+                  　SGD像最陽春的線性調整，Adam像會參考歷史趨勢的智慧型調整策略
+訓練迴圈五步驟   ≈ CI/CD pipeline，每個batch都固定跑一次：清狀態→跑一次→評分→算修正→套用
+Dropout         ≈ chaos engineering，訓練時隨機關掉部分節點
+                  　逼系統不要過度依賴少數幾台機器/幾個神經元</div>
+    <p>特別注意 zero_grad() 這一步：PyTorch 預設會把新算出的梯度「累加」到 .grad 上，不像大部分後端框架每個 request 都是全新的 context——比較像如果你忘記在每個 request 開始時清空一個全域變數，上一個 request 的殘留值會混進這次的結果，所以每個 batch 開始前一定要先 zero_grad()。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">06　整體視覺總覽——系統組件與資料流</span>
+    <p>把 nn.Module、Loss、Optimizer、資料放回整個系統裡看它們怎麼串起來——這是元件跟資料流的關係，用架構圖看最清楚。</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 420 400" role="img" aria-label="訓練系統架構圖：DataLoader從Dataset切出一個batch，送進Model做forward，模型內含Linear與Dropout等層，輸出predicted後交給Loss Function跟label比對，Optimizer依梯度更新Model參數，並回頭進入下一個batch重複">
+          <defs>
+            <marker id="arrowA5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="60" y="10" width="300" height="52" rx="3"></rect>
+          <text class="t1" x="210" y="32" text-anchor="middle">Dataset + DataLoader</text>
+          <text class="t2" x="210" y="50" text-anchor="middle">依 Batch Size 切出一批資料</text>
+          <line class="arrow" x1="210" y1="62" x2="210" y2="92" marker-end="url(#arrowA5)"></line>
+          <rect class="box accentbox" x="60" y="96" width="300" height="60" rx="3"></rect>
+          <text class="t1 accenttext" x="210" y="118" text-anchor="middle">Model（nn.Module）</text>
+          <text class="t2" x="210" y="136" text-anchor="middle">forward：Linear/ReLU/Dropout</text>
+          <text class="t2" x="210" y="150" text-anchor="middle">train()開啟Dropout／eval()關閉</text>
+          <line class="arrow" x1="210" y1="156" x2="210" y2="186" marker-end="url(#arrowA5)"></line>
+          <rect class="box" x="60" y="190" width="300" height="52" rx="3"></rect>
+          <text class="t1" x="210" y="212" text-anchor="middle">Loss Function</text>
+          <text class="t2" x="210" y="230" text-anchor="middle">predicted 與 label 比對算一個數字</text>
+          <line class="arrow" x1="210" y1="242" x2="210" y2="272" marker-end="url(#arrowA5)"></line>
+          <rect class="box" x="60" y="276" width="300" height="52" rx="3"></rect>
+          <text class="t1" x="210" y="298" text-anchor="middle">Optimizer</text>
+          <text class="t2" x="210" y="316" text-anchor="middle">依 loss.backward() 的梯度更新參數</text>
+          <line class="arrow" x1="368" y1="122" x2="392" y2="122"></line>
+          <line class="arrow" x1="392" y1="122" x2="392" y2="302"></line>
+          <line class="arrow" x1="392" y1="302" x2="362" y2="302" marker-end="url(#arrowA5)"></line>
+          <text class="lbl" x="398" y="215" text-anchor="start" transform="rotate(90 398 215)">回到 Model 更新參數</text>
+        </svg>
+      </div>
+      <figcaption>Optimizer 更新完的是 Model 裡的參數，下一個 batch 再從 DataLoader 拿新資料重新走一次同樣的流程；train() 與 eval() 這個開關會決定 Dropout 這類層現在要不要啟用。</figcaption>
+    </figure>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">07　業界實際應用案例——這技術實際用在哪裡</span>
+    <p>你的資安分類只是一個練手案例；面試被問「這個技術有什麼應用」，要答得出真實產品，不能只講自己這一個小例子：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>應用領域</th><th>具體產品／系統</th><th>這個技術解決了什麼問題</th></tr></thead>
+        <tbody>
+          <tr><td>優化器選擇</td><td>幾乎所有主流框架訓練大型模型（含 GPT 等 LLM）</td><td>Adam 是目前訓練大型模型的預設選擇，收斂快且不太需要手動調參。</td></tr>
+          <tr><td>正則化技巧</td><td>AlexNet 等影像分類模型（ImageNet 競賽）</td><td>Dropout 最早在這類競賽中證明能大幅降低過擬合，現在幾乎是神經網路標配技巧之一。</td></tr>
+          <tr><td>損失函數</td><td>垃圾郵件分類、LLM 預測下一個字</td><td>Cross Entropy 是分類任務（不管兩類還是幾萬類的字彙表）的標準損失函數。</td></tr>
+          <tr><td>你的 Threat Intel Agent（延伸）</td><td>本地端小型 NN 分類器初篩 IP 風險</td><td>nn.Module 定義網路結構、Cross Entropy 當 loss、Adam 當 optimizer、標準訓練迴圈跑起來，就是最基本可行的雛型。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">08　名詞卡（後端翻譯詞典）</span>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="tt"><span class="zh">神經網路模組</span><span class="en">nn.Module</span></div>
+        <p class="analogy">繼承這個基底類別，在 __init__ 宣告要用的層，在 forward 定義資料怎麼流過——像寫一個 class 繼承 framework 基底，用 <b>Depends 宣告依賴</b>、在請求處理函式裡定義流程。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">損失函數</span><span class="en">Loss Function</span></div>
+        <p class="analogy">量化「預測跟正解差多少」的一個數字——像系統的<b>健康檢查指標</b>，數字越低代表系統狀態越接近預期。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">優化器</span><span class="en">Optimizer</span></div>
+        <p class="analogy">知道梯度之後決定怎麼調整參數的策略——像 <b>auto-scaling 演算法</b>依監控指標決定怎麼調資源，Adam 是目前最常用的智慧型預設策略。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">隨機丟棄</span><span class="en">Dropout</span></div>
+        <p class="analogy">訓練時隨機關掉一部分神經元的輸出——像 <b>chaos engineering</b> 隨機關掉部分節點，逼系統不能只依賴少數幾個地方，藉此提升穩健度。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">09　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：你可以描述一下 PyTorch 訓練一個模型的標準流程嗎？為什麼要先做 optimizer.zero_grad()？</p>
+      <p class="a">A（草稿）：「先用 nn.Module 定義網路結構，__init__ 裡宣告要用的層，forward() 裡定義資料怎麼流過去。訓練迴圈每個 batch 要固定跑五步：先 optimizer.zero_grad() 清空上一輪殘留的梯度，因為 PyTorch 預設會把新算的梯度累加到 .grad 上，不清空的話這一輪的梯度會疊加到上一輪殘留的值上，等於算錯。接著把資料丟進 model(x) 做前向傳播算出 predicted，用 loss function（分類任務通常用 CrossEntropyLoss）算出 loss，呼叫 loss.backward() 沿著 Autograd 建的計算圖反向傳播算出每個參數的梯度，最後 optimizer.step() 依照選定的優化器策略——我通常直接選 Adam，收斂快又不用太花時間調參——更新參數。如果之後要做一個小型 NN 來初篩 Threat Intel Agent 裡的 IP 風險，特徵還是 AbuseIPDB 分數、地理位置、PortScan 次數這三個，用 nn.Sequential 疊兩層 Linear 加 ReLU，loss 用 CrossEntropy，optimizer 用 Adam，就是一個可以先跑起來、之後再迭代的雛型，好處是可以擋掉一部分明顯安全的 IP，不用每次都呼叫 Claude API。」</p>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">10　效率檢查點</span>
+    <p>合上這頁，只憑 03 步驟那張五格流程圖（zero_grad → forward → loss → backward → step），重講一次為什麼每一步不能省略、順序不能換；再挑戰自己：不看範例，手寫一次一個只有兩層 Linear＋一個 ReLU 的 nn.Module class 骨架（__init__ 跟 forward 各寫一次）。兩件事都做得出來，才算真的把訓練迴圈的機制吃下去了，不是背下五個英文單字的順序。</p>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M5・依 pytorch.pdf 整理</span>
+  </footer>
+</div>

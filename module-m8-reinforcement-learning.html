@@ -1,0 +1,211 @@
+<title>強化學習地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M8・選修・查閱</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M8 · 面試熱度 ★★☆☆☆</p>
+    <h1>強化學習地圖——只為看懂 PPO 在 RLHF 裡幹嘛</h1>
+    <p class="lede">M7 提到 RLHF 第三步用 PPO 演算法優化模型，這個模組不打算把你變成強化學習專家——只求你查得到、講得出：PPO 是什麼、站在整條技術脈絡的哪個位置、跟 RLHF 怎麼接起來。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>這是一個選修・查閱模組。目的只有一個：看懂 M7 提到的 PPO，在 RLHF 第三階段裡到底扮演什麼角色——不是要你精通整套強化學習理論、不是要你會推導 Bellman 方程式的證明。查得到、講得出，這個模組的任務就完成了。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念——訓練一隻狗坐下</span>
+    <p>完全不談任何公式，先想一個最生活化的畫面：<b>訓練一隻狗坐下</b>。你（訓練者）看牠現在的姿勢，喊一聲指令，牠做出某個動作——坐下了，給牠一塊零食；亂跑，什麼都不給。重複幾百次之後，狗會自己摸索出「什麼動作能拿到零食」，開始更常做出那個動作。這整個過程裡有五個角色：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>角色</th><th class="mono">英文</th><th>狗狗訓練裡對應誰</th></tr></thead>
+        <tbody>
+          <tr><td>代理人</td><td class="mono">Agent</td><td>那隻狗——做決策、採取動作的一方</td></tr>
+          <tr><td>環境</td><td class="mono">Environment</td><td>狗所處的房間＋你這個訓練者</td></tr>
+          <tr><td>狀態</td><td class="mono">State</td><td>狗目前的姿勢、位置、剛聽到的指令</td></tr>
+          <tr><td>動作</td><td class="mono">Action</td><td>坐下、亂跑、吠叫……狗能做的各種行為</td></tr>
+          <tr><td>獎勵</td><td class="mono">Reward</td><td>零食（做對）或什麼都沒有（做錯）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>這是一種<b>試錯式（trial-and-error）</b>學習——沒有人事先給狗一份「正確動作對照表」，牠靠不斷嘗試、觀察結果，自己摸索出策略。這跟前面 M1-M7 那種「有一堆輸入輸出配對資料」的監督式學習，完全是不同邏輯。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　RL 知識地圖——PPO 站在哪裡</span>
+    <p>不需要每個節點都展開公式，只要知道這條脈絡怎麼一路走到 PPO、又怎麼接上 RLHF：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 420 530" role="img" aria-label="強化學習知識地圖：從馬可夫決策過程MDP出發，定義出貝爾曼方程式計算狀態價值，發展出Q-Learning學習Q值表，再發展出直接學策略的Policy Gradient，PPO是Policy Gradient的Off-policy改良版本，最後PPO被用在RLHF第三階段優化語言模型參數">
+          <defs>
+            <marker id="arrowM8a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="60" y="10" width="300" height="56" rx="3"></rect>
+          <text class="t1" x="210" y="32" text-anchor="middle">①MDP 馬可夫決策過程</text>
+          <text class="t2" x="210" y="50" text-anchor="middle">State/Action/Reward 框架，馬可夫性質</text>
+          <line class="arrow" x1="210" y1="66" x2="210" y2="96" marker-end="url(#arrowM8a)"></line>
+          <rect class="box" x="60" y="96" width="300" height="56" rx="3"></rect>
+          <text class="t1" x="210" y="118" text-anchor="middle">②Bellman 方程式</text>
+          <text class="t2" x="210" y="136" text-anchor="middle">定義「狀態的價值」怎麼算</text>
+          <line class="arrow" x1="210" y1="152" x2="210" y2="182" marker-end="url(#arrowM8a)"></line>
+          <rect class="box" x="60" y="182" width="300" height="56" rx="3"></rect>
+          <text class="t1" x="210" y="204" text-anchor="middle">③Q-Learning</text>
+          <text class="t2" x="210" y="222" text-anchor="middle">反覆更新，學出每組(state,action)的Q值表</text>
+          <line class="arrow" x1="210" y1="238" x2="210" y2="268" marker-end="url(#arrowM8a)"></line>
+          <rect class="box" x="60" y="268" width="300" height="56" rx="3"></rect>
+          <text class="t1" x="210" y="290" text-anchor="middle">④Policy Gradient</text>
+          <text class="t2" x="210" y="308" text-anchor="middle">不學Q值表，直接學策略π本身</text>
+          <line class="arrow" x1="210" y1="324" x2="210" y2="354" marker-end="url(#arrowM8a)"></line>
+          <rect class="box accentbox" x="60" y="354" width="300" height="56" rx="3"></rect>
+          <text class="t1 accenttext" x="210" y="376" text-anchor="middle">⑤PPO</text>
+          <text class="t2" x="210" y="394" text-anchor="middle">Off-policy改良版，限制單次更新幅度</text>
+          <line class="arrow" x1="210" y1="410" x2="210" y2="440" marker-end="url(#arrowM8a)"></line>
+          <rect class="box accentbox" x="60" y="440" width="300" height="64" rx="3"></rect>
+          <text class="t1 accenttext" x="210" y="462" text-anchor="middle">⑥RLHF 第三階段</text>
+          <text class="t2" x="210" y="480" text-anchor="middle">PPO=優化演算法，LLM=policy</text>
+          <text class="t2" x="210" y="496" text-anchor="middle">RM打分=reward，KL懲罰=限制偏離</text>
+        </svg>
+      </div>
+      <figcaption>MDP 定義問題框架，Bellman 定義「價值」怎麼算，Q-Learning 學一張價值表，Policy Gradient 改成直接學策略，PPO 是它的穩定化版本，最後被 RLHF 第三階段直接拿去用。</figcaption>
+    </figure>
+    <p>兩個附帶概念，查得到就好：<b>On-policy</b>（邊互動邊學習，只能用自己目前策略收集的資料訓練自己）vs <b>Off-policy</b>（可以用別的策略收集到的資料訓練，資料能重複使用，效率較高）——PPO 正是 Policy Gradient 的 Off-policy 延伸版本，這也是它比純 Policy Gradient 更省樣本的原因。策略函數 π，指的是「在某個狀態下，決定要採取什麼動作的機率分布」——沒錯，跟 M7 步驟 02 那個「猜下一個字」的機率分布，是同一種數學物件。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　代入 RLHF 情境</span>
+    <p>把上面地圖裡的 Agent/Environment/State/Action/Reward，直接對應到 M7 講的 RLHF 第三階段：</p>
+    <div class="stepline">Agent（代理人）    ≈ LLM 本身
+Policy（策略π）    ≈ LLM 目前的參數——決定「看到這段上下文，該生成什麼字」
+Action（動作）     ≈ LLM 產生一段回覆
+Reward（獎勵）     ≈ Reward Model 對這段回覆打的分數
+PPO 在做的事      ≈ 在「不要跟原本SFT模型差太多」的前提下，
+                    調整LLM參數，讓它更常做出高Reward的回覆</div>
+    <p>貝爾曼方程式 V(S) = max_a(R(S,a) + γV(S')) 的 γ（折扣因子），概念上類似機器學習裡的 learning rate——決定模型有多重視「未來」的獎勵。你不需要會推導這條式子怎麼來的，知道它在定義「一個狀態的價值＝當下最好動作的獎勵＋打折後下一狀態的價值」就夠用。</p>
+    <p>延伸一個小表格，強化學習除了 RLHF 之外實際用在哪裡（點到為止，不用展開太多）：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>領域</th><th>具體案例</th><th>備註</th></tr></thead>
+        <tbody>
+          <tr><td>對齊 LLM</td><td>ChatGPT、Claude、Gemini 的 RLHF/PPO</td><td>本模組的核心情境</td></tr>
+          <tr><td>遊戲 AI</td><td>AlphaGo、玩 Atari 遊戲的 DQN</td><td>Reward 是輸贏或遊戲分數，不是人類偏好</td></tr>
+          <tr><td>機器人控制</td><td>機械手臂抓取、步態控制</td><td>Reward 通常是任務完成度或動作平穩度</td></tr>
+          <tr><td>自動駕駛決策</td><td>換道、跟車距離決策</td><td>Reward 涉及安全與效率的權衡</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>一個延伸思考（點到為止，不用寫得太篤定）：如果之後想讓你的 Threat Intel Agent 的查詢策略本身也被優化——例如讓它自動學會「先查哪個情資來源最有效率、最省 API 額度」——這也是強化學習可能可以發揮的方向，Reward 可以設計成「查詢成本」與「判斷準確度」的權衡。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">05　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：RLHF 裡的 PPO 在做什麼？為什麼要加 KL 散度懲罰？</p>
+      <p class="a">A（草稿）：「PPO 是 Policy Gradient 的 Off-policy 改良版，用在 RLHF 第三階段：LLM 本身就是要優化的 policy，它生成一段回覆算是一個 action，Reward Model 對這段回覆打分當作 reward。PPO 的工作是根據這個 reward 訊號調整 LLM 參數，讓它更常生成高分的回覆；但如果放任它一路優化，模型可能會學到『鑽 Reward Model 漏洞』的取巧回答方式，講出脫離常識、甚至危險的內容去騙高分。所以 PPO 額外加一個 KL 散度懲罰項，限制更新後的模型跟原本 SFT 模型的差異不能太大，等於是幫這次更新設一個『安全邊界』。這跟我在維運上熟悉的 Canary Rollout 概念很像——不會一次讓新版本全量上線，而是限制它跟舊版本的差異幅度，出事時影響可控。」</p>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">06　效率檢查點</span>
+    <p>閉上眼睛，只憑步驟 03 那張地圖，把 MDP→Bellman→Q-Learning→Policy Gradient→PPO→RLHF 這條線重新講一次，並且能講出 PPO 加 KL 懲罰的理由。講得出來，這個查閱模組就算過關，不需要再往下鑽。</p>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M8・依 LLM課程投影片(5) 整理</span>
+  </footer>
+</div>

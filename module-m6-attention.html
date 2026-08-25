@@ -1,0 +1,271 @@
+<title>Attention引擎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F1F3EC;
+  --surface:#FFFFFF;
+  --surface-soft:#E7EBE0;
+  --ink:#161E19;
+  --ink-soft:#49564C;
+  --ink-faint:#7C8A7E;
+  --line:#D6DCCC;
+  --accent:#BD5F26;
+  --accent-ink:#8A4419;
+  --accent-soft:#F1DDC6;
+  --mono-bg:#E9EDDF;
+  --font-head:'IBM Plex Sans Condensed','PingFang TC','Microsoft JhengHei',sans-serif;
+  --font-body:'IBM Plex Serif','Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Consolas',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+    --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+    --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131916; --surface:#1B2320; --surface-soft:#212B26;
+  --ink:#E7ECE2; --ink-soft:#A6B3A3; --ink-faint:#71806F; --line:#2B352E;
+  --accent:#E38A4D; --accent-ink:#F3B685; --accent-soft:#3A2A1B; --mono-bg:#1E2620;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent-soft); color:var(--accent-ink);}
+.wrap{max-width:800px; margin:0 auto; padding:0 24px 100px;}
+.topnav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+.topnav-inner{max-width:800px; margin:0 auto; padding:12px 24px; display:flex; gap:10px; align-items:center;}
+.topnav a{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); text-decoration:none; padding:5px 10px; border-radius:2px; border:1px solid transparent;}
+.topnav a:hover{border-color:var(--line); color:var(--ink);}
+.topnav .brand{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-ink);}
+.hero{padding:56px 0 32px; border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; color:var(--accent-ink); text-transform:uppercase; margin:0 0 14px;}
+h1{font-family:var(--font-head); font-weight:700; font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; letter-spacing:-.01em;}
+.hero p.lede{font-size:18px; color:var(--ink-soft); max-width:62ch; margin:0;}
+section{padding:44px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+p{margin:0 0 16px; max-width:66ch;}
+.mstep{padding:32px 0; border-bottom:1px solid var(--line);}
+.mstep:last-child{border-bottom:none;}
+.mstep .slabel{font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); margin:0 0 12px; display:block;}
+.mstep p{margin-bottom:12px; font-size:15.5px;}
+.mstep p:last-child{margin-bottom:0;}
+.stepline{font-family:var(--font-mono); font-size:13.5px; color:var(--ink-soft); background:var(--mono-bg); border-radius:2px; padding:12px 14px; margin:12px 0; white-space:pre-wrap; line-height:1.6;}
+.qa{border-left:2px solid var(--accent); padding-left:16px; margin-top:8px;}
+.qa .q{font-weight:600; margin-bottom:6px;}
+.qa .a{color:var(--ink-soft); font-size:15px;}
+.table-wrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:3px;}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px;}
+th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+thead th{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-soft); font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+td.mono, th.mono{font-family:var(--font-mono); font-size:13px;}
+figure.diagram{margin:20px 0 8px;}
+.diagram-frame{border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:20px 8px;}
+svg.pathway{width:100%; height:auto; display:block; color:var(--ink);}
+.pathway rect.box{fill:var(--surface); stroke:var(--line); stroke-width:1.2;}
+.pathway rect.box.accentbox{fill:var(--accent-soft); stroke:var(--accent);}
+.pathway text.t1{font-family:var(--font-head); font-weight:600; font-size:13.5px; fill:var(--ink);}
+.pathway text.t1.accenttext{fill:var(--accent-ink);}
+.pathway text.t2{font-family:var(--font-body); font-size:11.5px; fill:var(--ink-soft);}
+.pathway text.lbl{font-family:var(--font-mono); font-size:11px; fill:var(--ink-faint);}
+.pathway line.arrow{stroke:var(--ink-faint); stroke-width:1.4;}
+figcaption{font-size:14px; color:var(--ink-faint); margin-top:10px; max-width:62ch;}
+.term-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
+@media(max-width:640px){.term-grid{grid-template-columns:1fr;}}
+.term-card{border:1px solid var(--line); border-radius:3px; padding:16px 18px; background:var(--surface);}
+.term-card .tt{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px;}
+.term-card .zh{font-family:var(--font-head); font-weight:700; font-size:16px;}
+.term-card .en{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-faint);}
+.term-card .analogy{font-size:14.5px; color:var(--ink-soft); margin:0;}
+.term-card .analogy b{color:var(--ink); font-weight:600;}
+footer.doc-footer{padding:36px 0 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+footer.doc-footer a{font-family:var(--font-mono); font-size:13px; color:var(--accent-ink); text-decoration:none;}
+footer.doc-footer .note{color:var(--ink-faint); font-size:13px; font-family:var(--font-mono);}
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← AI橋接手冊 總覽</a>
+    <span class="brand" style="margin-left:auto;">M6・必修・核心</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">AI橋接手冊 · 模組 M6 · 面試熱度 ★★★★★</p>
+    <h1>Attention 機制——LLM 的引擎</h1>
+    <p class="lede">你的 Threat Intel Agent 靠 Claude API 判斷「這個 IP 危不危險」，Claude 內部到底怎麼「看懂」你丟進去那一大段查詢結果？這個模組從向量內積這個最底層的動作開始，一路疊到 Transformer 一整層的架構，拆開你目前只會呼叫、不懂內部的黑盒子。</p>
+  </header>
+
+  <div class="mstep">
+    <span class="slabel">01　為什麼要學這個</span>
+    <p>你的 Threat Intel Agent 靠 Claude API 判斷「這個 IP 危不危險」，Claude 內部到底怎麼「看懂」你丟進去那一大段查詢結果？答案就是 Attention——這個模組拆開這顆你目前只會呼叫、不懂內部的黑盒子。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">02　底層概念（先不談案例，只談最原始的東西）</span>
+    <p>Attention 骨子裡只有一個數學動作：<b>算兩個向量像不像</b>。文字要先變成向量（詞嵌入，見下方名詞卡），而「像不像」最基本的算法叫<b>內積（dot product）</b>——把兩個向量對應維度相乘再全部加總。數字越大代表方向越接近，數字是 0 代表毫無關係，負數代表方向相反。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>例子</th><th>向量 a</th><th>向量 b</th><th class="mono">a·b（相似度分數）</th><th>意義</th></tr></thead>
+        <tbody>
+          <tr><td>方向接近</td><td class="mono">(1, 2)</td><td class="mono">(2, 1)</td><td class="mono">1×2 + 2×1 = 4</td><td>分數高 → 兩者「有關」</td></tr>
+          <tr><td>完全垂直</td><td class="mono">(1, 2)</td><td class="mono">(&minus;2, 1)</td><td class="mono">1×(&minus;2) + 2×1 = 0</td><td>分數 0 → 兩者「無關」</td></tr>
+          <tr><td>方向相反</td><td class="mono">(1, 2)</td><td class="mono">(&minus;1, &minus;2)</td><td class="mono">1×(&minus;1) + 2×(&minus;2) = &minus;5</td><td>負分 → 兩者「相斥」</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>這就是地基。Attention 裡最核心的 <span class="mono" style="background:var(--mono-bg); padding:2px 6px; border-radius:2px;">q·k</span>，做的就是這件事——完全還沒牽扯到「文字」「句子」「Threat Intel」，純粹是兩串數字的內積。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">03　逐層往上疊——五個元件的計算順序</span>
+    <p>地基蓋好之後，一步一步加元件，每一步都還不代入真實文字，先看純粹的計算流程：</p>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 700 170" role="img" aria-label="Attention計算流程圖：向量先投影出Query、Key、Value三組向量，Query與Key做內積得到相似度分數，分數經過Softmax正規化成權重，權重與Value加權平均後得到最終輸出向量">
+          <defs>
+            <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="10" y="40" width="110" height="64" rx="3"></rect>
+          <text class="t1" x="65" y="66" text-anchor="middle">向量 x</text>
+          <text class="t2" x="65" y="86" text-anchor="middle">轉成向量</text>
+          <line class="arrow" x1="120" y1="72" x2="150" y2="72" marker-end="url(#arrowA)"></line>
+          <rect class="box" x="150" y="40" width="110" height="64" rx="3"></rect>
+          <text class="t1" x="205" y="60" text-anchor="middle">投影出</text>
+          <text class="t1" x="205" y="76" text-anchor="middle">Q・K・V</text>
+          <text class="t2" x="205" y="94" text-anchor="middle">三種線性變換</text>
+          <line class="arrow" x1="260" y1="72" x2="290" y2="72" marker-end="url(#arrowA)"></line>
+          <rect class="box" x="290" y="40" width="110" height="64" rx="3"></rect>
+          <text class="t1" x="345" y="66" text-anchor="middle">相似度分數</text>
+          <text class="t2" x="345" y="86" text-anchor="middle">q·k 內積</text>
+          <line class="arrow" x1="400" y1="72" x2="430" y2="72" marker-end="url(#arrowA)"></line>
+          <rect class="box" x="430" y="40" width="110" height="64" rx="3"></rect>
+          <text class="t1" x="485" y="66" text-anchor="middle">Softmax</text>
+          <text class="t2" x="485" y="86" text-anchor="middle">正規化成權重</text>
+          <line class="arrow" x1="540" y1="72" x2="570" y2="72" marker-end="url(#arrowA)"></line>
+          <rect class="box accentbox" x="570" y="40" width="120" height="64" rx="3"></rect>
+          <text class="t1 accenttext" x="630" y="66" text-anchor="middle">加權平均</text>
+          <text class="t2" x="630" y="86" text-anchor="middle">權重×v 加總=輸出</text>
+        </svg>
+      </div>
+      <figcaption>純計算流程，還沒代入任何一句話：向量先投影成 Q／K／V 三組向量，Q 與 K 做內積得到相似度分數，分數經 Softmax 轉成加總為 1 的權重，最後權重與 V 做加權平均，得到這個位置的輸出向量。</figcaption>
+    </figure>
+    <p>把上一步的「內積」代進來看，這五格就是 Attention 的全部：<b>Query</b>＝要去比對的向量、<b>Key</b>＝被比對的向量、<b>Value</b>＝比對完真正要拿走的內容。地基（內積）＋這五格，就是完整機制，還沒有任何類比或案例參與。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">04　現在才代入具體案例</span>
+    <p>地基跟流程都蓋好了，這時候才套進你熟悉的東西：一句話丟進模型——「IP 1.2.3.4 在 AbuseIPDB 被回報 42 次，但地理位置在台灣。」模型在算「危險」這個判斷時，「42 次」這個詞的向量會去跟句子裡每個字的向量做內積（步驟 02 的地基），分數高的字（可能是「回報」「42」）會在 Softmax 後拿到較大權重，最終輸出向量會比較貼近「42 次回報」而不是「台灣」。案例在這裡的作用，是驗證你懂不懂上面五格，不是用來理解機制本身。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">05　類比鎖記憶——用 SQL JOIN 掛住五格</span>
+    <p>機制已經懂了，現在才用類比幫長期記憶打個結：</p>
+    <div class="stepline">Query（Q） ≈ WHERE 子句裡你要比對的值　　　　　　「我在找什麼」
+Key（K）   ≈ 對方資料表拿來被 JOIN 比對的欄位　　「我有什麼可以被找到」
+Value（V） ≈ JOIN 成功後真正要 SELECT 出來的欄位　「找到後真正要拿的資料」</div>
+    <p><b>跟 SQL JOIN 最大的不同：</b>JOIN ON 是 0／1 的篩選，符合條件就撈出來、不符合就丟掉；Attention 是步驟 03 那張圖裡的「連續加權平均」——所有字都被撈出來，只是權重不同。這正是 Transformer 能「模糊地」理解上下文、而不是死板比對關鍵字的原因。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">06　整體架構圖——這五格放在 Transformer 裡的哪裡</span>
+    <figure class="diagram">
+      <div class="diagram-frame">
+        <svg class="pathway" viewBox="0 0 420 400" role="img" aria-label="Transformer單層架構圖：輸入先經過詞嵌入與位置編碼，接著進入Multi-Head Attention層並疊加殘差連接與Layer Normalization，再進入前饋神經網路層並再次疊加殘差連接與Layer Normalization，整個區塊會重複堆疊N次">
+          <defs>
+            <marker id="arrowB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+          <rect class="box" x="60" y="10" width="300" height="52" rx="3"></rect>
+          <text class="t1" x="210" y="32" text-anchor="middle">輸入嵌入 + 位置編碼</text>
+          <text class="t2" x="210" y="50" text-anchor="middle">文字先變成向量，再標記順序</text>
+          <line class="arrow" x1="210" y1="62" x2="210" y2="92" marker-end="url(#arrowB)"></line>
+          <rect class="box accentbox" x="60" y="96" width="300" height="52" rx="3"></rect>
+          <text class="t1 accenttext" x="210" y="118" text-anchor="middle">Multi-Head Attention</text>
+          <text class="t2" x="210" y="136" text-anchor="middle">就是步驟 03 那張圖，平行做好幾組</text>
+          <line class="arrow" x1="210" y1="148" x2="210" y2="178" marker-end="url(#arrowB)"></line>
+          <rect class="box" x="60" y="182" width="300" height="44" rx="3"></rect>
+          <text class="t1" x="210" y="200" text-anchor="middle">殘差連接 + Layer Norm</text>
+          <text class="t2" x="210" y="218" text-anchor="middle">輸出 = 輸入 + Attention結果，再標準化</text>
+          <line class="arrow" x1="210" y1="226" x2="210" y2="256" marker-end="url(#arrowB)"></line>
+          <rect class="box" x="60" y="260" width="300" height="44" rx="3"></rect>
+          <text class="t1" x="210" y="278" text-anchor="middle">前饋神經網路 FFN</text>
+          <text class="t2" x="210" y="296" text-anchor="middle">對每個位置獨立做非線性轉換</text>
+          <line class="arrow" x1="210" y1="304" x2="210" y2="334" marker-end="url(#arrowB)"></line>
+          <rect class="box" x="60" y="338" width="300" height="44" rx="3"></rect>
+          <text class="t1" x="210" y="356" text-anchor="middle">殘差連接 + Layer Norm</text>
+          <text class="t2" x="210" y="374" text-anchor="middle">同上，再標準化一次</text>
+          <line class="arrow" x1="368" y1="30" x2="392" y2="30"></line>
+          <line class="arrow" x1="392" y1="30" x2="392" y2="360" marker-end="url(#arrowB)"></line>
+          <text class="lbl" x="398" y="200" text-anchor="start" transform="rotate(90 398 200)">× N 層堆疊</text>
+        </svg>
+      </div>
+      <figcaption>步驟 03 的五格計算，其實只佔 Transformer 一層裡的一小塊（橘色框）；一層還包含殘差連接、Layer Norm、前饋神經網路，整個區塊再往上疊 N 次（GPT-3 疊了 96 層）。</figcaption>
+    </figure>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">07　業界實際應用案例——這技術實際用在哪裡</span>
+    <p>你的資安分類只是一個練手案例；面試被問「Attention 有什麼應用」，要答得出真實產品，不能只講自己這一個小例子：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>應用領域</th><th>具體產品／系統</th><th>Attention 解決了什麼問題</th></tr></thead>
+        <tbody>
+          <tr><td>機器翻譯</td><td>Google 翻譯</td><td>翻長句時不再像 RNN 一樣只能靠「前一步的記憶」，能同時直接參考整句任何位置的字，長距離語意對應更準。</td></tr>
+          <tr><td>搜尋引擎</td><td>Google 搜尋（BERT）</td><td>理解查詢字詞的上下文關係（例如「銀行」是金融機構還是河岸），改善搜尋排序準確度。</td></tr>
+          <tr><td>對話式 AI</td><td>ChatGPT／Claude</td><td>生成每個字時能回頭「重新看」前面幾千字的對話歷史，決定該接續哪一段脈絡回答，而不是只記得最後幾句。</td></tr>
+          <tr><td>你的 Threat Intel Agent</td><td>Claude API 分析情資</td><td>模型讀一大段 WHOIS／AbuseIPDB 查詢結果時，能自動抓出真正影響風險判斷的關鍵欄位，而不是逐字等權重處理。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>共同點：只要任務需要「從一長串輸入裡，動態判斷該重視哪一部分」，就是 Attention 的用武之地——這正是步驟 03 那五格在做的事。</p>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">08　名詞卡（後端翻譯詞典）</span>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="tt"><span class="zh">詞嵌入</span><span class="en">Embedding</span></div>
+        <p class="analogy">把文字轉成的<b>正規化 ID</b>——像把使用者字串轉成資料庫裡的 user_id，只是這裡的 ID 是幾百維的浮點數向量，語意相近的字，向量內積也較大。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">自注意力</span><span class="en">Self-Attention</span></div>
+        <p class="analogy">句子裡每個字都對其他所有字做一次<b>加權 JOIN</b>，決定生成這個字時該多聽誰的意見。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">多頭注意力</span><span class="en">Multi-Head Attention</span></div>
+        <p class="analogy">同時開好幾條並行連線，各自用不同條件做 JOIN——像同時查「地理位置關聯表」跟「信譽分數關聯表」，最後把結果併在一起。</p>
+      </div>
+      <div class="term-card">
+        <div class="tt"><span class="zh">位置編碼</span><span class="en">Positional Encoding</span></div>
+        <p class="analogy">Attention 本身不知道字的順序，就像 JOIN 出來的 result set 沒有預設排序——位置編碼是額外塞進去的一個「原本第幾筆」欄位。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mstep">
+    <span class="slabel">09　面試模擬</span>
+    <div class="qa">
+      <p class="q">Q：你了解 Transformer 的 Attention 機制嗎？</p>
+      <p class="a">A（草稿）：「Attention 的地基是向量內積——衡量兩個向量方向像不像。往上疊，每個 token 會投影出 Query、Key、Value 三組向量，Query 跟每個 Key 做內積得到相似度分數，分數經過 Softmax 轉成加總為 1 的權重，再對 Value 做加權平均，得到這個位置的輸出。這其實跟資料庫的 JOIN 概念很像，差別是 JOIN 是離散篩選、符合條件才撈出來，Attention 是連續的加權平均，所有位置都會被納入計算，只是權重不同。這也是為什麼 Transformer 能處理『模糊』的上下文關係，而不是死板比對關鍵字。」</p>
+    </div>
+  </div>
+
+  <div class="mstep" style="border-bottom:none;">
+    <span class="slabel">10　效率檢查點</span>
+    <p>合上這頁，只憑步驟 03 那張流程圖的五個框框（不看文字），把整個機制重新講一次給自己聽。五格都補得出內容，才算真的疊上去了，不是背下一句類比。</p>
+  </div>
+
+  <footer class="doc-footer">
+    <a href="https://claude.ai/code/artifact/fda2371a-a40b-41ae-ab9e-b7691c5f695a">← 回到 AI橋接手冊 總覽</a>
+    <span class="note">AI橋接手冊・M6・依 LLM 課程投影片(1)整理</span>
+  </footer>
+</div>
