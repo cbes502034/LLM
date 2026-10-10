@@ -327,9 +327,12 @@ button.fname:hover{color:var(--lc,var(--ink))}
 .fdall{margin-top:4px;border:1px dashed var(--line-strong);background:none;border-radius:999px;padding:1px 9px;font-size:11.5px;color:var(--muted);cursor:pointer}
 .fdall:hover{border-color:var(--ink);color:var(--ink)}
 /* 同一概念也出現在：列出每一處的完整位置 */
-/* 「上一層」：選取中回到剛才看的節點 */
+/* 「返回／前進」：選取中在看過的節點之間來回 */
 .backnav{display:block;max-width:100%;margin:0 0 12px;overflow:hidden;text-overflow:ellipsis;font-weight:600;border-color:color-mix(in srgb,var(--lc) 55%,var(--line-strong));background:color-mix(in srgb,var(--lc) 8%,var(--surface))}
 .backnav:hover{border-color:var(--lc)}
+.histnav{display:flex;gap:8px;margin:0 0 12px;min-width:0}
+.histnav .backnav{flex:0 1 auto;min-width:0;margin:0}
+.histnav .fwd{margin-left:auto}
 .also .relpath{margin:3px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted)}
 @media (max-width:979px){.fdcols{max-height:45vh}}
 @media (min-width:980px){
@@ -12931,6 +12934,7 @@ const I18N = {
     seeAll: n => `Open all ${n} on the map`, closeStep: 'Close',
     alsoIn: p => `Also in ${p}`, alsoSec: 'The same concept also appears in', alsoTip: 'also appears in',
     backTo: n => `← Back: ${n}`, backTitle: 'Return to what you were looking at before (Backspace). Cleared when you deselect.',
+    fwdTo: n => `Forward: ${n} →`, fwdTitle: 'Go forward again to where you were before going back (Shift + Backspace).',
     srcTitle: 'Source deck', srcLead: (n, f) => `${n} entry points on the map come from this deck${f ? ` (${f})` : ''}.`, keyTitle: 'Expand to every node marked important in practice and fade the rest',
     imp: {3: 'Core in practice', 2: 'Important in practice'}, why: 'Why it matters in practice', impLegend: '<b>★</b> core · <b>☆</b> important', 
     langAria: 'Language', legendAria: 'Domains', mapAria: 'Mind map',
@@ -12968,7 +12972,8 @@ const I18N = {
     drawerLead: n => n ? `實務重點 ${n} 個 · 點一個，心智圖就展開它` : '這一步沒有標星的重點 · 可以在心智圖展開完整分支',
     seeAll: n => `在心智圖展開全部 ${n} 個`, closeStep: '收起',
     alsoIn: p => `也在 ${p}`, alsoSec: '同一概念也出現在', alsoTip: '也出現在',
-    backTo: n => `← 上一層：${n}`, backTitle: '回到剛才看的內容（Backspace）。取消選取後清空。',
+    backTo: n => `← 返回：${n}`, backTitle: '回到剛才看的內容（Backspace）。取消選取後清空。',
+    fwdTo: n => `前進：${n} →`, fwdTitle: '返回之後，再前進到原本看的內容（Shift + Backspace）。',
     srcTitle: '出處講義', srcLead: (n, f) => `圖上有 ${n} 個入口來自這份講義${f ? `（${f}）` : ''}。`, keyTitle: '展開所有實務重點節點，其餘淡化',
     imp: {3: '實務核心', 2: '實務重要'}, why: '為什麼實務上重要', impLegend: '<b>★</b> 核心 · <b>☆</b> 重要', 
     langAria: '語言', legendAria: '領域', mapAria: '心智圖',
@@ -13090,7 +13095,8 @@ let stepSel = null;     /* 流程圖上選取的步驟 {owner, i}：選步驟時
 let openStep = null;    /* 流程圖上展開的步驟：點進裡面的節點時保持展開 */
 let flowCtx = null;     /* 第二行要顯示哪個主題的流程 */
 let panelStep = null;   /* 面板目前顯示的步驟（切換語言時重畫用） */
-let navHist = [];       /* 「上一層」：選取中依序看過的節點或步驟；取消選取時清空 */
+let navHist = [];       /* 「返回」：選取中依序看過的節點或步驟；取消選取時清空 */
+let navFwd = [];        /* 「前進」：按了返回之後可以再前進的；有新的跳轉就清空（和瀏覽器一樣） */
 let userMoved = false;
 let viewPref = LSget('llm-mindmap-view') || '';
 let keyMode = false, savedExpanded = null;
@@ -13341,24 +13347,36 @@ function onNodeClick(id){
   if (opening) expanded.add(id);
   select(id, {fromMap: true, pan: opening});
 }
-/* 記下目前看的東西（節點或步驟），讓「上一層」能回來 */
+/* 瀏覽紀錄：目前看的東西（節點或步驟） */
+function currentView(){ return stepSel ? {step: {owner: stepSel.owner, i: stepSel.i}} : selected && selected !== 'root' ? {id: selected} : null; }
+function validView(h){ return !!h && (h.step ? !!BY[h.step.owner] && !!flowSteps(BY[h.step.owner])[h.step.i] : !!BY[h.id]); }
+function openView(h){ if (h.step) selectStep(h.step.owner, h.step.i, {fromHist: true}); else navigate(h.id, {fromHist: true}); }
+/* 新的跳轉：記下目前的，前進紀錄作廢 */
 function pushHist(){
-  const cur = stepSel ? {step: {owner: stepSel.owner, i: stepSel.i}} : selected && selected !== 'root' ? {id: selected} : null;
-  if (!cur) return;
-  navHist.push(cur);
+  const cur = currentView(); if (!cur) return;
+  navHist.push(cur); navFwd = [];
   if (navHist.length > 60) navHist.shift();
 }
 function goBack(){
   while (navHist.length) {
-    const h = navHist.pop();
-    if (h.step && BY[h.step.owner]) { selectStep(h.step.owner, h.step.i, {fromHist: true}); return; }
-    if (h.id && BY[h.id]) { navigate(h.id, {fromHist: true}); return; }
+    const h = navHist.pop(); if (!validView(h)) continue;
+    const cur = currentView(); if (cur) navFwd.push(cur);
+    openView(h); return;
   }
 }
+function goForward(){
+  while (navFwd.length) {
+    const h = navFwd.pop(); if (!validView(h)) continue;
+    const cur = currentView(); if (cur) navHist.push(cur);
+    openView(h); return;
+  }
+}
+function viewName(h){ return h.step ? (flowSteps(BY[h.step.owner])[h.step.i] || {}).t || '' : nm(BY[h.id]); }
+/* 面板最上方：左邊返回、右邊前進，各自有紀錄時才出現 */
 function backHTML(){
-  const h = navHist[navHist.length - 1]; if (!h) return '';
-  const name = h.step ? (flowSteps(BY[h.step.owner])[h.step.i] || {}).t || '' : nm(BY[h.id]);
-  return `<button type="button" class="btn backnav" data-hist="1" title="${esc(ui('backTitle'))}">${esc(ui('backTo')(name))}</button>`;
+  const b = navHist[navHist.length - 1], f = navFwd[navFwd.length - 1];
+  if (!b && !f) return '';
+  return `<div class="histnav">${b ? `<button type="button" class="btn backnav" data-hist="back" title="${esc(ui('backTitle'))}">${esc(ui('backTo')(viewName(b)))}</button>` : ''}${f ? `<button type="button" class="btn backnav fwd" data-hist="fwd" title="${esc(ui('fwdTitle'))}">${esc(ui('fwdTo')(viewName(f)))}</button>` : ''}</div>`;
 }
 function select(id, opt = {}){
   if (!opt.fromHist && (stepSel || (selected && selected !== 'root' && selected !== id))) pushHist();
@@ -13396,7 +13414,7 @@ function step(dir){
 }
 /* 取消選取：關聯線與淡化消失，自動展開的分支收回，使用者展開的分支保留 */
 function clearSelection(){
-  navHist = [];
+  navHist = []; navFwd = [];
   if (!selected && !stepSel && !openStep) return;
   selected = null; stepSel = null; panelStep = null; openStep = null;
   relOpen = new Set();
@@ -13596,7 +13614,8 @@ function showSource(k){
   if (narrowMQ.matches) panel.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
 }
 panel.addEventListener('click', e => {
-  if (e.target.closest('[data-hist]')) { goBack(); return; }
+  const hb = e.target.closest('[data-hist]');
+  if (hb) { if (hb.dataset.hist === 'fwd') goForward(); else goBack(); return; }
   const sb = e.target.closest('[data-src]');
   if (sb) { showSource(sb.dataset.src); return; }
   const tab = e.target.closest('[data-tab]');
@@ -13686,7 +13705,8 @@ document.addEventListener('keydown', e => {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   if (e.target.closest && e.target.closest('input,textarea,#results,[role=tab]')) return;
   if (e.key === 'Escape') { clearSelection(); return; }
-  if (e.key === 'Backspace' && navHist.length) { e.preventDefault(); goBack(); return; }
+  if (e.key === 'Backspace' && e.shiftKey && navFwd.length) { e.preventDefault(); goForward(); return; }
+  if (e.key === 'Backspace' && !e.shiftKey && navHist.length) { e.preventDefault(); goBack(); return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
   else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
 });
@@ -13698,7 +13718,7 @@ document.getElementById('btn-expand').addEventListener('click', () => {
 document.getElementById('btn-collapse').addEventListener('click', () => {
   expanded = new Set(DOMS.map(d => d.id));
   relOpen = new Set();
-  selected = 'root'; stepSel = null; panelStep = null; flowCtx = null; openStep = null; navHist = [];
+  selected = 'root'; stepSel = null; panelStep = null; flowCtx = null; openStep = null; navHist = []; navFwd = [];
   render(); showDetail('root'); fit();
 });
 const relBtn = document.getElementById('btn-rel');
