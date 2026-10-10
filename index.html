@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Interactive bilingual (English / 繁體中文) mind map and flowchart of an LLM course: 8 knowledge domains, 1,519 nodes, 566 explained relations.">
+<meta name="description" content="Interactive bilingual (English / 繁體中文) LLM course map: a practical flowchart docked above a full mind map — 8 knowledge domains, 1,518 nodes, 593 explained relations.">
 <title>LLM Course Mind Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,29 +277,75 @@ html[lang="en"] .dd .ddval:not(:empty)::before{content:': '}
 .mi.check[aria-pressed="true"]::before{content:'✓';border-color:var(--ink);background:var(--ink);color:var(--surface)}
 .mi.act::before{content:'↳';color:var(--muted);font-size:13px}
 .mi[aria-pressed="true"]{font-weight:700}
-/* 流程圖檢視：取代心智圖畫布，顯示從資料到上線的生命週期 */
-.flowview{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:22px 40px 28px 22px;background:var(--surface)}
-.flowview h2{font-family:var(--font-display);font-size:22px;margin:0 0 4px}
-.flowview .flead{margin:0 0 18px;color:var(--muted);font-size:14px;max-width:70ch}
-.fsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px 30px;counter-reset:fs}
-.fstep{position:relative;border:1px solid color-mix(in srgb,var(--lc) 45%,transparent);border-top:4px solid var(--lc);border-radius:12px;background:color-mix(in srgb,var(--lc) 6%,var(--surface));padding:12px 14px 12px;display:flex;flex-direction:column;gap:6px}
-.fstep .fnum{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--muted)}
-.fstep h3{margin:0;font-size:16px;line-height:1.35;font-family:var(--font-display)}
-.fstep p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink)}
-.fstep .fdom{font-size:11.5px;font-weight:700;color:var(--lc);letter-spacing:.04em}
-.fstep:not(:last-child)::after{content:'→';position:absolute;right:-24px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--muted);font-weight:700}
-.fstep .chips{margin-top:2px}
-.floop{margin-top:20px;display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted)}
-.floop button{border:1px dashed var(--line-strong);background:var(--surface);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:13px}
+/* 流程圖：固定在心智圖上方，跟心智圖雙向同步——點步驟，圖上反白它涉及的節點；點節點，它所在的步驟亮起來 */
+.flowdock{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.frow{display:flex;flex-direction:column;gap:3px;min-width:0}
+.frow + .frow{border-top:1px dashed var(--line);padding-top:8px}
+.fhead{display:flex;align-items:baseline;gap:8px;min-width:0;padding-left:2px}
+.fcap{font-size:11px;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+.fname{font-family:var(--font-display);font-weight:700;font-size:13.5px;line-height:1.25;color:var(--ink);text-align:left;padding:0;border:0;background:none}
+button.fname{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+button.fname:hover{color:var(--lc,var(--ink))}
+.fline{list-style:none;margin:0;padding:2px 2px 4px;display:flex;gap:12px;min-width:0;overflow-x:auto;scrollbar-width:thin}
+.fs{position:relative;flex:1 1 0;min-width:68px;display:flex}
+.fs + .fs::before{content:'›';position:absolute;left:-10px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:15px}
+.fs button{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid color-mix(in srgb,var(--lc) 35%,var(--line));border-top:3px solid var(--lc);border-radius:9px;background:var(--surface);padding:3px 7px 4px;cursor:pointer;color:var(--ink);min-height:40px;font:inherit}
+.fs button:hover{background:color-mix(in srgb,var(--lc) 10%,var(--surface))}
+.fs button:focus-visible,.floop button:focus-visible,button.fname:focus-visible{outline:2px solid var(--l1);outline-offset:1px}
+.fs .fn{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);line-height:1.2}
+.fs .ft{font-size:12.5px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fs.near button{background:color-mix(in srgb,var(--lc) 18%,var(--surface));border-color:var(--lc)}
+.fs.on button{background:var(--lc);border-color:var(--lc);color:var(--on-l)}
+.fs.on .fn{color:inherit;opacity:.8}
+.floop{flex:0 0 auto;display:flex;align-items:center}
+.floop button{border:1px dashed var(--line-strong);background:none;border-radius:999px;padding:2px 9px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
 .floop button:hover{border-color:var(--ink);color:var(--ink)}
-@media (max-width:700px){.fsteps{grid-template-columns:1fr}.fstep:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-24px;transform:translateX(-50%)}}
-.mapwrap.flowing #map,.mapwrap.flowing .mapctl,.mapwrap.flowing .hint{visibility:hidden}
+.fempty{margin:0;padding-left:2px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fempty .chip{font-size:12px;padding:1px 9px}
+.node.stp rect.pill{stroke:var(--ink);stroke-width:2.6}
+.fs .fk{color:var(--gold);margin-left:4px}
+.fs.on .fk{color:inherit}
+/* 步驟展開：列出這一步的主要節點，以及它們底下所有實務重點（★★★／★★）；完整內容在心智圖 */
+.fdrawer{border:1px solid color-mix(in srgb,var(--lc) 45%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--lc) 5%,var(--surface));padding:8px 10px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.fdhead{display:flex;align-items:baseline;gap:10px;min-width:0}
+.fdhead b{font-family:var(--font-display);font-size:14px;white-space:nowrap}
+.fdhead span{color:var(--muted);font-size:12.5px;flex:1;min-width:0}
+.fdx{border:0;background:none;font-size:18px;line-height:1;cursor:pointer;color:var(--muted);padding:0 4px;border-radius:6px}
+.fdx:hover{color:var(--ink)}
+.fdcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 14px;max-height:min(30vh,260px);overflow:auto;padding:0 4px 2px 0}
+.fdcol{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;border-left:3px solid var(--lc);padding-left:8px}
+.fdcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;width:100%}
+.fdcol li{padding-left:calc(var(--ind,0) * 12px)}
+.fdgo,.fdi{border:0;background:none;padding:2px 6px;border-radius:6px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;line-height:1.35;display:inline-flex;gap:4px;align-items:baseline;max-width:100%}
+.fdgo{font-weight:700;font-size:13.5px}
+.fdi{font-size:12.5px}
+.fdgo:hover,.fdi:hover{background:color-mix(in srgb,var(--lc) 14%,var(--surface))}
+.fdgo.cur,.fdi.cur{background:var(--lc);color:var(--on-l)}
+.fdgo:focus-visible,.fdi:focus-visible,.fdall:focus-visible,.fdx:focus-visible{outline:2px solid var(--l1);outline-offset:1px}
+.fdcol .st{color:var(--gold);font-size:11px;flex:none}
+.fdgo.cur .st,.fdi.cur .st{color:inherit}
+.fdall{margin-top:4px;border:1px dashed var(--line-strong);background:none;border-radius:999px;padding:1px 9px;font-size:11.5px;color:var(--muted);cursor:pointer}
+.fdall:hover{border-color:var(--ink);color:var(--ink)}
+/* 同一概念也出現在：列出每一處的完整位置 */
+.also .relpath{margin:3px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+@media (max-width:979px){.fdcols{max-height:45vh}}
+@media (min-width:980px){
+  .main{grid-template-rows:auto minmax(340px,1fr)}
+  .flowdock{grid-column:1;grid-row:1}
+  .mapwrap{grid-column:1;grid-row:2}
+  .panel{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:700px){
+  .fs{min-width:84px}
+}
 /* 條目內的小流程圖：直式步驟 */
 .miniflow ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
 .miniflow li{position:relative;border:1px solid color-mix(in srgb,var(--lc) 40%,transparent);border-left:4px solid var(--lc);border-radius:10px;background:color-mix(in srgb,var(--lc) 5%,var(--surface));padding:8px 12px;margin-bottom:22px}
 .miniflow li:last-child{margin-bottom:0}
 .miniflow li:not(:last-child)::after{content:'↓';position:absolute;left:18px;bottom:-21px;color:var(--muted);font-weight:700;font-size:14px}
 .miniflow .mt{display:flex;gap:8px;align-items:baseline;font-weight:700;font-size:14px}
+.miniflow .mstep{display:inline-flex;gap:8px;align-items:baseline;border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.miniflow .mstep:hover{color:var(--lc);text-decoration:underline;text-underline-offset:3px}
 .miniflow .mn{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);font-weight:500}
 .miniflow p{margin:2px 0 4px;font-size:13.5px;line-height:1.6}
 .miniflow .back{display:inline-block;margin-top:2px;font-size:12px;color:var(--muted);border:1px dashed var(--line-strong);border-radius:999px;padding:0 9px}
@@ -325,13 +371,6 @@ html[lang="en"] .dd .ddval:not(:empty)::before{content:': '}
         <input id="q" type="search" autocomplete="off" data-i18n-ph="searchPh" data-i18n-aria="searchAria" aria-controls="results">
         <ul id="results" role="listbox" hidden></ul>
       </div>
-      <details class="dd" id="dd-view">
-        <summary class="btn"><span data-i18n="ddView"></span><b class="ddval" id="dv-view"></b></summary>
-        <div class="menu" role="group" data-i18n-aria="ddView">
-          <button class="mi radio" id="btn-map" type="button" aria-pressed="true" data-i18n="viewMap"></button>
-          <button class="mi radio" id="btn-flow" type="button" aria-pressed="false" data-i18n="viewFlow"></button>
-        </div>
-      </details>
       <details class="dd" id="dd-show">
         <summary class="btn"><span data-i18n="ddShow"></span><b class="ddval" id="dv-show"></b></summary>
         <div class="menu" role="group" data-i18n-aria="ddShow">
@@ -361,9 +400,9 @@ html[lang="en"] .dd .ddval:not(:empty)::before{content:': '}
     <div class="progress"><span id="prog-text"></span><span class="bar" aria-hidden="true"><i id="prog-bar"></i></span></div>
   </div>
   <main class="main">
+    <section class="flowdock" id="flowdock" data-i18n-aria="dockAria"></section>
     <section class="mapwrap" data-i18n-aria="mapAria">
       <svg id="map" role="tree" data-i18n-aria="title"></svg>
-      <div class="flowview" id="flowview" hidden></div>
       <div class="hint" data-i18n="hint"></div>
       <div class="mapctl">
         <button type="button" id="z-in" data-i18n-aria="zoomIn">+</button>
@@ -383,16 +422,16 @@ const WHY = [];
 const LINKS = [];
 const AN = [];
 const SRC = [];
-const ALIAS = {"a1-plat":"deploy","a1-cloud":"dep-api","a1-self":"dep-local","a1-ollama":"loc-ollama","vendor-openai":"a1-oaiplat","vendor-anthropic":"a1-console","vendor-google":"a1-aistudio","vendor-bedrock":"a1-bedrock","vendor-vertex":"a1-vertex","a1-pain":"rag-why","a1-rag":"rag","a6-sim":"sim","sim-cos":"a6-cos","cosine":"a6-cos","sim-dot":"a6-dot","sim-l2":"a6-l2","a6-vdb":"vdb","a6-ann":"ann","a6-annidea":"ann","a6-hnsw":"ann-hnsw","hn-entry":"hnsw-entry","a6-ivf":"ann-ivf","iv-kmeans":"ivf-kmeans","vdb-type":"a6-prod","db-faiss":"vp-faiss","db-chroma":"vp-chroma","db-pinecone":"vp-pinecone","db-milvus":"vp-milvus","db-weaviate":"vp-weaviate","db-es":"vp-es","db-pgvector":"pg-vector","db-mongo":"vp-mongo","ie-model":"embm","a4-vs":"a3-cmp","eval-bleu":"bleu","eval-rouge":"rouge","apply":"strat","apply-pe":"st-pe","apply-rag":"st-rag","apply-ft":"st-ft","l1-train":"train","l1t-pre":"pre","l1t-ft":"ftstrat","train-sft":"sft","ta-rlhf":"rlhf","ta-dpo":"dpo","gpt-decode":"decode","gd-greedy":"dec-greedy","gd-beam":"beam","gd-topk":"topk","gd-topp":"topp","gd-temp":"temp","th-cot":"pa-cot","tokz-bpe":"bpe","ev-hit":"rm-hit","ev-mrr":"rm-mrr","ev-ndcg":"rm-ndcg"};
+const ALIAS = {"a1-plat":"deploy","a1-cloud":"dep-api","a1-self":"dep-local","a1-ollama":"loc-ollama","vendor-openai":"a1-oaiplat","vendor-anthropic":"a1-console","vendor-google":"a1-aistudio","vendor-bedrock":"a1-bedrock","vendor-vertex":"a1-vertex","a1-pain":"rag-why","a1-rag":"rag","a6-sim":"sim","sim-cos":"a6-cos","cosine":"a6-cos","sim-dot":"a6-dot","sim-l2":"a6-l2","a6-vdb":"vdb","a6-ann":"ann","a6-annidea":"ann","a6-hnsw":"ann-hnsw","hn-entry":"hnsw-entry","a6-ivf":"ann-ivf","iv-kmeans":"ivf-kmeans","vdb-type":"a6-prod","db-faiss":"vp-faiss","db-chroma":"vp-chroma","db-pinecone":"vp-pinecone","db-milvus":"vp-milvus","db-weaviate":"vp-weaviate","db-es":"vp-es","db-pgvector":"pg-vector","db-mongo":"vp-mongo","ie-model":"embm","a4-vs":"a3-cmp","eval-bleu":"bleu","eval-rouge":"rouge","apply":"strat","apply-pe":"st-pe","apply-rag":"st-rag","apply-ft":"st-ft","l1-train":"train","l1t-pre":"pre","l1t-ft":"ftstrat","train-sft":"sft","ta-rlhf":"rlhf","ta-dpo":"dpo","gpt-decode":"decode","gd-greedy":"dec-greedy","gd-beam":"beam","gd-topk":"topk","gd-topp":"topp","gd-temp":"temp","th-cot":"pa-cot","tokz-bpe":"bpe","ev-hit":"rm-hit","ev-mrr":"rm-mrr","ev-ndcg":"rm-ndcg","why-hall":"pain-hall"};
 function N(o){ DATA.push(o); }
 function S(o){ SRC.push(o); }
 function W(a, b, tag, en, zh){ WHY.push([a, b, tag, en, zh]); }
 
 N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
- s:`Fourteen slide decks, reorganised by knowledge into eight domains: how models work, how they are trained, how they run, how to talk to them, how to give them knowledge and tools, how to build agent systems, and how to keep them trustworthy. A flowchart view shows the order in which these pieces come together, from data to production.`,
- sz:`十四份講義依「知識」重新歸納成八大領域：模型怎麼運作、怎麼訓練、怎麼運行、怎麼和它溝通、怎麼給它知識與工具、怎麼組成 Agent 系統，以及怎麼讓它值得信任。另有流程圖檢視，呈現從資料到上線，這些環節依什麼順序組合起來。`,
+ s:`Fourteen slide decks, reorganised by knowledge into eight domains: how models work, how they are trained, how they run, how to talk to them, how to give them knowledge and tools, how to build agent systems, and how to keep them trustworthy. A flowchart above the map shows the order in which these pieces come together, from data to production, and stays in sync with the map.`,
+ sz:`十四份講義依「知識」重新歸納成八大領域：模型怎麼運作、怎麼訓練、怎麼運行、怎麼和它溝通、怎麼給它知識與工具、怎麼組成 Agent 系統，以及怎麼讓它值得信任。心智圖上方的流程圖呈現從資料到上線，這些環節依什麼順序組合起來，並且和心智圖同步。`,
  v:[
-  {k:'plain', en:`<p>The map is organised by knowledge, not by lecture: <b>domain → topic → concept → keyword</b>, one term per node. The right half is the model itself — [[d-theory|how models work]], [[d-train|training]], [[d-run|running models]] and [[d-talk|talking to models]]. The left half is what you build around it — [[d-know|knowledge retrieval]], [[d-ext|extending capabilities]], [[d-agent|agent systems]] and [[d-trust|trustworthy AI]].</p><p>Concepts that appeared in several decks are merged into a single node, and every node carries a source tag showing which decks it comes from. For the order in which the pieces come together — from data to production — switch to the flowchart view.</p>`, zh:`<p>這張圖依「知識」而不是講次來組織：<b>領域 → 主題 → 概念 → 關鍵字</b>，每個節點只放一個專有名詞。右半邊是模型本身——[[d-theory|模型原理]]、[[d-train|模型訓練]]、[[d-run|模型運行]]、[[d-talk|模型溝通]]；左半邊是圍繞模型打造的東西——[[d-know|知識檢索]]、[[d-ext|能力擴充]]、[[d-agent|Agent 系統]]、[[d-trust|可信 AI]]。</p><p>在多份講義重複出現的概念已合併成同一個節點，每個節點都標有出處，看得出來自哪幾份講義。想看這些環節從資料到上線的先後順序，請切換到流程圖檢視。</p>`}],
+  {k:'plain', en:`<p>The map is organised by knowledge, not by lecture: <b>domain → topic → concept → keyword</b>, one term per node. The right half is the model itself — [[d-theory|how models work]], [[d-train|training]], [[d-run|running models]] and [[d-talk|talking to models]]. The left half is what you build around it — [[d-know|knowledge retrieval]], [[d-ext|extending capabilities]], [[d-agent|agent systems]] and [[d-trust|trustworthy AI]].</p><p>Concepts that appeared in several decks are merged into a single node, and every node carries a source tag showing which decks it comes from. For the order in which the pieces come together — from data to production — follow the flowchart above the map.</p>`, zh:`<p>這張圖依「知識」而不是講次來組織：<b>領域 → 主題 → 概念 → 關鍵字</b>，每個節點只放一個專有名詞。右半邊是模型本身——[[d-theory|模型原理]]、[[d-train|模型訓練]]、[[d-run|模型運行]]、[[d-talk|模型溝通]]；左半邊是圍繞模型打造的東西——[[d-know|知識檢索]]、[[d-ext|能力擴充]]、[[d-agent|Agent 系統]]、[[d-trust|可信 AI]]。</p><p>在多份講義重複出現的概念已合併成同一個節點，每個節點都標有出處，看得出來自哪幾份講義。想看這些環節從資料到上線的先後順序，請看心智圖上方的流程圖。</p>`}],
  a:['Raising a new employee｜Understand the brain (how models work), train them (training), put them on shift (running), brief them (talking), hand them a manual (knowledge), tools (capabilities), a team (agents), and reviews and rules (trust).',
     'Opening a restaurant chain｜Know your kitchen, train the chefs, run service, take orders, stock the pantry, buy equipment, build brigades, and pass inspections.',
     'Building a car and putting it on the road｜Engine, assembly, driving, controls, navigation, accessories, a fleet, and safety checks.'],
@@ -401,8 +440,8 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     '造一台車並開上路｜引擎、組裝、駕駛、操控、導航、配件、車隊，以及安全檢驗。'],
  k:[`The map is organised by knowledge into eight domains; the right half is the model itself, the left half is what you build around it.`,
     `Click a node to read its article on the right and open the next level; the round button beside a node expands or collapses it.`,
-    `The “Flowchart” button shows the LLM lifecycle from data to production — click any step to jump to its nodes on the map.`,
-    `Some articles include a small flowchart of their own steps, such as the RAG pipeline or the function-calling loop.`,
+    `The flowchart above the map follows the LLM lifecycle from data to production and keeps to what you use most in practice. Click a step and it unfolds to list its main nodes and every starred item under them; click one and the mind map opens it there. The mind map itself is the full territory: click any node and the steps it belongs to light up.`,
+    `Topics with a process of their own, such as the RAG pipeline or the function-calling loop, show it on the flowchart’s second row while you are inside that topic.`,
     `Source tags such as “Lecture 6” show which slide decks a node comes from; click one to list everything from that deck.`,
     `Highlighted words inside explanations are links to other nodes; related nodes are joined by dashed lines that explain why.`,
     `“★ Key nodes” opens every node marked important in practice (★★★ core, ★★ important) and fades the rest.`,
@@ -411,8 +450,8 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     `Concepts can be marked as mastered; progress stays in your browser. Use ← / → to step through nodes in map order.`],
  kz:[`整張圖依知識分成八大領域：右半邊是模型本身，左半邊是圍繞模型打造的東西。`,
     `點節點：右邊顯示條目，並展開下一層；節點旁的圓鈕可以展開或收合。`,
-    `「流程圖」按鈕呈現從資料到上線的 LLM 生命週期，點任何一步都會跳到圖上對應的節點。`,
-    `部分條目附有自己的小流程圖，例如 RAG 流程、Function Calling 的呼叫循環。`,
+    `心智圖上方的流程圖照「從資料到上線」的順序排，只放實務上最常用的重點：點一個步驟，它會展開列出主要節點和底下所有標星的重點；點其中一個，心智圖就在那裡展開它。心智圖則是包含全部內容的大地圖，點任何節點，它所在的步驟也會亮起來。`,
+    `有自己流程的主題（例如 RAG 流程、Function Calling 的呼叫循環），在你瀏覽該主題時會出現在流程圖的第二行。`,
     `「第六講」這類出處標籤標示節點來自哪份講義；點一下就列出那份講義的所有內容。`,
     `說明文字裡反白的詞是連結；有關聯的節點用虛線連起來，並寫明為什麼相關。`,
     `「★ 只看重點」會展開所有實務重點節點（★★★ 核心、★★ 重要），其餘淡化。`,
@@ -7006,7 +7045,7 @@ N({id:'rag-why', p:'rag', n:'Motivation', nz:'動機', src:['l6',
  sl:`<p><b>API Lecture 1:</b> The slides: models answer from training data and invent plausible answers when a question goes beyond it (hallucination); training data covers everything, so specialised fields such as law are answered shallowly; private data such as company policies was never available in training.</p>`,
  slz:`<p><b>API 第一講：</b> 講義說：模型依訓練資料回答，問題超出範圍時會編出看似合理的答案（幻覺）；訓練資料什麼都有，所以特定領域（例如法律）答不深；公司政策、規章等私有資料，模型訓練時拿不到，自然答不出來。</p>`,
  v:[
-  {k:'plain', en:`<p>The slides list four known problems: [[why-hall|hallucination]] when there is no answer, the [[why-cutoff|knowledge cutoff]], [[why-src|non-authoritative sources]], and [[why-term|terminology confusion]] between sources. Each one is a reason to fetch facts at question time instead of trusting the weights.</p>`, zh:`<p>講義列出四個已知問題：沒有答案時產生 [[why-hall|幻覺]]、[[why-cutoff|知識截止]]、引用 [[why-src|非權威來源]]、不同來源造成 [[why-term|術語混淆]]。每一個都是「在提問當下去查事實，而不是相信權重」的理由。</p>`}],
+  {k:'plain', en:`<p>The slides list four known problems: [[pain-hall|hallucination]] when there is no answer, the [[why-cutoff|knowledge cutoff]], [[why-src|non-authoritative sources]], and [[why-term|terminology confusion]] between sources. Each one is a reason to fetch facts at question time instead of trusting the weights.</p>`, zh:`<p>講義列出四個已知問題：沒有答案時產生 [[pain-hall|幻覺]]、[[why-cutoff|知識截止]]、引用 [[why-src|非權威來源]]、不同來源造成 [[why-term|術語混淆]]。每一個都是「在提問當下去查事實，而不是相信權重」的理由。</p>`}],
  nw:[
   {dt:'2023-06-22', src:'LawSites', u:'https://www.lawnext.com/2023/06/court-imposes-sanctions-on-lawyers-who-filed-bogus-cases-after-relying-on-chatgpt-for-legal-research.html', en:`In Mata v. Avianca a New York federal judge fined two lawyers and their firm $5,000 for filing a brief citing six court decisions that ChatGPT had invented. The judge said using AI is not improper, but lawyers must verify what they file — the textbook case of a model answering without a source.`, zh:`在 Mata 控告 Avianca 航空一案中，紐約聯邦法官對兩名律師及其事務所處以 5,000 美元罰款，因為他們提交的書狀引用了六個由 ChatGPT 編造的判決。法官表示使用 AI 本身並無不當，但律師必須查證所提交的內容。這是「模型沒有出處就作答」的經典案例。`}],
  a:['An over-eager new hire｜Never reads the news, yet answers every question with total confidence.',
@@ -7023,11 +7062,6 @@ N({id:'rag-why', p:'rag', n:'Motivation', nz:'動機', src:['l6',
   {k:'wiki', t:'Wikipedia — Hallucination (artificial intelligence)', u:'https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)'},
   {k:'wikiz', t:'維基百科 — 人工智慧幻覺', u:'https://zh.wikipedia.org/zh-tw/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E5%B9%BB%E8%A6%BA'},
   {k:'wiki', t:'Wikipedia — Mata v. Avianca, Inc.', u:'https://en.wikipedia.org/wiki/Mata_v._Avianca,_Inc.'}]});
-N({id:'why-hall', p:'rag-why', n:'Hallucination', nz:'幻覺', src:['l6'], imp:2,
- s:`When no answer is available, the model still produces plausible-sounding content instead of saying “I don't know”.`,
- sz:`沒有答案時，模型仍會編出聽起來合理的內容，而不是說「我不知道」。`,
- why:`Hallucination is the main reason enterprises adopt RAG.`,
- whyz:`幻覺是企業導入 RAG 的主要原因。`});
 N({id:'why-cutoff', p:'rag-why', n:'Knowledge cutoff', nz:'知識截止', src:['l6'],
  s:`Training data ends on a fixed date, so anything that happened later — new prices, laws, products — is unknown and answers may be out of date.`,
  sz:`訓練資料停在某個日期，之後發生的事（新價格、新法規、新產品）模型都不知道，回答可能過時。`,
@@ -7039,9 +7073,12 @@ N({id:'why-src', p:'rag-why', n:'Unreliable sources', nz:'非權威來源', src:
 N({id:'why-term', p:'rag-why', n:'Terminology confusion', nz:'術語混淆', src:['l6'],
  s:`Different sources use the same word for different things — “leave” in one company is not “leave” in another — so blended training data gives muddled answers.`,
  sz:`不同來源用同一個詞指不同的事，例如這家公司的「休假」不等於另一家公司的「休假」，混在一起訓練就會給出混淆的答案。`});
-N({id:'pain-hall', p:'rag-why', n:'Hallucination', nz:'幻覺', src:['a1'],
+N({id:'pain-hall', p:'rag-why', n:'Hallucination', nz:'幻覺', src:['a1',
+    'l6'], imp:2,
  s:`When it does not know, the model still gives wrong information with a straight face.`,
- sz:`不知道答案時，仍一本正經地給出錯誤資訊。`});
+ sz:`不知道答案時，仍一本正經地給出錯誤資訊。`,
+ why:`Hallucination is the main reason enterprises adopt RAG.`,
+ whyz:`幻覺是企業導入 RAG 的主要原因。`});
 N({id:'pain-domain', p:'rag-why', n:'Specialised domains', nz:'特定領域', src:['a1'],
  s:`Training data is not specialised enough, so expert questions get shallow answers.`,
  sz:`訓練資料不夠專精，專業問題答不深。`});
@@ -12268,11 +12305,11 @@ S({key:'a6', n:'API Supplement 3', nz:'API 補充三', t:'Vector databases', tz:
 /* ===== 關聯：W(a, b, 類型, 英文理由, 中文理由) ===== */
 /* How models work */
 W('s1-tf','ve-vit','實作使用',`ViT applies the Transformer encoder to image patches.`,`ViT 把 Transformer 的 Encoder 用在影像上。`);
-W('mha-proj','pj-linear','原理相同',`Both map vectors into another space with one learned matrix.`,`都是用一個權重矩陣把向量投影到另一個空間。`);
+W('mha-proj','pj-linear','同一概念',`Both are a trainable weight matrix: multi-head attention projects Q, K and V into each head's subspace; a multimodal alignment layer projects image features into the LLM's embedding space.`,`都是一個可訓練的權重矩陣：Multi-Head Attention 用它把 Q、K、V 投到各個頭的子空間；多模態的對齊層用它把影像特徵投到 LLM 的向量空間。`);
 W('sa-q','pj-qformer','原理相同',`Q-Former uses learned Queries to pull information out of image features.`,`Q-Former 用可學習的 Query 向量，透過注意力從影像特徵中抽取資訊。`);
-W('sa','dc-sa','同一概念',`Multimodal models apply the same self-attention to image and text tokens together.`,`就是 Transformer 的 Self-Attention。`);
+W('sa','dc-sa','同一概念',`Multimodal models apply the same self-attention to image and text tokens together.`,`多模態模型的 LLM 解碼器用的就是 Transformer 的 Self-Attention，只是影像 Token 和文字 Token 一起互相注意。`);
 W('cross','a5-mmdec','對照比較',`Some multimodal models read image features with cross-attention instead of prefix tokens.`,`另一類多模態設計用 Cross-Attention 讀取影像特徵。`);
-W('s1-tf','a5-tfm','同一概念',`The same Transformer, revisited as the backbone of multimodal models.`,`同一個 Transformer，在多模態模型裡當骨幹。`);
+W('s1-tf','a5-tfm','同一概念',`Model fundamentals cover the transformer's full structure; multimodal models use it as their backbone — GPT-4o and Gemini process text and images with it.`,`模型原理講 Transformer 的完整結構；多模態把它當成骨幹，GPT-4o、Gemini 都用它同時處理文字與影像。`);
 W('nlp','nlp-tasks','同一主題',`T5 groups NLP work into task types such as classification and generation.`,`NLP 系統由多個子任務組成；T5 把 NLP 歸納成幾大類任務，並用同一個模型處理。`);
 W('nlp-tok','token','同一概念',`Splitting text produces tokens.`,`NLP 分詞步驟切出來的單位，就是 LLM 讀寫的 Token。`);
 W('lm','ar','實例',`Autoregressive models are one kind of language model.`,`自迴歸模型是語言模型的一種：用前文逐詞預測下一個詞。`);
@@ -12289,9 +12326,9 @@ W('ae','mlm','實作使用',`Autoencoding models are trained with masked languag
 W('ae-mask','mlm','同一概念',`Masked prediction is the MLM objective.`,`遮罩預測在 BERT 裡的具體做法就是 MLM。`);
 W('scale','gpt3','實例',`GPT-3 is the slides' example of a 175B-parameter model.`,`講義說明「大」語言模型時，舉的例子就是 175B 參數的 GPT-3。`);
 W('scale-175','gpt3','同一概念',`175B is GPT-3's parameter count.`,`175B 就是 GPT-3 的參數量。`);
-W('scale-175','g3-size','同一概念',`The same 175B figure appears in the GPT-3 section.`,`同一個數字，分別出現在「參數規模」與「GPT-3」兩個分支。`);
-W('scale-over','mft-over','同一概念',`The same overfitting risk appears when fine-tuning on small data.`,`都是過擬合：模型相對資料太複雜，記住了資料卻無法泛化。`);
-W('scale-over','pw-over','同一概念',`PEFT reduces overfitting by training fewer parameters.`,`都是過擬合；PEFT 只訓練少量參數，正是為了降低這個風險。`);
+W('scale-175','g3-size','同一概念',`The scale topic uses 175B to show how large models have become; the GPT-3 entry presents it as that generation's defining feature.`,`參數規模用 175B 說明模型可以大到什麼程度；GPT-3 條目把它當成這一代最主要的特徵。`);
+W('scale-over','mft-over','同一概念',`The scale topic explains overfitting when a model is too complex for its data; transfer learning warns that fine-tuning a whole model on little data does the same.`,`參數規模說明模型相對資料太複雜時會過擬合；遷移學習提醒，用少量資料微調整個模型時同樣會發生。`);
+W('scale-over','pw-over','同一概念',`The scale topic explains overfitting when a model is too complex for its data; PEFT lists it among full fine-tuning's problems and trains only a few parameters to reduce it.`,`參數規模說明模型相對資料太複雜時會過擬合；PEFT 把它列為完整微調的問題之一，只訓練少量參數來降低風險。`);
 W('scale-cost','pw-train','因果影響',`High training cost is one motivation for parameter-efficient fine-tuning.`,`模型越大，完整微調的訓練成本越高，這是 PEFT 出現的原因之一。`);
 W('token','tokz','前後步驟',`Tokenization is the process that produces tokens.`,`Tokenization 就是把文字切成 Token 的過程。`);
 W('arch','t5-arch','對照比較',`T5's architecture experiments compare these same three designs.`,`T5 用實驗比較了這幾種架構，結論是 Encoder-Decoder 最適合它的設定。`);
@@ -12303,12 +12340,12 @@ W('rnn','lim-par','因果影響',`RNNs must compute one step after another.`,`RN
 W('rnn','elmo-bilstm','實例',`ELMo is built from bidirectional LSTM RNNs.`,`ELMo 的 Bi-LSTM 是 RNN 家族的雙向版本。`);
 W('rnn-lstm','elmo-bilstm','構成元件',`ELMo stacks forward and backward LSTMs.`,`Bi-LSTM 由一個前向、一個後向的 LSTM 組成。`);
 W('ctxvec','bottleneck','因果影響',`Relying on one context vector is the information bottleneck.`,`整句只靠一個上下文向量傳遞，就是資訊瓶頸的來源。`);
-W('s2s-tok','spec','原理相同',`BERT's special tokens play the same marking role.`,`Seq2Seq 的特殊符號和 BERT 的特殊標記，都是用保留的 Token 標示句子結構。`);
-W('eos','mt-eos','同一概念',`The same end-of-sequence token used in the GPT translation example.`,`程式中的 eos_token 就是結束符號；GPT-2 翻譯實作把它加在每筆資料的結尾。`);
+W('s2s-tok','spec','同一概念',`Both are reserved tokens that mark structure: Seq2Seq uses &lt;SOS&gt; and &lt;EOS&gt; for start and end, and BERT adds [CLS], [SEP], [MASK] and [PAD].`,`都是保留給結構用的特殊 Token：Seq2Seq 用 &lt;SOS&gt;、&lt;EOS&gt; 標開始與結束；BERT 再多了 [CLS]、[SEP]、[MASK]、[PAD]。`);
+W('eos','mt-eos','同一概念',`Seq2Seq uses &lt;EOS&gt; to tell the decoder to stop; the GPT-2 translation example appends eos_token to the end of every training example.`,`程式中的 eos_token 就是結束符號；GPT-2 翻譯實作把它加在每筆資料的結尾。`);
 W('eos','tok-sep','原理相同',`[SEP] marks the end of a segment, like &lt;EOS&gt;.`,`[SEP] 標示第一句的結尾，作用類似 &lt;EOS&gt;。`);
 W('rev','lim-grad','解決問題',`Reversing shortens the distance gradients must travel for the first words.`,`反向輸入讓第一個輸入詞與第一個輸出詞靠近，緩解長序列記不住的問題。`);
 W('masked','teacher','因果影響',`Teacher forcing feeds the whole target at once, so a mask is needed to stop peeking.`,`Teacher Forcing 一次餵入整句答案；Transformer 平行計算時需要遮罩，才不會偷看還沒生成的字。`);
-W('tf-greedy','dec-greedy','同一概念',`The same greedy decoding strategy.`,`同一個方法：每一步都選機率最高的詞。`);
+W('tf-greedy','dec-greedy','同一概念',`Teacher forcing is contrasted with greedy decoding, where at inference the model can only feed back its own top choice; the decoding-strategies topic covers greedy search in full.`,`Teacher Forcing 拿它當對照：推論時模型只能把自己挑的最高機率詞接回去；完整說明在解碼策略的 Greedy Search。`);
 W('bottleneck','attn','解決問題',`Attention removes the single-vector bottleneck.`,`Attention 讓 Decoder 回頭看所有 Encoder 狀態，解決只靠一個向量的資訊瓶頸。`);
 W('s1-tf','bottleneck','解決問題',`Self-attention removed the fixed-size bottleneck and the step-by-step computation of RNN Seq2Seq.`,`Transformer 用 Self-Attention 取代 RNN，解決無法平行與長序列遺忘的問題。`);
 W('lim-info','attn','解決問題',`Attention lets the decoder read every encoder state, not just the last.`,`Attention 不再只靠一個固定向量，直接解決資訊瓶頸。`);
@@ -12316,7 +12353,7 @@ W('sa-par','lim-par','解決問題',`Matrix-parallel self-attention removes the 
 W('sa','attn','演進改良',`Self-attention generalises Seq2Seq attention so a sequence can attend to itself.`,`把 Attention 用在句子自己身上（每個字看同一句的其他字），就是 Self-Attention。`);
 W('cross','attn','演進改良',`Cross-attention is Seq2Seq attention moved inside the Transformer.`,`Cross-Attention 是 Seq2Seq Attention 在 Transformer 裡的版本：Decoder 回頭看 Encoder。`);
 W('sa-sqrt','attn-score','構成元件',`Scaling by √dₖ is part of computing the attention score.`,`Transformer 的注意力分數用點積計算，再除以 √dₖ 縮放。`);
-W('tokz','pre-tok','前後步驟',`Pre-training starts by tokenizing the corpus.`,`預訓練的第二步就是分詞轉換。`);
+W('tokz','pre-tok','同一概念',`The pre-training pipeline's tokenisation step is this same process: text must become tokens before the model can compute anything.`,`預訓練流程的「分詞轉換」就是 Tokenization：先把文字切成 Token，模型才能計算。`);
 W('tokz-oov','tok-unk','解決問題',`Without sub-words, OOV words become [UNK].`,`詞表裡沒有的字（OOV）在 BERT 中會被換成 [UNK]；Subword 分詞可以大幅減少這種情況。`);
 W('tokz-sp','t5','實作使用',`T5 uses a SentencePiece tokenizer.`,`T5 使用 SentencePiece 分詞。`);
 W('onehot','emb','解決問題',`Embeddings replace sparse one-hot vectors with dense, meaningful ones.`,`Word Embedding 解決 One-hot 高維稀疏、看不出語意關係的問題。`);
@@ -12333,7 +12370,7 @@ W('pe-learn','be-pos','同一概念',`BERT's position embedding is a learned pos
 W('sa','mha','構成元件',`Multi-head attention is several self-attention operations run in parallel.`,`Multi-Head Attention 由多組 Self-Attention 平行計算後串接而成。`);
 W('sa','dims','同一主題',`The shape walkthrough follows self-attention step by step.`,`維度推導的第 2 到第 5 步，就是 Self-Attention 的矩陣運算。`);
 W('sa','lora-target','實作使用',`LoRA usually adapts the attention projections W_Q and W_V.`,`LoRA 通常加在 Self-Attention 的 Query 與 Value 投影層上。`);
-W('cross-q','sa-q','同一概念',`Both are Queries; only the source sequence differs.`,`Cross-Attention 的 Query 同樣代表「我要找什麼」，只是改由 Decoder 產生。`);
+W('cross-q','sa-q','同一概念',`Self-attention explains what a Query is; in cross-attention it plays the same role, but comes from the decoder.`,`Cross-Attention 的 Query 同樣代表「我要找什麼」，只是改由 Decoder 產生。`);
 W('sa-k','vllm-kv','實作使用',`The KV cache stores the Keys of past tokens.`,`KV Cache 快取的就是每個 Token 的 Key。`);
 W('cross-kv','sa-k','同一概念',`Encoder-memory Keys play the same role as self-attention Keys.`,`Cross-Attention 的 Key 改由 Encoder 輸出產生。`);
 W('sa-v','vllm-kv','實作使用',`The KV cache stores the Values of past tokens.`,`KV Cache 快取的就是每個 Token 的 Value。`);
@@ -12353,7 +12390,7 @@ W('masked','gpt-clm','實作使用',`GPT's causal language modeling is implement
 W('mask-causal','clm-uni','同一概念',`Unidirectional prediction is exactly what the causal mask enforces.`,`因果遮罩就是單向預測的實作方式。`);
 W('mask-causal','obj-clm','實作使用',`The CLM training objective relies on the causal mask.`,`CLM 需要因果遮罩，才能整句平行訓練又不偷看答案。`);
 W('dec-softmax','decode','前後步驟',`Softmax produces the distribution that decoding strategies sample from.`,`Softmax 產生機率分布，解碼策略在這個分布上挑詞。`);
-W('dec-logits','fake-logits','同一概念',`The same raw scores, here for a classification head.`,`都是 softmax 之前、每個候選的原始分數。`);
+W('dec-logits','fake-logits','同一概念',`The decoder's logits score every word in the vocabulary; in the fake-news classifier they score each class — either way, softmax turns them into probabilities.`,`Decoder 的 logits 是詞表上每個詞的原始分數；假新聞分類的 logits 則是每個類別的分數，兩者都要經過 softmax 才變成機率。`);
 W('sa-wq','target-q','同一概念',`target_modules="q_proj" in LoRA is exactly W_Q.`,`LoRA 的 query 目標模組，就是 W_Q 這個投影矩陣。`);
 W('sa-wv','target-v','同一概念',`target_modules="v_proj" in LoRA is exactly W_V.`,`LoRA 的 value 目標模組，就是 W_V 這個投影矩陣。`);
 W('gpt-clm','obj-clm','同一概念',`GPT's causal language modeling is the CLM objective.`,`GPT 的因果語言模型，就是目標函數裡的 CLM。`);
@@ -12367,10 +12404,10 @@ W('gpt2','gpt-mt','實作使用',`The translation project fine-tunes GPT-2.`,`�
 W('g2-ftdrop','ch-tax','原理相同',`Both lose existing abilities through extra training: fine-tuning costs GPT-2 generality, alignment costs an alignment tax.`,`兩者都是額外訓練後失去原有能力：微調讓 GPT-2 失去通用性，對齊讓模型付出對齊稅。`);
 W('g2-release','misuse','因果影響',`GPT-2's delayed release over fake-news fears is an early AI-misuse case.`,`GPT-2 因為擔心被拿來大量產生假新聞而延後開源，是 AI 濫用議題的早期案例。`);
 W('gpt3','icl','實例',`In-context learning is the core ability the GPT-3 paper demonstrated.`,`In-Context Learning 是 GPT-3 論文展示的核心能力。`);
-W('g3-cc','c4-cc','資料來源',`GPT-3 and T5 (C4) both draw mainly on Common Crawl.`,`GPT-3 與 T5（C4）都以 Common Crawl 網頁資料為主要來源。`);
+W('g3-cc','c4-cc','同一概念',`About 60% of GPT-3's training data came from filtered Common Crawl; T5's C4 was cleaned from the April 2019 Common Crawl snapshot.`,`GPT-3 的訓練資料約六成來自過濾後的 Common Crawl；T5 的 C4 則是把 2019 年 4 月那一期 Common Crawl 清洗而成。`);
 W('maml','icl','原理相同',`The slides use MAML's “learning to learn” as an analogy for in-context learning's fast adaptation.`,`講義用 MAML「學會如何學習」，類比 In-Context Learning 快速適應新任務的能力。`);
 W('gpt-mt','bleu','評估指標',`The translation project is scored with BLEU.`,`翻譯實作的成果用 BLEU 評分。`);
-W('mt-pad','tok-pad','同一概念',`Both are padding tokens that make sequences the same length.`,`都是用來補齊長度的 padding Token。`);
+W('mt-pad','tok-pad','同一概念',`BERT pads batches with its own [PAD] token; the GPT translation example has to set pad_token itself, because GPT-2 has none.`,`BERT 的特殊標記用 [PAD] 把批次補齊；GPT 翻譯實作則要自己設定 pad_token，因為 GPT-2 本來沒有這個 Token。`);
 W('mt-ignore','sum-ignore','同一概念',`Both projects label padding −100 so the loss ignores it.`,`兩個實作都把 padding 的標籤設成 −100，讓 loss 忽略。`);
 W('elmo','bert-emb','演進改良',`BERT continues ELMo's contextual-representation idea and adds its three-part input embedding.`,`BERT 延續 ELMo「上下文相關表示」的想法，並設計三層輸入 Embedding。`);
 W('be-seg','nsp','實作使用',`Segment embeddings mark the two sentences as 0 and 1 so the model can do NSP.`,`Segment Embedding 把兩個句子標成 0 與 1，模型才能做 NSP。`);
@@ -12381,10 +12418,10 @@ W('tok-mask','mlm','實作使用',`[MASK] is the symbol MLM uses to hide words.`
 W('tok-pad','fake-am','實作使用',`[PAD] positions are marked 0 in attention_mask.`,`[PAD] 所在的位置，在 attention_mask 中標成 0。`);
 W('mlm','obj-mlm','同一概念',`The same pre-training objective: detailed under BERT, compared with other objectives under pre-training.`,`同一個預訓練目標：在 BERT 細講，在目標函數裡和其他目標比較。`);
 W('mlm','t5-mask','演進改良',`T5's masking experiments start from BERT's MLM and improve it to span masking.`,`T5 的遮蔽實驗以 BERT 的 MLM 為基礎，改良成整段遮罩。`);
-W('mlm','enc-mlm','同一概念',`The same MLM pre-training task.`,`Encoder-only 模型用 MLM 預訓練。`);
-W('nsp','enc-nsp','同一概念',`The same NSP pre-training task.`,`Encoder-only 模型用 NSP 預訓練。`);
+W('mlm','enc-mlm','同一概念',`The architectures topic uses MLM to explain how encoder-only models are pre-trained; BERT's MLM entry gives the full recipe, such as masking 15% of the tokens.`,`模型架構用 MLM 說明 Encoder-only 怎麼預訓練；BERT 的 MLM 條目講完整做法，例如遮住 15% 的 Token。`);
+W('nsp','enc-nsp','同一概念',`The architectures topic lists NSP as one encoder-only pre-training task; BERT's NSP entry explains how it judges whether two sentences follow each other.`,`模型架構把 NSP 列為 Encoder-only 的預訓練任務之一；BERT 的 NSP 條目說明它怎麼判斷兩個句子是否前後相連。`);
 W('fake','fullft','實作使用',`The fake-news project fine-tunes all of BERT's parameters.`,`假新聞分類對 BERT 做的是完整微調：所有參數一起更新。`);
-W('fake-am','left-am','同一概念',`The same parameter: it marks padding positions for the model to skip.`,`同一個參數：標出哪些位置是 padding，讓模型跳過。`);
+W('fake-am','left-am','同一概念',`The fake-news classifier uses attention_mask to hide padded positions; the GPT translation example relies on it too when it pads on the left.`,`假新聞分類用 attention_mask 遮掉補齊的位置；GPT 翻譯實作採用 Left Padding 時，也靠它讓模型略過左側補上的 Token。`);
 W('t5-t2t','inst','原理相同',`Both write tasks as “text instruction → text answer”.`,`兩者都把任務寫成「文字指令 → 文字答案」的格式。`);
 W('c4','pre-clean','實例',`C4 is the result of cleaning Common Crawl.`,`C4 就是對 Common Crawl 做資料清洗之後的成果。`);
 W('c4','pre','資料來源',`C4 is the corpus T5 is pre-trained on.`,`C4 是 T5 預訓練使用的語料。`);
@@ -12419,8 +12456,8 @@ W('nlp-lemma','nlp-stem','對照比較',`Lemmatization uses a dictionary and par
 W('nlp-context','emb-dyn','原理相同',`Both decide a word's meaning from its surrounding context.`,`兩者都依周圍的上下文決定字詞的意思。`);
 W('nlp-dialog','a1-memory','實作使用',`With LLM APIs, dialogue management is implemented by resending the chat history every turn.`,`用 LLM API 時，對話管理就是每一輪都重送聊天紀錄。`);
 W('lm-limit','bias','因果影響',`Bias absorbed from training data is one of the listed limitations.`,`從訓練資料學到的偏見，是講義列出的侷限之一。`);
-W('ar-gpt','gpt','同一概念',`The GPT family, the best-known autoregressive models.`,`GPT 家族，最有名的自迴歸模型。`);
-W('ae-bert','bert','同一概念',`BERT, the best-known autoencoding model.`,`BERT，最有名的自編碼模型。`);
+W('ar-gpt','gpt','同一概念',`Autoregressive models use GPT as the leading example; the GPT generations and their details are under model families.`,`自迴歸模型拿 GPT 當代表例子；GPT 各代的演進與細節在模型家族。`);
+W('ae-bert','bert','同一概念',`Autoencoding models use BERT as the leading example; BERT's inputs, pre-training tasks and uses are under model families.`,`自編碼模型拿 BERT 當代表例子；BERT 的輸入、預訓練任務與應用在模型家族。`);
 W('ae-enc','enc','原理相同',`Both compress the input into representations for later use.`,`兩者都把輸入壓縮成之後要用的表示。`);
 W('scale-7b','q-int4','搭配使用',`7B models are usually run locally in 4-bit quantized form.`,`7B 模型在本地執行時通常使用 4 位元量化版本。`);
 W('scale-70b','dep-local','因果影響',`70B models need serious hardware to self-host.`,`70B 模型要自行部署需要相當的硬體。`);
@@ -12445,6 +12482,18 @@ W('span-sentinel','s2s-tok','原理相同',`Sentinels, like &lt;SOS&gt;/&lt;EOS&
 W('ta-prefix','arch-encdec','對照比較',`A prefix LM imitates an encoder–decoder inside a single stack.`,`Prefix LM 在單一堆疊中模仿 Encoder–Decoder。`);
 W('emb','a6-cos','實作使用',`Embeddings are compared with cosine similarity.`,`兩個 Embedding 的語意有多像，用餘弦相似度計算。`);
 W('tokz-sp','bpe','對照比較',`SentencePiece can train BPE models but works on raw text with spaces as symbols.`,`SentencePiece 也能訓練 BPE 模型，但直接處理原始文字，把空白當成符號。`);
+W('nlp-tok','tokz','同一概念',`NLP pipelines list tokenisation as the first step; the input-representation topic explains how modern LLMs split text with subword methods such as BPE.`,`NLP 流程把分詞列為第一步；輸入表示的 Tokenization 說明現代 LLM 怎麼用 BPE 這類子詞方法切字。`);
+W('ae-bi','enc-bi','同一概念',`Autoencoding models rely on bidirectional context; the Transformer encoder, where every position attends both ways, is how that is built.`,`自編碼模型靠雙向上下文做理解；Transformer 的 Encoder 讓每個位置都能注意左右所有位置，就是這種雙向的實作。`);
+W('score-concat','mha-concat','同一概念',`Both join vectors end to end: Bahdanau attention concatenates two states before scoring them; multi-head attention concatenates the heads' outputs back to the model width.`,`同樣是把向量接起來：Bahdanau 注意力把兩個狀態接起來再算分數；Multi-Head Attention 把各個頭的輸出接回模型的寬度。`);
+W('bilstm-cat','mha-concat','同一概念',`ELMo concatenates the forward and backward LSTM states; multi-head attention concatenates its heads' outputs. Both lay vectors side by side into a longer one.`,`ELMo 把前向與後向 LSTM 的狀態接起來；Multi-Head Attention 把 8 個頭的輸出接起來。兩者都是把向量並排接成一個更長的向量。`);
+W('cls-softmax','dec-softmax','同一概念',`The decoder applies softmax over the whole vocabulary; classification applies it over mutually exclusive classes so the probabilities sum to 1.`,`Decoder 用 softmax 把 logits 轉成整個詞表的機率；分類任務用它把互斥類別的分數轉成加總為 1 的機率。`);
+W('arch-dec','ta-lm','同一概念',`The architectures topic introduces decoder-only models such as GPT and Llama; T5's architecture experiments compared this design with encoder-decoder and chose the latter.`,`模型架構介紹 Decoder-only（GPT、Llama 都是）；T5 的架構實驗把它拿來和 Encoder-Decoder 比較，最後選了後者。`);
+W('arch-encdec','ta-ed','同一概念',`The architectures topic explains how an encoder and a decoder split the work; T5's architecture experiments compared several designs and settled on this one.`,`模型架構介紹 Encoder-Decoder 怎麼分工；T5 的架構實驗比較多種設計後，最終採用的就是它。`);
+W('outer-init','mft-init','同一概念',`Both are where training starts: transfer learning uses pre-trained weights as the initial parameters, while MAML learns a set of initial parameters that adapt fastest.`,`都是訓練的起點：遷移學習直接拿預訓練權重當初始參數；MAML 則專門學一組「最容易調好」的初始參數。`);
+W('mt-tpl','a3-tpl','同一概念',`The GPT translation example uses a fixed prompt template to tell the model its task; LangChain's PromptTemplate turns such templates into reusable components with variables.`,`GPT 翻譯實作用固定的 Prompt 模板告訴模型要做什麼；LangChain 的 PromptTemplate 把這種模板變成可填變數、可重複使用的元件。`);
+W('cls-sigmoid','dl-sig','同一概念',`Classification uses sigmoid to squash each score to 0–1 for binary or multi-label tasks; the DPO loss uses it to turn a score gap into the probability that the chosen answer wins.`,`分類任務用 sigmoid 把每個分數壓到 0–1，做二元或多標籤分類；DPO Loss 用它把兩個回答的分數差轉成「Chosen 勝出」的機率。`);
+W('task-sim','sim','同一概念',`T5 lists similarity among its NLP tasks — how alike two texts are; the embedding-space topic explains how that is measured: cosine, Euclidean distance or dot product.`,`T5 把相似度列為一種 NLP 任務：判斷兩段文字有多像；Embedding 空間的相似度說明背後怎麼算——餘弦、歐氏距離或內積。`);
+W('tmh-lm','obj-clm','同一概念',`T5's masking experiments used left-to-right language modelling as a baseline; CLM among the training objectives is that next-token objective.`,`T5 的遮蔽實驗把「由左到右的語言建模」當成對照組；目標函數裡的 CLM 就是這種預測下一個 Token 的訓練目標。`);
 /* Training */
 W('rlhf','rl-trial','實例',`RLHF is trial and error: try answers, get rewarded, improve.`,`RLHF 就是把強化學習的試誤架構用在 LLM 上：模型生成回答、獎勵模型給回饋、再更新模型。`);
 W('rl-explore','temp-high','原理相同',`Both trade off trying new options against choosing the current best; high temperature makes the model explore.`,`都是在「冒險嘗試新選項」與「選目前最好的」之間取捨；高溫就是讓模型多探索。`);
@@ -12481,8 +12530,8 @@ W('rl-pb','rl-pg','實例',`Policy gradient is a policy-based method.`,`Policy G
 W('rl-onp','rl-pg','實例',`Policy gradient is on-policy: each sample is used once.`,`Policy Gradient 是 On-policy：資料只能用一次。`);
 W('rl-offp','rl-ppo','解決問題',`PPO borrows the off-policy idea of reusing data to ease policy gradient's low sample efficiency.`,`PPO 借用 Off-policy 的想法重複使用資料，改善 Policy Gradient 樣本效率低的問題。`);
 W('ppo','rl-ppo','同一概念',`The same PPO algorithm: its theory under reinforcement learning, its use in RLHF here.`,`同一個演算法：原理在強化學習，這裡是它在 RLHF 的用法。`);
-W('ppo-pg','rl-pg','同一概念',`The same policy-gradient family.`,`PPO 所屬的策略梯度方法，就是 Policy Gradient。`);
-W('ppo-is','offp-is','同一概念',`The same importance-sampling correction from off-policy RL.`,`同一個技巧：用舊策略收集的資料更新新策略時的修正。`);
+W('ppo-pg','rl-pg','同一概念',`PPO belongs to the policy-gradient family; the general idea is explained under policy optimisation in reinforcement learning.`,`PPO 屬於策略梯度方法；策略梯度的基本想法在強化學習的策略優化。`);
+W('ppo-is','offp-is','同一概念',`PPO uses importance sampling to learn from data its previous policy collected; the off-policy topic explains why that correction is needed.`,`PPO 用重要性取樣，拿上一版策略收集的資料更新新策略；這個修正為什麼需要，在 Off-policy 說明。`);
 W('ppo-actor','ppo-ac','構成元件',`The actor is one half of the actor–critic structure.`,`Actor-Critic 的 Actor 就是 RLHF 裡的策略模型。`);
 W('ppo-critic','ppo-ac','構成元件',`The critic is the other half of actor–critic.`,`Actor-Critic 的 Critic 就是 RLHF 裡的價值模型。`);
 W('lim-blackbox','mis-trans','同一主題',`RL policies are hard to explain — the same issue as AI transparency.`,`強化學習策略難以解釋，和 AI 透明度的討論是同一個問題。`);
@@ -12490,9 +12539,9 @@ W('rlhf','app-dialog','實例',`Dialogue systems are a key application of reinfo
 W('lim-sample','ppo-se','因果影響',`RL's low sample efficiency is the problem PPO aims to ease.`,`強化學習樣本效率低，是 PPO 想解決的問題。`);
 W('chat-multi','a1-memory','原理相同',`Multi-turn ability in training matches resending chat history at inference.`,`API 端的記憶靠把聊天紀錄一起送出；模型端要靠多輪對話資料訓練才懂得延續話題。`);
 W('rlhf','a4-hitl','對照比較',`Both involve humans: RLHF scores answers during training, HITL approves actions at run time.`,`都有人類參與：RLHF 是訓練時由人評分，HITL 是執行時由人審批。`);
-W('head-mlp','pj-mlp','同一概念',`Both are multi-layer perceptrons.`,`同樣是多層感知機。`);
-W('con-clip','ct-clip','同一概念',`The same CLIP model.`,`同一個模型。`);
-W('obj-con','a5-contrast','同一概念',`The same contrastive learning used in multimodal models.`,`對比學習的訓練目標就是 Contrastive Loss。`);
+W('head-mlp','pj-mlp','同一概念',`Feature extraction uses a small MLP as the classifier head; a multimodal alignment layer uses one to map image features into the LLM's embedding space (two layers in LLaVA-1.5).`,`特徵提取用小型 MLP 當分類頭；多模態的對齊層也用 MLP 把影像特徵轉進 LLM 的向量空間（LLaVA-1.5 用兩層）。`);
+W('con-clip','ct-clip','同一概念',`The objectives topic uses CLIP to show how a contrastive loss is trained; multimodal contrastive learning explains how CLIP puts images and text in one space, and how its encoder became the eyes of many multimodal LLMs.`,`目標函數用 CLIP 說明 Contrastive Loss 怎麼訓練；多模態的對比學習說明 CLIP 怎麼讓圖文共用同一個空間，它的編碼器也成了許多多模態 LLM 的眼睛。`);
+W('obj-con','a5-contrast','同一概念',`The objectives topic explains how a contrastive loss is computed; multimodal contrastive learning uses it to pull matching image–text pairs together and push mismatches apart.`,`目標函數說明 Contrastive Loss 怎麼計算；多模態的對比學習用它讓配對的圖文靠近、不配對的推遠。`);
 W('pair-chosen','ml-feedback','原理相同',`An approved version is like a chosen answer: it shows what you want.`,`你批准的版本就像偏好資料中的 Chosen，代表你想要的回答。`);
 W('featext','elmo-fb','同一概念',`ELMo's feature-based use is feature extraction.`,`Feature-based 就是把預訓練模型當成特徵提取器使用。`);
 W('tl','bb-tl','同一概念',`BERT's pre-train-then-fine-tune recipe is transfer learning.`,`BERT 的「預訓練後微調」就是遷移學習。`);
@@ -12502,7 +12551,7 @@ W('tl-src','pre','同一概念',`In LLMs, the pre-training corpus is the source 
 W('tlt-task','layer','解決問題',`Layer transfer keeps the shared low-level layers when only the task changes.`,`領域相似、任務不同時，低階特徵可以共用，適合用 Layer Transfer。`);
 W('tlt-domain','dat','解決問題',`Domain-adversarial training addresses the different-domain case.`,`任務相同、領域不同時，Domain-Adversarial 讓模型學出不分領域的特徵。`);
 W('mft','fullft','同一概念',`Model fine-tuning in transfer learning is full fine-tuning.`,`Model Fine-tuning 用在 LLM 上，就是完整微調。`);
-W('mft-over','pw-over','同一概念',`PEFT reduces overfitting by training far fewer parameters.`,`都是過擬合；資料少時更新全部參數特別容易發生。`);
+W('mft-over','pw-over','同一概念',`Transfer learning warns that updating every parameter on little data overfits; PEFT addresses exactly that by training only a few parameters.`,`遷移學習提醒，資料少時微調全部參數容易過擬合；PEFT 正是為了這個問題，只訓練少量參數。`);
 W('tl-cases','featext','實例',`With little similar data, use the model as a feature extractor.`,`資料少又相似時，建議把預訓練模型當特徵提取器使用。`);
 W('layer','featext','原理相同',`Both freeze pre-trained layers and train only a small part.`,`都是凍結前面的層，只訓練後面的部分。`);
 W('dat-fe','featext','原理相同',`Both use a network's early layers to turn inputs into features.`,`名稱相近：都是把輸入轉成特徵的前段網路。`);
@@ -12510,7 +12559,7 @@ W('pre','obj','構成元件',`The objective function is the core of pre-training
 W('pre-base','sft','前後步驟',`SFT starts from the base model produced by pre-training.`,`SFT 的起點，就是預訓練產出的 Base Model。`);
 W('pre-base','shift-cont','同一概念',`A base model is in “continuation mode” — it only continues text.`,`Base Model 的行為就是續寫模式。`);
 W('fullft','peft-why','因果影響',`Full fine-tuning's cost is the motivation for PEFT.`,`完整微調的訓練與儲存成本太高，是 PEFT 出現的原因。`);
-W('fullft','st-ft','同一概念',`The same full-parameter fine-tuning, as one option in the strategy comparison.`,`策略選擇裡的全參數微調，就是完整微調。`);
+W('fullft','st-ft','同一概念',`Fine-tuning strategies explain how full fine-tuning works and why it is expensive; strategy selection weighs it as the costliest option with the deepest effect.`,`微調策略說明完整微調怎麼做、為什麼昂貴；策略選擇把它當成成本最高、但改變最深的選項來比較。`);
 W('fullft','lora','替代方案',`LoRA is the cheaper alternative to updating every weight.`,`LoRA 只訓練不到 1% 的參數，效果接近完整微調。`);
 W('sft','rlhf-s1','同一概念',`RLHF's initial policy is produced by SFT.`,`RLHF 的第一步就是做 SFT。`);
 W('dpo-use','sft','前後步驟',`DPO is applied after SFT.`,`常見流程是先做 SFT，再做 DPO。`);
@@ -12522,7 +12571,7 @@ W('rlhf','bias-align','解決問題',`RLHF is a main tool of safety alignment ag
 W('rlhf','tr-hybrid','實例',`RLHF combines human judgement with machine learning.`,`RAG 的未來趨勢之一，是和強化學習等技術結合。`);
 W('rlhf-why','hhh','因果影響',`The problems motivating RLHF are failures of helpfulness, honesty and harmlessness.`,`動機中列的問題（有害、偏見、生硬），正是對齊目標要改善的地方。`);
 W('rlhf-why','safety','同一主題',`Both deal with making model outputs safe.`,`RLHF 想避免的有害與偏見內容，也是 AI 安全討論的風險。`);
-W('why-bias','bias','同一概念',`The same bias problem covered under AI safety.`,`同一個問題：模型輸出帶有偏見。`);
+W('why-bias','bias','同一概念',`RLHF lists biased output among the behaviours it sets out to correct; the bias entry under AI safety covers where bias comes from and how to detect and reduce it.`,`RLHF 把偏見輸出列為要矯正的行為之一；AI 安全的偏見說明它從哪裡來，以及怎麼檢測與降低。`);
 W('dpo-loss','rm','原理相同',`The DPO loss has the same Bradley–Terry form as the reward-model loss.`,`DPO Loss 和獎勵模型的損失形式相同，只是「獎勵」改用模型自己的對數機率比表示。`);
 W('dpo-implicit','rm','替代方案',`The implicit reward replaces the explicit reward model.`,`DPO 用隱式獎勵，取代另外訓練的獎勵模型。`);
 W('dpo-pair','rm-rank','資料來源',`Human rankings of answers supply the chosen/rejected pairs.`,`兩者用的都是「哪個回答比較好」的成對人類偏好資料。`);
@@ -12544,11 +12593,14 @@ W('lora-merge','ad-latency','對照比較',`LoRA merges into the weights so infe
 W('l1t-lm','obj-clm','同一概念',`Language modeling is the CLM objective.`,`語言建模就是 CLM 目標。`);
 W('l1t-bi','mlm','實作使用',`BERT learns bidirectional context through masked language modeling.`,`BERT 透過遮罩語言模型學習雙向情境。`);
 W('l1t-domain','tlt-domain','實例',`A domain model is an example of transferring to a different domain.`,`領域模型就是遷移到不同領域的實例。`);
+W('zsl-space','md-space','同一概念',`Zero-shot learning recognises unseen classes through a shared semantic space; multimodal models use the same kind of space so that images and text can be compared.`,`Zero-shot Learning 靠共用的語意空間辨認沒見過的類別；多模態模型用同一種空間，讓圖片和文字能互相比較。`);
+W('featext','ve-feat','同一概念',`Feature extraction freezes a pre-trained model and uses its outputs as features; a multimodal vision encoder is often used exactly this way, frozen, handing image features to the LLM.`,`微調策略的特徵提取是凍結預訓練模型、只拿它的輸出當特徵；多模態的 Vision Encoder 常被這樣使用：凍結後提取影像特徵交給 LLM。`);
+W('cb-aspace','ppo-space','同一概念',`In the contextual bandit the action space is the 10 ads that can be shown; PPO handles discrete action spaces (pick a token) as well as continuous ones (joint torques).`,`Contextual Bandit 的動作空間是 10 種可推送的廣告；PPO 的動作空間可以是離散的（選一個 Token），也可以是連續的（關節力矩）。`);
 /* Running models */
 W('a1-bedrock','a1-boto3','實作使用',`Boto3 calls Amazon Bedrock from Python.`,`用 Boto3 在 Python 裡呼叫 Amazon Bedrock。`);
 W('api-token','a1-key','原理相同',`Both are secret keys that authenticate API calls.`,`都是呼叫服務用的私密金鑰：OpenAI 的 API Key 與 Hugging Face 的 API Token。`);
 W('groq-oss','loc-oss','實例',`gpt-oss-20b is an open-weight model you can download.`,`gpt-oss-20b 是可以下載權重的開源模型。`);
-W('spaces-sd','diff-sd','同一概念',`The same Stable Diffusion model.`,`同一個模型。`);
+W('spaces-sd','diff-sd','同一概念',`Hugging Face Spaces uses Stable Diffusion 3.5 to demonstrate trying a model online; the diffusion entry explains how it turns noise into an image step by step.`,`Hugging Face Spaces 用 Stable Diffusion 3.5 示範線上試用模型；擴散模型條目說明它怎麼從雜訊一步步生成圖片。`);
 W('hf-tokenizers','tok-tool','實作使用',`Hugging Face Tokenizers implements tokenizers.`,`Hugging Face 的 Tokenizers 函式庫，就是在程式中實際使用的分詞工具。`);
 W('hf-libs','gpt-mt','實作使用',`The GPT-2 translation project uses these libraries.`,`翻譯實作用 Hugging Face Transformers 載入 GPT-2 與 tokenizer。`);
 W('hf-libs','fake','實作使用',`The fake-news project uses these libraries.`,`假新聞分類用 Hugging Face 載入 tokenizer 與模型。`);
@@ -12575,31 +12627,33 @@ W('loc-ollama','quant','實作使用',`The q4 or q3 in an Ollama model name is t
 W('dep-mix','privacy','解決問題',`Hybrid deployment keeps confidential data local and sends the rest to an API.`,`混合模式讓機密資料走本地、一般資料走 API，兼顧隱私與便利。`);
 W('quant','onnx','搭配使用',`Often used together: quantisation shrinks the model; ONNX makes it portable.`,`推論加速常一起使用：量化讓模型變小，ONNX 讓模型能跨平台執行。`);
 W('a1-app','dep-api','對照比較',`Apps work out of the box but are hard to customise; cloud APIs need code but integrate into your own systems.`,`應用服務拿來就能用但難以客製；雲端 API 要寫程式，但能整合進自己的系統。`);
+W('a1-gemini','tf-gemini','同一概念',`Key techniques present Gemini as a natively multimodal model family; deployment lists the Gemini app of the same name as an AI service linked to Google Drive and Gmail.`,`關鍵技術介紹 Gemini 是原生多模態的模型系列；部署方式把同名的 Gemini 應用列為 AI 應用服務，可連結 Google 雲端硬碟、Gmail。`);
 /* Talking to models */
 W('a1-compat','a1-groq','實例',`Groq's API is compatible with the OpenAI SDK; the code is almost identical.`,`Groq 的 API 相容 OpenAI SDK，程式寫法幾乎一樣。`);
-W('ch-messages','msgs','同一概念',`The same messages array.`,`同一個參數：對話陣列與 system、user、assistant 三種角色。`);
-W('ch-temp','temp','同一概念',`The API's temperature parameter is the decoding strategy's temperature.`,`API 的 temperature 參數，就是解碼策略的 Temperature。`);
+W('ch-messages','msgs','同一概念',`Chat Completions defines the messages parameter; the résumé generator builds one with system, user and assistant roles.`,`Chat Completions 說明 messages 參數的格式；履歷產生器實際組出一份，含 system、user、assistant 三種角色。`);
+W('ch-temp','temp','同一概念',`Decoding strategies explain what temperature does; the Chat Completions temperature parameter sets it through the API, from 0 to 2.`,`解碼策略說明 Temperature 的原理；Chat Completions 的 temperature 參數就是在 API 裡調它，範圍 0–2。`);
 W('ch-max','tok-ctx','因果影響',`max_tokens must fit inside the context window together with the input.`,`max_tokens 限制輸出長度；輸入加輸出不能超過上下文長度。`);
-W('a1-price','tok-bill','同一概念',`API pricing is billing per token.`,`都是依 Token 數計費。`);
+W('a1-price','tok-bill','同一概念',`The token entry explains that billing is counted in tokens; the OpenAI API pricing section gives actual prices, with input and output charged separately.`,`Token 條目說明計費以 Token 為單位；OpenAI API 的計費列出實際價格，輸入與輸出分開計算。`);
 W('pr-zh','token','實例',`Chinese uses more tokens than English for the same content, so it costs more.`,`中文比英文更耗 Token，是 Token 切法不同的實際例子。`);
-W('a1-system','role-system','同一概念',`The same system role.`,`System Prompt 就是 messages 裡 role 為 system 的訊息。`);
-W('a1-ctx','tok-ctx','同一概念',`The same context-window limit.`,`同一個限制：輸入加輸出能用的 Token 總量。`);
+W('a1-system','role-system','同一概念',`A system prompt is sent as the message whose role is system, as the résumé generator shows.`,`System Prompt 就是 messages 裡 role 為 system 的訊息。`);
+W('a1-ctx','tok-ctx','同一概念',`The token entry explains how the context window is counted and what to do when text will not fit; parameter control gives the real limits, such as gpt-4o-mini's 128,000 plus a separate output cap.`,`Token 條目說明上下文長度怎麼算、放不下時怎麼辦；參數控制則列出實際上限，例如 gpt-4o-mini 的 128,000，以及另一個輸出長度上限。`);
 W('trim-tiktoken','tok-tool','實作使用',`tiktoken is OpenAI's tokenizer library, used to count tokens before trimming.`,`tiktoken 就是 OpenAI 的 Tokenizer 程式庫。`);
 W('a1-strat','pe-5','同一主題',`OpenAI's six strategies and the five principles organise the same advice differently.`,`OpenAI 的六大策略與五大原則，是同一件事的兩種整理方式。`);
-W('a1-clear','p5-clear','同一概念',`Both ask for explicit, unambiguous instructions.`,`都是要求指令明確、不模糊。`);
+W('a1-clear','p5-clear','同一概念',`The five principles list clarity as a rule for writing prompts; the prompting strategies turn it into practice — explicit instructions with no room for ambiguity.`,`五大原則把「清晰」列為寫提示詞的原則之一；提示策略把它落實成具體做法：指令寫明確、不留模糊空間。`);
 W('a1-ref','flow-aug','原理相同',`Putting reference text into the prompt is exactly RAG's augmentation step.`,`把參考資料放進提示詞，就是 RAG 的 Augmentation。`);
 W('th-tot','beam','原理相同',`Both keep several candidate paths alive to avoid missing a better answer.`,`都是同時保留多條候選路線，避免只走一條而錯過更好的答案。`);
-W('tl-rag','rag','同一概念',`RAG as an external tool is retrieval-augmented generation.`,`外部工具中的 RAG，就是檢索增強生成。`);
+W('tl-rag','rag','同一概念',`The prompting strategies treat RAG as an external tool — hand the model precise reference material, then ask; the full pipeline and its variants are under Knowledge retrieval.`,`提示策略把 RAG 當成外部工具：先提供精確的參考資料再請模型回答；完整流程與各種變體在知識檢索的 RAG。`);
 W('a1-test','eval','同一主題',`Testing prompt changes is evaluation applied in practice.`,`測試 Prompt 的改動，就是評估的實際應用。`);
+W('a1-key','pl-key','同一概念',`The OpenAI API section explains why an API key must never leak; the Pinecone example follows the same practice — get a key on sign-up and keep it in an environment variable.`,`OpenAI API 說明 API Key 為什麼絕不能外洩；Pinecone 範例示範同樣的做法：註冊取得金鑰，存在環境變數裡。`);
 W('resume','icl','實例',`The résumé app's few-shot examples are in-context learning.`,`履歷產生器示範的 Zero-shot 與 Few-shot，就是 In-Context Learning。`);
 W('resume','pe-5','實例',`The app applies the five prompting principles in practice.`,`替履歷產生器加上職缺、語氣、範例，就是在應用提示工程的原則。`);
 W('resume','dep-api','實作使用',`The app calls a hosted model through the API.`,`履歷產生器透過 OpenAI API 呼叫模型，屬於 API 部署模式。`);
 W('msgs','chat','原理相同',`Chat fine-tuning uses the same role-based message structure.`,`API 的 Messages 格式，對應對話微調時訓練資料使用的多輪、角色格式。`);
 W('msgs','chat-role','原理相同',`Role markers in training data correspond to message roles.`,`API 的 system、user、assistant，對應訓練資料中的角色標記。`);
 W('role-system','p5-cons','實作使用',`Constraints are usually written in the system prompt.`,`提示工程的「限制」（語氣、格式、不要做什麼）通常寫在 system 訊息裡。`);
-W('res-zero','icl-zero','同一概念',`The same zero-shot idea.`,`同一個概念：只給指令、不給範例。`);
-W('res-few','icl-few','同一概念',`The same few-shot idea.`,`同一個概念：先給範例再提問。`);
-W('res-temp','temp','同一概念',`The same temperature parameter used in decoding.`,`API 的 temperature 參數，就是解碼策略中的 Temperature。`);
+W('res-zero','icl-zero','同一概念',`In-context learning explains zero-shot prompting; the résumé generator shows it in practice — instructions only, fast but with formats that vary from run to run.`,`情境學習說明 Zero-shot 的原理；履歷產生器示範它的效果：只給指令、不給範例，快，但每次輸出的格式都可能不同。`);
+W('res-few','icl-few','同一概念',`In-context learning explains why few-shot works without any training; the résumé generator shows it — a few sample exchanges first, then the model follows their format.`,`情境學習說明 Few-shot 為什麼不用訓練就有效；履歷產生器示範它：先放幾組示範對話，模型就照著格式回答。`);
+W('res-temp','temp','同一概念',`Decoding strategies explain how temperature reshapes the probability distribution; the résumé generator gives practical settings — 0–0.3 to stay close to the brief, 0.3–0.7 balanced, above 0.7 more creative.`,`解碼策略說明 Temperature 怎麼改變機率分布；履歷產生器給出實際建議：0–0.3 貼近條件、0.3–0.7 平衡、0.7 以上更有創意。`);
 W('res-temp','dg-tech','實例',`Technical writing calls for a low temperature.`,`技術文件建議用低 temperature（0.2~0.5），讓輸出貼近條件。`);
 W('apply-train','pre','同一概念',`Training from scratch starts with pre-training.`,`從頭訓練一個模型，第一步就是大規模預訓練。`);
 W('icl','pe-adv','實例',`Few-shot prompting techniques are applications of in-context learning.`,`提示工程的 Few-shot 技巧，就是 In-Context Learning 的應用。`);
@@ -12608,50 +12662,52 @@ W('icl-few','p5-ex','同一概念',`The “examples” prompting principle is fe
 W('icl-few','pa-few','同一概念',`The same technique, seen as in-context learning and as a prompting technique.`,`同一個技巧：一邊從情境學習的角度看，一邊當成提示技巧。`);
 W('icl-prompt','t5-prefix','原理相同',`Both put text in front of the input to tell the model the task.`,`都是在輸入前面用一段文字告訴模型要做什麼任務。`);
 W('icl-prompt','inst','演進改良',`Instruction tuning trains the “describe the task in words” format into the model.`,`指令微調把「用自然語言描述任務」的格式，直接訓練進模型裡。`);
-W('prompt-eng','st-pe','同一概念',`“Prompt engineering” in the strategy comparison is this topic.`,`策略選擇裡的提示工程，就是 Prompt Engineering。`);
+W('prompt-eng','st-pe','同一概念',`Strategy selection rates prompt engineering as cheap and flexible but unable to go beyond what the model already knows; the full techniques are under Prompt Engineering.`,`策略選擇把提示工程評為成本低、彈性高，但無法超出模型原有的知識；完整技巧在 Prompt Engineering。`);
 W('prompt-eng','prefix','對照比較',`Prompt engineering writes human-readable prompts; Prefix Tuning trains a prompt made of vectors.`,`Prompt Engineering 寫人看得懂的文字提示；Prefix Tuning 則是訓練一段向量形式的提示。`);
 W('pa-cot','hall-cot','同一概念',`Chain-of-Thought is both a prompting technique and a hallucination countermeasure.`,`Chain-of-Thought 既是提示技巧，也是降低幻覺的對策。`);
 W('st-ft','peft','解決問題',`Full fine-tuning is compute-hungry; PEFT cuts that cost sharply.`,`全參數微調的算力需求高，PEFT 大幅降低這個成本。`);
-W('res-model','ch-model','同一概念',`The same model parameter of the Chat Completions call.`,`Chat Completions 呼叫中同一個 model 參數。`);
+W('res-model','ch-model','同一概念',`Chat Completions explains that the model parameter picks the model, and with it capability and price; the résumé generator demo uses gpt-3.5-turbo.`,`Chat Completions 說明 model 參數決定用哪個模型，也決定能力與價格；履歷產生器示範時用的是 gpt-3.5-turbo。`);
 W('res-limit','tok-ctx','解決問題',`Capping input length keeps the request within the context window.`,`限制輸入長度，讓請求維持在上下文上限之內。`);
 W('st-pe','pe-value','同一主題',`Why prompt engineering is worth it as a strategy.`,`提示工程成本最低，它帶來的價值是可控性、精準度與使用體驗。`);
 W('st-ft','ftstrat','同一概念',`Fine-tuning strategies break this option down further.`,`微調策略把這個選項再細分成完整微調、特徵提取與 PEFT。`);
+W('p5-ctx','mcp-context','同一概念',`The five prompting principles ask you to supply background and context yourself; MCP standardises this so models can pull the context they need from files, records and tool results.`,`提示詞五大原則要你主動提供背景與情境；MCP 把這件事標準化，讓模型能從檔案、紀錄、工具結果取得需要的上下文。`);
+W('a1-sdkfc','a2-fc','同一概念',`The SDK chapter shows how to send a Function Calling request with the OpenAI SDK; the Function Calling topic explains the full loop and why it underpins agents and MCP.`,`SDK 章節示範用 OpenAI SDK 送出 Function Calling 請求；能力擴充的 Function Calling 說明完整流程，以及它為什麼是 Agent 和 MCP 的基礎。`);
+W('an-sysprompt','a1-system','同一概念',`Parameter control explains what a system prompt is and what goes in it; the Anthropic SDK section gives a real product example — the Claude.ai system prompts Anthropic publishes.`,`參數控制說明 System Prompt 是什麼、放什麼；Anthropic SDK 這裡提供真實產品的例子：Anthropic 公開的 Claude.ai 系統提示詞。`);
+W('a1-stream','llm-stream','同一概念',`Parameter control explains how stream=True gives the typing effect; LlamaIndex's LLM integrations stream the same way, a few tokens at a time.`,`參數控制說明 stream=True 帶來的打字效果；LlamaIndex 串接 LLM 時同樣支援串流，每次回傳幾個 Token 即時顯示。`);
 /* Knowledge retrieval */
-W('pain-hall','hall','同一概念',`The same problem: the model invents plausible but false information.`,`同一個問題：模型編造看似合理的錯誤資訊。`);
+W('pain-hall','hall','同一概念',`RAG's motivation names hallucination as the pain point — confident answers even when the model does not know; the hallucination entry under AI safety covers its causes and countermeasures.`,`RAG 的動機把幻覺當成要解決的痛點：不知道答案時仍一本正經地回答；AI 安全的幻覺說明它的成因與各種對策。`);
 W('fz-semantic','vdb','實作使用',`Semantic search relies on a vector database to match similar meanings.`,`語意檢索靠向量資料庫比對意思相近的內容。`);
 W('a6-unstruct','a5-mmdef','同一主題',`Images, video and speech are exactly the data multimodal models handle.`,`圖片、影片、語音，正是多模態模型要處理的資料。`);
 W('a6-limit','md-space','解決問題',`Turning images and text into vectors in one semantic space lets a database compare whether contents are similar.`,`把圖片與文字都轉成同一語意空間的向量，資料庫就能比較內容是否相似。`);
 W('a6-oltp','sql-mysql','實例',`MySQL is a typical OLTP relational database.`,`MySQL 是典型的 OLTP 關聯式資料庫。`);
-W('vd-embed','emb','同一概念',`Vector embeddings in a database are the same idea.`,`資料庫裡的向量嵌入，和 Word Embedding 是同一個想法。`);
+W('vd-embed','emb','同一概念',`Word embeddings introduce the idea that similar meanings get nearby vectors; a vector database stores embeddings of whole passages and searches by exactly that property.`,`輸入表示的 Word Embedding 說明「意思相近、向量相近」的想法；向量資料庫把整段內容的向量嵌入存起來，靠的正是這個性質來搜尋。`);
 W('hd-analogy','emb-arith','原理相同',`Vector differences encode relations, as in king − man + woman.`,`向量差可以表示關係，就像 king − man + woman ≈ queen。`);
 W('hd-cluster','emb-space','原理相同',`Similar items cluster in embedding space.`,`意思相近的詞在 Embedding 空間中也會聚在一起。`);
 W('a6-store','flow-index','同一概念',`Storing vectors and building the index is RAG's indexing stage.`,`儲存並建立索引，就是 RAG 的 Indexing 階段。`);
 W('a6-query','flow-ret','同一概念',`Similarity search is RAG's retrieval stage.`,`相似搜尋就是 RAG 的 Retrieval 階段。`);
-W('si-meta','doc-meta','同一概念',`Both are descriptive information attached to data, usable for filtering.`,`都是附加在資料上的描述資訊，可以用來過濾。`);
+W('si-meta','doc-meta','同一概念',`Vector databases store metadata alongside each vector and filter on it after a query; a LlamaIndex Document carries metadata too, passed on to every node when it is chunked.`,`向量資料庫把 Metadata 跟著向量一起存，查詢後用來過濾；LlamaIndex 的 Document 也帶著 metadata，切塊時會傳給每個 Node。`);
 W('pp-filter','tb-filter','因果影響',`Metadata filtering is useful, but when it removes most of the data it slows the search.`,`元資料過濾很實用，但過濾掉大部分資料時會拖慢搜尋。`);
 W('dp-mag','a6-cos','解決問題',`When one dimension is very large, switch to cosine similarity, which looks only at the angle.`,`某一維數值特別大時，改用只看角度的餘弦相似度。`);
 W('a6-two','rerank','原理相同',`Shortlist candidates coarsely, then rank them precisely by another criterion.`,`先粗篩一批候選，再用另一種標準精排。`);
 W('iv-cell','ivf-centroid','構成元件',`Each cell is represented by a centroid, which queries are compared with first.`,`每個簇由一個群中心代表，查詢時先比對群中心。`);
 W('a6-pq','quant','原理相同',`Both represent numbers with fewer bits to save memory and speed up computation, at a small cost in precision.`,`都用較少的位元表示數值，省記憶體、加快計算，代價是一點精度。`);
 W('pq-ivf','mv-algo','實例',`IVF_PQ is one of the indexes Milvus supports.`,`IVF_PQ 是 Milvus 支援的索引之一。`);
-W('vp-qdrant','sv-qdrant','同一概念',`The same vector database.`,`同一個向量資料庫。`);
+W('vp-qdrant','sv-qdrant','同一概念',`The product comparison files Qdrant under open-source dedicated vector databases; LlamaIndex lists it as a vector store it can plug into.`,`產品比較把 Qdrant 歸為開源專用的向量資料庫；LlamaIndex 把它列為可以直接接上的 Vector Store。`);
 W('vp-redis','ckpt-redis','同一概念',`The same database, also usable in LangGraph as a checkpoint store.`,`同一個資料庫，在 LangGraph 中也能當 Checkpointer 的儲存後端。`);
 W('es-inverted','ret-bm25','搭配使用',`BM25 keyword retrieval is built on an inverted index.`,`BM25 關鍵字檢索就建立在倒排索引上。`);
 W('es-hybrid','ret-ensemble','原理相同',`Both combine keyword and vector retrieval results.`,`都是同時結合關鍵字與向量兩種檢索結果。`);
 W('a6-faisslab','sv-faiss','實作使用',`LlamaIndex can use Faiss as its vector store.`,`LlamaIndex 可以用 Faiss 當向量儲存。`);
 W('fl-write','st-persist','原理相同',`Both save the index to disk to read back next time.`,`都是把索引存到磁碟，下次直接讀回。`);
 W('wl-docker','sql-mysql','對照比較',`Docker also stands up MySQL quickly for the Text-to-SQL demo — same deployment method, different kind of database.`,`Text-to-SQL 範例也用 Docker 快速架設 MySQL；一樣的部署方式，不同的資料庫類型。`);
-W('pl-key','a1-key','原理相同',`Cloud services all authenticate with API keys, which must not leak either.`,`雲端服務都用 API Key 驗證身分，也一樣不能外洩。`);
 W('pl-upsert','flow-update','實作使用',`Upsert lets the knowledge base be updated continuously without duplicates.`,`upsert 讓知識庫可以持續更新，不會重複。`);
 W('a6-bench','rmet','對照比較',`Retrieval metrics measure accuracy; VDBBench measures speed and load capacity.`,`檢索指標看找得準不準；VDBBench 看找得快不快、撐不撐得住。`);
 W('vb-data','em-openai','資料來源',`VDBBench uses high-dimensional vectors produced by OpenAI and other models as test data.`,`VDBBench 使用 OpenAI 等模型產生的高維向量當測試資料。`);
 W('vb-data','em-cohere','資料來源',`VDBBench also uses vectors produced by Cohere models.`,`VDBBench 也使用 Cohere 模型產生的向量。`);
-W('cos-dot','score-dot','同一概念',`Attention's dot-product score is the same operation.`,`都是內積：兩個向量對應元素相乘後相加。`);
+W('cos-dot','score-dot','同一概念',`Attention scores a query against a key with the dot product; cosine similarity uses it as the numerator, divided by the two vectors' lengths.`,`注意力用點積替 Query 和 Key 打分數；餘弦相似度把它當分子，再除以兩個向量的長度。`);
 W('rag','hall','解決問題',`Grounding answers in trusted data is the main way to reduce hallucination.`,`RAG 讓回答有可信資料作根據，是降低幻覺的主要方法。`);
-W('rag','hall-rag','同一概念',`RAG is one of the countermeasures against hallucination.`,`幻覺的對策之一就是 RAG。`);
-W('rag','st-rag','同一概念',`“Retrieval augmentation” in the strategy comparison is RAG.`,`策略選擇裡的檢索增強就是 RAG。`);
+W('rag','hall-rag','同一概念',`AI safety lists RAG as a hallucination countermeasure — the model may answer only from retrieved context; how RAG works in full is under Knowledge retrieval.`,`AI 安全把 RAG 列為降低幻覺的對策：要求模型只根據檢索到的資料回答；RAG 的完整做法在知識檢索。`);
+W('rag','st-rag','同一概念',`Strategy selection lists retrieval augmentation as the option when answers need live external data; the full RAG approach is under Knowledge retrieval.`,`策略選擇把檢索增強列為需要即時外部資料時的選項；完整的 RAG 做法在知識檢索。`);
 W('rag-why','hall','因果影響',`Hallucination is the first reason RAG is needed.`,`幻覺是需要 RAG 的首要原因。`);
-W('why-hall','hall','同一概念',`The same problem, seen from RAG's motivation and from AI safety.`,`同一個問題，分別出現在 RAG 的動機與 AI 安全。`);
 W('why-cutoff','flow-update','解決問題',`Refreshing external data regularly works around the model's knowledge cutoff.`,`定期更新外部資料，解決模型知識有截止日期的問題。`);
 W('rag-flow','vdb','構成元件',`RAG's indexing and retrieval are both built on a vector database.`,`RAG 的建立索引與檢索，都建立在向量資料庫上。`);
 W('flow-index','adv-chunk','構成元件',`Chunking is the splitting step inside indexing.`,`Chunking 是建立索引時的切塊步驟。`);
@@ -12673,11 +12729,14 @@ W('tr-latency','ann','解決問題',`ANN indexes return results in milliseconds,
 W('embm','rmet','評估指標',`Embedding models should be compared using retrieval metrics.`,`選擇 Embedding 模型，要用檢索指標比較。`);
 W('a6-cos','obj-con','實作使用',`Contrastive training pulls related pairs to high cosine similarity.`,`Contrastive Loss（例如 CLIP）用相似度讓配對的圖片與文字互相靠近。`);
 W('a6-cos','em-sep','實作使用',`Embedding-model separation is measured with cosine similarity.`,`分離度是用餘弦相似度計算三個詞之間的距離再相減。`);
-W('si-hnsw','ann-hnsw','實作使用',`Vectors are indexed with HNSW as they are written.`,`寫入向量時就用 HNSW 建立索引。`);
+W('si-hnsw','ann-hnsw','同一概念',`The ANN topic explains how HNSW searches layer by layer; the storing-and-indexing step wires each new vector into the HNSW graph on write, so it is searchable at once.`,`ANN 介紹 HNSW 怎麼一層層搜尋；儲存索引這一步則是在寫入時把新向量接進 HNSW 圖，讓它立刻能被搜到。`);
 W('a6-lsh','ann-ivf','對照比較',`Both narrow the search: LSH with hash buckets, IVF with clusters.`,`都是縮小搜尋範圍：LSH 用雜湊桶，IVF 用分群。`);
 W('flow-index','a6-prod','實作使用',`Indexing requires choosing which kind of vector store to use.`,`建立索引時，要選擇用哪一種向量資料庫儲存。`);
 W('ann-ivf','vp-faiss','實作使用',`FAISS provides IVF among many index types.`,`FAISS 提供 IVF 等多種索引結構。`);
 W('ann-hnsw','vp-chroma','實作使用',`Chroma's core index is HNSW.`,`Chroma 的核心索引技術是 HNSW。`);
+W('a6-dot','cos-dot','同一概念',`The similarity topic treats the dot product as one measure in its own right; inside cosine similarity it is the numerator, divided by the two vectors' lengths.`,`相似度條目把內積當成一種衡量方式；在餘弦相似度裡，它是公式的分子，再除以兩個向量的長度。`);
+W('tr-scale','df-scale','同一概念',`RAG's trends list scalability as a direction of growth; the vector-database comparison treats it as a key point of difference between products.`,`RAG 的趨勢把可擴展性列為發展方向；向量資料庫比較產品時，也把它當成主要的差異面向。`);
+W('du-video','md-video','同一概念',`Vector databases treat video as unstructured data that must be embedded before it can be searched; multimodal models treat it as a modality to understand or generate.`,`向量資料庫把影片當成要先轉成向量才能搜尋的非結構化資料；多模態把它當成模型要理解或生成的一種模態。`);
 /* Extending capabilities */
 W('a2-def','a1-sdkfc','同一概念',`The Function Calling supported by the OpenAI SDK is this tool calling.`,`OpenAI SDK 支援的 Function Calling，就是這裡的工具呼叫。`);
 W('a2-def','a1-tools','實作使用',`The “use external tools” prompting strategy is implemented with function calling.`,`提示策略中「使用外部工具」，實作方式就是 Function Calling。`);
@@ -12713,14 +12772,16 @@ W('ve-patch','tokz','原理相同',`Cutting an image into patches is like cuttin
 W('a5-proj','adapter','對照比較',`Same name, different job: a multimodal adapter converts vector spaces; a PEFT adapter is an inserted trainable module.`,`名稱相同但用途不同：多模態的 Adapter 轉換向量空間；PEFT 的 Adapter 是插入的可訓練小模組。`);
 W('dc-prefix','prefix','原理相同',`Both prepend non-text vectors for the model to attend to.`,`都是在文字前面接上一段不是文字的向量，讓模型參考。`);
 W('a5-mmdec','ar','實作使用',`Multimodal models still generate the answer autoregressively.`,`最後由自迴歸語言模型逐字生成回覆。`);
-W('gen-ar','ar','同一概念',`Autoregressive generation in multimodal models is the same idea.`,`就是模型原理裡的自迴歸模型。`);
+W('gen-ar','ar','同一概念',`Multimodal generative models can be autoregressive too (AudioLM, for example), conditioning each step on what came before — the same principle as autoregressive language models.`,`多模態的生成式模型也有自迴歸的做法（例如 AudioLM）：每一步都以前面生成的片段為條件，原理和模型原理的自迴歸模型相同。`);
 W('ti-sd','diff-sd','同一概念',`The same model: the technique under key techniques, the use under applications.`,`同一個模型：原理在關鍵技術，應用在應用場景。`);
 W('a5-cap','a5-venc','實作使用',`Describing an image starts with a vision encoder understanding it.`,`影像轉文字要先用 Vision Encoder 看懂圖片。`);
 W('a5-t2i','gen-diff','實作使用',`Text-to-image is mostly done by diffusion models.`,`文字生圖多半由擴散模型完成。`);
 W('can-caption','a5-cap','同一概念',`Image description is image captioning.`,`圖片描述就是 Image Captioning。`);
-W('ms-gpt4o','tf-gpt4o','同一概念',`The same model.`,`同一個模型。`);
-W('ad-openai','a1-oaiplat','同一概念',`The same company.`,`同一家公司。`);
+W('ms-gpt4o','tf-gpt4o','同一概念',`Key techniques use GPT-4o to show a transformer trained end to end on text, images and audio; the applications section uses it as an example of a multimodal assistant.`,`關鍵技術用 GPT-4o 說明以文字、影像、音訊端到端訓練的 Transformer；應用場景把它當成多模態助理的代表。`);
+W('ad-openai','a1-oaiplat','同一概念',`MCP's industry adoption notes OpenAI announcing MCP support in 2025; deployment lists the OpenAI Platform as a cloud API provider.`,`MCP 的產業採用提到 OpenAI 在 2025 年宣布支援 MCP；部署方式則把 OpenAI Platform 列為雲端 API 供應商。`);
 W('use-live','rag-why','解決問題',`The model does not know live information; tools that query live data fill the gap.`,`模型不知道即時資訊，用工具查詢即時資料就能補上。`);
+W('ms-gemini','tf-gemini','同一概念',`Key techniques explain how Gemini handles several modalities natively; the applications section uses it as an example of a multimodal assistant.`,`關鍵技術說明 Gemini 怎麼原生處理多種模態；應用場景把它當成多模態助理的代表之一。`);
+W('can-t2i','a5-t2i','同一概念',`Multimodal capabilities list text-to-image as one capability; the applications section shows how it is delivered, mostly with diffusion models.`,`多模態能力把文字生成影像列為一種能力；應用場景說明它怎麼落地，多半由擴散模型完成。`);
 /* Agent systems */
 W('hg-plan','a1-decomp','原理相同',`Task planning is task decomposition.`,`都是先把大任務拆成小任務，再分別處理。`);
 W('hgpt','a2-def','原理相同',`HuggingGPT's model calls are an early form of tool calling.`,`HuggingGPT 也是讓 LLM 決定要用哪個工具（模型），再把結果整理成回答。`);
@@ -12733,19 +12794,19 @@ W('mem-summary','a1-trim','對照比較',`Two ways to handle long conversations:
 W('a3-tool','a2-def','實作使用',`LangChain's Tool module implements function calling.`,`LangChain 的 Tool 模組用來實現 Function Calling。`);
 W('a3-ret','rag-flow','實作使用',`Retrieval components are the code that implements the RAG pipeline.`,`檢索元件就是在程式裡實作 RAG 流程的工具。`);
 W('ret-splitter','adv-chunk','同一概念',`A Text Splitter performs chunking.`,`Text Splitter 做的就是 Chunking。`);
-W('ret-store','vdb','同一概念',`A Vector Store is a vector database.`,`Vector Store 就是向量資料庫。`);
+W('ret-store','vdb','同一概念',`LangChain's Vector Store is a common interface to many vector databases; how the databases themselves store and search is under Knowledge retrieval.`,`LangChain 的 Vector Store 是連接各種向量資料庫的統一介面；向量資料庫本身怎麼儲存與搜尋，在知識檢索。`);
 W('ret-embed','embm','同一概念',`The Embedding Model component is an embedding model like those compared here.`,`Embedding Model 元件，就是這裡比較的 Embedding 模型。`);
-W('ret-bm25','qr-bm25','同一概念',`The same algorithm, appearing in both LangChain and LlamaIndex.`,`同一個演算法，分別出現在 LangChain 與 LlamaIndex。`);
+W('ret-bm25','qr-bm25','同一概念',`LangChain and LlamaIndex both ship a BM25 retriever that complements vector search with keyword matching.`,`LangChain 和 LlamaIndex 都內建 BM25 檢索器，用關鍵字比對補足向量檢索。`);
 W('a3-parser','a1-structured','原理相同',`Both ask the model for a structured format code can process directly.`,`都是要求模型輸出程式能直接處理的結構化格式。`);
-W('mp-vllm','vllm','同一概念',`The same inference engine.`,`同一個推論引擎。`);
+W('mp-vllm','vllm','同一概念',`LangChain uses vLLM as a model back end through its OpenAI-compatible API; why vLLM is fast (PagedAttention, continuous batching) is under inference acceleration.`,`LangChain 透過相容 OpenAI 的 API 把 vLLM 當成模型後端；vLLM 為什麼快（PagedAttention、連續批次）在推論加速。`);
 W('eco-smith','a3-smith','同一概念',`The LangSmith in the ecosystem is the platform detailed under observability.`,`生態系中的 LangSmith，就是可觀測性主題詳細介紹的平台。`);
 W('node-chunk','adv-chunk','同一概念',`A Node is a piece produced by chunking.`,`Node 就是 Chunking 切出來的片段。`);
 W('a3-doc','a3-node','前後步驟',`Documents are split into smaller Nodes before embedding and retrieval.`,`Document 切成更小的 Node，才能做 Embedding 與檢索。`);
-W('llm-ollama','loc-ollama','同一概念',`The same local runtime.`,`同一個本地執行工具。`);
+W('llm-ollama','loc-ollama','同一概念',`Local deployment shows Ollama running a model with a single command; LlamaIndex connects to it as an LLM through llama-index-llms-ollama.`,`本地部署介紹 Ollama 怎麼用一行指令在自己電腦跑模型；LlamaIndex 示範用 llama-index-llms-ollama 把它接成 LLM。`);
 W('ollama-tag','quant','同一概念',`The q3 or q4 in a model tag is the quantisation bit-width.`,`模型標籤中的 q3、q4，就是量化的位元數。`);
-W('emb-3s','oe-small','同一概念',`The same OpenAI embedding model.`,`同一個 OpenAI Embedding 模型。`);
-W('emb-3l','oe-large','同一概念',`The same OpenAI embedding model.`,`同一個 OpenAI Embedding 模型。`);
-W('emb-bge','em-bge','同一概念',`The same embedding model family.`,`同一個 Embedding 模型家族。`);
+W('emb-3s','oe-small','同一概念',`The embedding-models entry describes text-embedding-3-small as smaller and cheaper, 1,536 dimensions by default; LlamaIndex sets it as the model that produces its vectors.`,`Embedding 模型介紹 text-embedding-3-small 較小、較便宜，預設 1,536 維；LlamaIndex 示範把它設成產生向量的模型。`);
+W('emb-3l','oe-large','同一概念',`The embedding-models entry describes text-embedding-3-large, OpenAI's larger embedding model; LlamaIndex sets it as the model that produces its vectors.`,`Embedding 模型介紹 OpenAI 較大的 text-embedding-3-large；LlamaIndex 示範把它設成產生向量的模型。`);
+W('emb-bge','em-bge','同一概念',`The embedding-models entry introduces BAAI's free, open BGE family, strong on Chinese; LlamaIndex's Hugging Face example uses a 1024-dimension BGE model.`,`Embedding 模型介紹 BAAI 的 BGE 家族，免費開源、中文表現佳；LlamaIndex 的 Hugging Face 範例用 1024 維的 BGE 產生向量。`);
 W('idx-vector','vdb','實作使用',`A Vector Store Index stores the nodes' vectors in a vector database.`,`Vector Store Index 把 Node 的向量存進向量資料庫。`);
 W('idx-kg','db-neo4j','原理相同',`Both organise knowledge as a graph of entities and relationships.`,`兩者都用實體與關係組成的圖來組織知識。`);
 W('q-retriever','flow-ret','同一概念',`LlamaIndex's Retriever corresponds to RAG's retrieval.`,`LlamaIndex 的 Retriever 對應 RAG 的檢索。`);
@@ -12775,7 +12836,7 @@ W('cap-time','cap-ckpt','因果影響',`Because every step has a snapshot, you c
 W('cap-hitl','a4-hitl','同一概念',`The human-in-the-loop capability is implemented in full in the HITL topic.`,`四大能力中的人機協同，在 HITL 主題有完整實作。`);
 W('pn-approve','cap-hitl','解決問題',`Native human-in-the-loop solves the problem of pausing for approval.`,`人工審批的難題，由原生的 Human-in-the-Loop 解決。`);
 W('pn-resume','cap-ckpt','解決問題',`A checkpointer lets the flow resume from the last successful node.`,`Checkpointer 讓流程能從最後一個成功節點恢復。`);
-W('fsm-obs','a3-obs','同一主題',`Both aim to make every step visible.`,`都在追求看得見每一步發生什麼。`);
+W('fsm-obs','a3-obs','同一概念',`LangGraph's state machine puts every step on an explicit node, which makes it easy to observe; the observability topic covers tracing in production with LangSmith or Langfuse.`,`LangGraph 的狀態機讓每一步都落在明確的節點上，天生容易觀察；可信 AI 的可觀測性說明上線後怎麼用 LangSmith、Langfuse 追蹤。`);
 W('a4-react','a4-cmp3','實例',`The ReAct state graph demonstrates the table's LangGraph loops and conditional branches.`,`ReAct 狀態圖示範了表中 LangGraph 的循環與條件分支。`);
 W('rg-agent','rg-tools','前後步驟',`The agent decides to use a tool; tools runs it and returns to the agent.`,`agent 決定要用工具，tools 執行完再回到 agent。`);
 W('rg-thread','a1-memory','解決問題',`Without a framework you maintain history by hand; thread_id lets the framework manage each conversation's memory.`,`沒有框架時要自己維護聊天紀錄；thread_id 讓框架自動管理每個對話的記憶。`);
@@ -12803,7 +12864,7 @@ W('a4-hitl','rk-priv','解決問題',`Human approval before high-privilege actio
 W('a4-intr','cap-ckpt','搭配使用',`An interrupt must save the State as a snapshot before it can be resumed.`,`中斷時要先把 State 存成快照，之後才能恢復。`);
 W('rf-review','edge-cond','實作使用',`Only refunds over NT$1,000 go to human review — a decision made by a conditional edge.`,`超過 1,000 元才進入人工審核，這個判斷由條件邊完成。`);
 W('in-update','pd-rbac','搭配使用',`Whoever edits the State must first pass a permission check.`,`能修改 State 的人必須先通過權限檢查。`);
-W('pd-audit','pr-audit','同一概念',`Both record who did what and when for later investigation.`,`都是記錄誰在何時做了什麼，方便事後追查。`);
+W('pd-audit','pr-audit','同一概念',`Human-in-the-loop practice keeps an audit log of every human decision; security design lists audit trails as a principle for later investigation.`,`HITL 的生產實踐用 Audit Log 記下每次人工審核的決定；安全設計把審計追蹤列為安全原則，方便事後追查。`);
 W('pd-rbac','pr-least','原理相同',`Only roles with permission may perform sensitive operations.`,`只讓有權限的角色執行敏感操作。`);
 W('ckpt-session','rg-thread','實作使用',`Each session's state is distinguished by its thread_id.`,`每個 Session 用 thread_id 區分各自的狀態。`);
 W('a4-lcpos','a3-lc','同一概念',`The “developer toolbox” is LangChain itself.`,`開發工具箱指的就是 LangChain。`);
@@ -12815,22 +12876,25 @@ W('ml-exp','a3-mem','對照比較',`Memory handles short-term memory within a co
 W('a6-loop','rl-core','原理相同',`Act, get feedback, adjust — like the RL loop, except that what is updated here is memory, not model parameters.`,`行動、取得回饋、調整，和強化學習的循環很像；差別是這裡更新的是記憶，不是模型參數。`);
 W('lp-query','flow-ret','實作使用',`Querying memory is a retrieval against the vector database.`,`查詢記憶就是對向量資料庫做一次檢索。`);
 W('a6-agent','tr-personal','實例',`Personalisation is a RAG trend; agent memory is one example.`,`個人化是 RAG 的發展趨勢，Agent 記憶就是一個例子。`);
-W('sv-faiss','vp-faiss','同一概念',`The same vector index library.`,`同一個向量索引工具。`);
-W('sv-chroma','vp-chroma','同一概念',`The same vector database.`,`同一個向量資料庫。`);
-W('sv-pinecone','vp-pinecone','同一概念',`The same vector database.`,`同一個向量資料庫。`);
-W('sv-es','vp-es','同一概念',`The same search platform.`,`同一個搜尋平台。`);
+W('sv-faiss','vp-faiss','同一概念',`The product comparison files FAISS under local libraries; LlamaIndex lists it as a vector store it can plug into.`,`產品比較把 FAISS 歸為本地函式庫；LlamaIndex 把它列為可以直接接上的 Vector Store。`);
+W('sv-chroma','vp-chroma','同一概念',`The product comparison files Chroma under open-source dedicated vector databases; LlamaIndex lists it as a vector store it can plug into.`,`產品比較把 Chroma 歸為開源專用的向量資料庫；LlamaIndex 把它列為可以直接接上的 Vector Store。`);
+W('sv-pinecone','vp-pinecone','同一概念',`The product comparison files Pinecone under cloud-hosted vector databases; LlamaIndex lists it as a vector store it can plug into.`,`產品比較把 Pinecone 歸為雲端託管的向量資料庫；LlamaIndex 把它列為可以直接接上的 Vector Store。`);
+W('sv-es','vp-es','同一概念',`The product comparison files Elasticsearch under existing databases with vector search added, supporting hybrid search; LlamaIndex lists it as a vector store it can plug into.`,`產品比較把 Elasticsearch 歸為加上向量搜尋的既有資料庫，支援混合搜尋；LlamaIndex 把它列為可以直接接上的 Vector Store。`);
+W('a3-lc','eco-app','同一概念',`The LangChain topic introduces the whole framework; langchain in the ecosystem is its core package for assembling chains, agents and retrievers.`,`LangChain 主題介紹整個框架；生態系裡的 langchain 是其中組裝 Chain、Agent、Retriever 的核心套件。`);
+W('a3-li','pkg-starter','同一概念',`The LlamaIndex topic introduces the framework; llama-index is the starter package you install, bundling the core with common integrations such as OpenAI.`,`LlamaIndex 主題介紹整個框架；llama-index 是安裝時用的入門套件，包含核心與 OpenAI 等常用整合。`);
+W('sel-sup','tw-sup','同一概念',`Architecture selection explains when to use a supervisor (8–20 tools, roles to divide up); the research-and-writing team shows one deciding which specialist works next.`,`架構選型說明什麼時候該用 Supervisor（工具 8–20 個、需要角色分工）；研究寫作團隊示範它怎麼決定下一步交給哪個專家。`);
 /* Trustworthy AI */
 W('a3-smith','pr-audit','原理相同',`Both record every step completely for later investigation.`,`都是完整記錄每一步，方便事後追查。`);
 W('a3-verbose','a3-smith','對照比較',`Verbose suits live viewing while developing; LangSmith suits long-term storage and analysis in production.`,`Verbose 適合開發時即時看；LangSmith 適合上線後長期保存與分析。`);
 W('a3-langfuse','a3-smith','替代方案',`Langfuse is a self-hostable open-source alternative.`,`Langfuse 是可以自行部署的開源替代方案。`);
 W('ev-faith','hall','評估指標',`Faithfulness checks whether an answer is grounded, detecting hallucination.`,`Faithfulness 檢查回答是否有根據，用來偵測幻覺。`);
-W('ev-p','rouge-p','原理相同',`Both ask “how much of what was returned is correct”, for retrieved documents vs summary words.`,`都是「找出來的裡面有多少是對的」，只是對象分別是檢索結果與摘要用詞。`);
-W('ev-r','rouge-r','原理相同',`Both ask “how much of what should be found was found”.`,`都是「該找到的有多少被找到」。`);
+W('rouge-p','ev-p','同一概念',`Both ask “how much of what was returned is correct”, for retrieved documents vs summary words.`,`都是「找出來的裡面有多少是對的」，只是對象分別是檢索結果與摘要用詞。`);
+W('rouge-r','ev-r','同一概念',`ROUGE recall measures how much of the reference summary is covered; retrieval recall measures how many relevant documents come back — both ask how much of what should be found was found.`,`ROUGE 的 Recall 看參考摘要的內容被涵蓋多少；檢索指標的 Recall 看相關文件被找回多少——都是「該找到的有多少被找到」。`);
 W('a3-eval','human','對照比較',`An LLM judge is cheaper and faster than human evaluation but still less reliable.`,`LLM 當裁判比人工評估便宜快速，但仍不如人工可靠。`);
 W('rk-inject','misuse','同一主題',`Prompt injection is one way LLMs are abused.`,`Prompt Injection 是 LLM 被濫用的一種攻擊方式。`);
 W('rk-poison','lim-data','因果影響',`A poisoned index degrades the quality of RAG's answers.`,`索引被污染，RAG 的回答品質就跟著出問題。`);
-W('rk-secret','key-leak','同一概念',`Both are the risk of leaked keys.`,`都是金鑰外洩的風險。`);
-W('pr-redteam','bias-red','同一概念',`The same practice: simulate attacks on purpose to find weaknesses.`,`同一種做法：刻意模擬攻擊找出弱點。`);
+W('rk-secret','key-leak','同一概念',`The API key entry explains that anyone holding a leaked key can spend on your account; security design lists leaked secrets as a common risk and how to prevent it.`,`API Key 條目說明金鑰一旦外洩，任何人都能用你的帳號花錢；安全設計把 Secrets 洩漏列為常見風險，並說明怎麼防範。`);
+W('pr-redteam','bias-red','同一概念',`The bias entry uses red teaming to surface biased answers on purpose; security design lists it as a principle for finding a system's weak points.`,`偏見條目用紅隊測試主動找出帶偏見的回答；安全設計把它列為安全原則之一，用來找出系統弱點。`);
 W('pr-isolate','a1-system','實作使用',`Context isolation means keeping user input out of the system prompt.`,`上下文隔離的重點，就是不讓使用者輸入混進 System Prompt。`);
 W('th-pref','rk-inject','原理相同',`Both manipulate the model's choices with maliciously crafted content.`,`都是用惡意設計的內容操控模型的選擇。`);
 W('th-malicious','rk-priv','因果影響',`A malicious server may lure an agent into dangerous high-privilege actions.`,`惡意 Server 可能誘使 Agent 執行高權限的危險操作。`);
@@ -12853,11 +12917,16 @@ let LANG = LSget('llm-mindmap-lang') === 'zh' ? 'zh' : 'en';
 const I18N = {
   en: {
     title: 'LLM Course Mind Map', searchPh: 'Search, e.g. LoRA, Query, KV Cache', searchAria: 'Search the map',
-    expandAll: 'Expand all', collapse: 'Collapse to topics', viewMap: 'Mind map', viewFlow: 'Flowchart', viewAria: 'View', ddView: 'View', ddShow: 'Display', ddBranch: 'Branches', ddLang: 'Language',
+    expandAll: 'Expand all', collapse: 'Collapse to topics', ddShow: 'Display', ddBranch: 'Branches', ddLang: 'Language',
     shownNone: 'none', shownBoth: 'Key + lines',
     keyLbl: '★ Key nodes', relLbl: 'Relation lines', relTitle: 'Show or hide the dashed lines between related nodes',
-    flowTitle: 'From data to production', flowLead: 'The LLM lifecycle in order. Each step links to the nodes on the map that explain it; colours match the eight domains.',
-    flowBack: n => `↺ Back to step ${n}`, flowLoop: 'Improvement is a loop:', flowSec: 'Flowchart', domainOf: 'Domain',
+    flowTitle: 'From data to production', flowBack: n => `↺ Back to step ${n}`, flowSec: 'Flowchart', domainOf: 'Domain',
+    dockAria: 'Flowcharts', lifeCap: 'LIFECYCLE', flowOfTopic: 'Topic process', topicOf: 'Topic',
+    subEmpty: 'Topics with their own process show it here, e.g.', stepOf: (i, n) => `Step ${i} of ${n}`,
+    stepNodes: n => `Main nodes (${n})`, stepKeys: 'Use ← / → to move between steps · Esc clears the highlight.',
+    drawerLead: n => n ? `${n} key items in practice · click one and the mind map opens it` : 'No starred items here · open the full branch on the map',
+    seeAll: n => `Open all ${n} on the map`, closeStep: 'Close',
+    alsoIn: p => `Also in ${p}`, alsoSec: 'The same concept also appears in', alsoTip: 'also appears in',
     srcTitle: 'Source deck', srcLead: (n, f) => `${n} entry points on the map come from this deck${f ? ` (${f})` : ''}.`, keyTitle: 'Expand to every node marked important in practice and fade the rest',
     imp: {3: 'Core in practice', 2: 'Important in practice'}, why: 'Why it matters in practice', impLegend: '<b>★</b> core · <b>☆</b> important', 
     langAria: 'Language', legendAria: 'Domains', mapAria: 'Mind map',
@@ -12885,11 +12954,16 @@ const I18N = {
   },
   zh: {
     title: 'LLM 課程心智圖', searchPh: '搜尋關鍵字，例如 LoRA、Query、KV Cache', searchAria: '搜尋關鍵字',
-    expandAll: '全部展開', collapse: '收合到主題', viewMap: '心智圖', viewFlow: '流程圖', viewAria: '檢視方式', ddView: '檢視', ddShow: '顯示', ddBranch: '分支', ddLang: '語言',
+    expandAll: '全部展開', collapse: '收合到主題', ddShow: '顯示', ddBranch: '分支', ddLang: '語言',
     shownNone: '無', shownBoth: '重點＋關聯線',
     keyLbl: '★ 只看重點', relLbl: '關聯線', relTitle: '顯示或隱藏關聯節點之間的虛線',
-    flowTitle: '從資料到上線', flowLead: '依先後順序排列的 LLM 生命週期。每一步都連到圖上解釋它的節點，顏色對應八大領域。',
-    flowBack: n => `↺ 回到第 ${n} 步`, flowLoop: '改進是一個循環：', flowSec: '流程圖', domainOf: '所屬領域',
+    flowTitle: '從資料到上線', flowBack: n => `↺ 回到第 ${n} 步`, flowSec: '流程圖', domainOf: '所屬領域',
+    dockAria: '流程圖', lifeCap: '生命週期', flowOfTopic: '主題流程', topicOf: '所屬主題',
+    subEmpty: '有自己流程的主題會顯示在這裡，例如', stepOf: (i, n) => `第 ${i} 步，共 ${n} 步`,
+    stepNodes: n => `主要節點（${n}）`, stepKeys: '鍵盤左右方向鍵切換上一步／下一步，Esc 取消反白。',
+    drawerLead: n => n ? `實務重點 ${n} 個 · 點一個，心智圖就展開它` : '這一步沒有標星的重點 · 可以在心智圖展開完整分支',
+    seeAll: n => `在心智圖展開全部 ${n} 個`, closeStep: '收起',
+    alsoIn: p => `也在 ${p}`, alsoSec: '同一概念也出現在', alsoTip: '也出現在',
     srcTitle: '出處講義', srcLead: (n, f) => `圖上有 ${n} 個入口來自這份講義${f ? `（${f}）` : ''}。`, keyTitle: '展開所有實務重點節點，其餘淡化',
     imp: {3: '實務核心', 2: '實務重要'}, why: '為什麼實務上重要', impLegend: '<b>★</b> 核心 · <b>☆</b> 重要', 
     langAria: '語言', legendAria: '領域', mapAria: '心智圖',
@@ -12978,6 +13052,28 @@ function pairKey(a, b){ return a < b ? a + '|' + b : b + '|' + a; }
 WHY.forEach(([a, b, tag, en, zh]) => { link(a, b); REASON[pairKey(a, b)] = {tag, en, zh}; });
 function reasonOf(a, b){ const r = REASON[pairKey(a, b)] || {tag: '相關', en: '', zh: ''}; return {tag: tagName(r.tag), text: pick(r)}; }
 function relsOf(id){ return [...(RELS[id] || [])].map(x => BY[x]).sort((a, b) => OIDX.get(a.id) - OIDX.get(b.id)); }
+/* 「同一概念」關聯：重點是對方「在哪裡」，所以顯示位置而不是重複名稱 */
+function isSame(a, b){ const r = REASON[pairKey(a, b)]; return !!r && r.tag === '同一概念'; }
+function pathOf(c){ return [...ancestors(c.id).filter(a => a.depth > 0), c].map(nm).join(' › '); }
+/* 同一個概念出現的所有位置：沿著「同一概念」關聯一路找（A–B、B–C 時，A 也看得到 C） */
+function sameGroup(id){
+  const seen = new Set([id]), q = [id];
+  while (q.length) { const x = q.shift(); for (const y of (RELS[x] || [])) if (!seen.has(y) && isSame(x, y)) { seen.add(y); q.push(y); } }
+  seen.delete(id);
+  return [...seen].map(i => BY[i]).sort((a, b) => OIDX.get(a.id) - OIDX.get(b.id));
+}
+/* 說明文字：有直接關聯就用它；間接的，用那個位置連進這一組的關聯說明 */
+function sameText(id, c, group){
+  if (isSame(id, c.id)) return reasonOf(id, c.id).text;
+  const ids = new Set([id, ...group.map(g => g.id)]);
+  for (const y of (RELS[c.id] || [])) if (ids.has(y) && isSame(c.id, y)) return reasonOf(c.id, y).text;
+  return '';
+}
+function relLabel(a, b){
+  if (!isSame(a, b)) return reasonOf(a, b).tag;
+  const P = BY[b].p ? BY[BY[b].p] : null;
+  return ui('alsoIn')(P && P.depth ? nm(P) : nm(BY[b]));
+}
 
 let expanded = new Set(DOMS.map(d => d.id));   /* 使用者自己展開的分支：保留 */
 let relOpen = new Set();                        /* 為了畫關聯線而自動展開的分支：換選取時收回 */
@@ -12985,6 +13081,10 @@ let showRel = LSget('llm-core-mindmap-rel') !== '0';
 function isOpen(id){ return expanded.has(id) || relOpen.has(id); }
 let selected = 'root';
 let panelId = 'root';
+let stepSel = null;     /* 流程圖上選取的步驟 {owner, i}：選步驟時不選節點 */
+let openStep = null;    /* 流程圖上展開的步驟：點進裡面的節點時保持展開 */
+let flowCtx = null;     /* 第二行要顯示哪個主題的流程 */
+let panelStep = null;   /* 面板目前顯示的步驟（切換語言時重畫用） */
 let userMoved = false;
 let viewPref = LSget('llm-mindmap-view') || '';
 let keyMode = false, savedExpanded = null;
@@ -13078,7 +13178,8 @@ const LAB_FONT = `700 11.5px ${FONT_B}`;
 function render(opt = {}){
   const {nodes, links} = layout();
   const dur = (reduceMotion || opt.instant) ? 0 : 300;
-  const hot = selected ? new Set([selected, ...ancestors(selected).map(a => a.id)]) : new Set();
+  const stepIds = stepSel ? stepIdsAll(stepSel) : [], stepSet = new Set(stepIds);
+  const hot = selected ? new Set([selected, ...ancestors(selected).map(a => a.id)]) : new Set(stepIds.flatMap(id => [id, ...ancestors(id).map(a => a.id)]));
   function origin(d){ let a = d; while (a.p) { a = BY[a.p]; if (pos.has(a.id)) return pos.get(a.id); } return {px: 0, py: 0, w: 0}; }
 
   /* 關聯：選取節點的所有關聯節點；看不到的就連到最近的可見祖先 */
@@ -13088,8 +13189,11 @@ function render(opt = {}){
   /* 聚焦：選了任何節點（根節點除外）都反白它的脈絡——上層路徑、自己、直接子節點；有關聯線時再加上關聯節點，其餘淡化 */
   const focus = new Set();
   if (selected && selected !== 'root' && BY[selected]) {
-    [selected, ...ancestors(selected).map(a => a.id), ...BY[selected].kids.map(k => k.id)].forEach(x => focus.add(x));
+    [selected, ...ancestors(selected).map(a => a.id), ...descendants(BY[selected]).map(k => k.id)].forEach(x => focus.add(x));
     rels.forEach(r => { focus.add(r.id); ancestors(r.id).forEach(a => focus.add(a.id)); });
+  } else if (stepIds.length) {
+    /* 選了流程圖的步驟：反白這一步的主要節點、它們底下的實務重點，以及上層路徑 */
+    stepIds.forEach(id => { focus.add(id); ancestors(id).forEach(a => focus.add(a.id)); });
   }
   const dimOn = focus.size > 0;
   const visibleOf = d => { let x = d; while (x && !P.has(x.id)) x = BY[x.p]; return x; };
@@ -13110,7 +13214,11 @@ function render(opt = {}){
   const rpe = rp.enter().append('path').style('opacity', 0);
   rpe.append('title');
   rpe.on('click', (ev, e) => navigate(e.id));
-  const tip = e => { const r = reasonOf(selected, e.id); return `${nm(BY[selected])} ↔ ${nm(BY[e.id])} [${r.tag}] ${strip(r.text)} (${ui('jump')})`; };
+  const tip = e => {
+    const r = reasonOf(selected, e.id);
+    if (isSame(selected, e.id)) return `${nm(BY[selected])} ${ui('alsoTip')}：${pathOf(BY[e.id])} — ${strip(r.text)} (${ui('jump')})`;
+    return `${nm(BY[selected])} ↔ ${nm(BY[e.id])} [${r.tag}] ${strip(r.text)} (${ui('jump')})`;
+  };
   rpe.merge(rp)
     .attr('class', e => `rel-line${e.far ? ' far' : ''}`)
     .attr('d', e => relPath(A, P.get(e.vis.id)))
@@ -13126,7 +13234,7 @@ function render(opt = {}){
   const lall = lpe.merge(lp);
   lall.each(function(e){
     const g = relGeom(A, P.get(e.vis.id)); if (!g) return;
-    const tag = reasonOf(selected, e.id).tag;
+    const tag = relLabel(selected, e.id);
     mctx.font = LAB_FONT; const w = Math.ceil(mctx.measureText(tag).width) + 14;
     const s = d3.select(this).attr('transform', `translate(${g.mx},${g.my})`);
     s.select('rect').attr('x', -w / 2).attr('y', -10).attr('width', w).attr('height', 20).attr('rx', 10);
@@ -13155,7 +13263,7 @@ function render(opt = {}){
       else if (e.key === ' ') { e.preventDefault(); if (n.depth) toggle(n.data.id); }
     });
   const all = en.merge(ns);
-  all.attr('class', n => `node d${n.data.lv}${n.data.id === selected ? ' sel' : ''}${isDone(n.data) ? ' done' : ''}${relIds.has(n.data.id) ? ' rel' : ''}${n.data.x ? ' sup' : ''}${n.data.e ? ' ex' : ''}`)
+  all.attr('class', n => `node d${n.data.lv}${n.data.id === selected ? ' sel' : ''}${isDone(n.data) ? ' done' : ''}${relIds.has(n.data.id) ? ' rel' : ''}${stepSet.has(n.data.id) ? ' stp' : ''}${n.data.x ? ' sup' : ''}${n.data.e ? ' ex' : ''}`)
     .attr('style', n => `--lc:${lcOf(n.data)}`)
     .attr('aria-label', n => nm(n.data))
     .attr('aria-selected', n => n.data.id === selected ? 'true' : 'false')
@@ -13179,6 +13287,7 @@ function render(opt = {}){
 
   pos.clear();
   nodes.forEach(n => pos.set(n.data.id, {px: n.px, py: n.py, w: n.w}));
+  renderDock();
 }
 
 function panTo(id, instant){
@@ -13227,7 +13336,8 @@ function onNodeClick(id){
   select(id, {fromMap: true, pan: opening});
 }
 function select(id, opt = {}){
-  selected = id;
+  selected = id; stepSel = null; panelStep = null; flowCtx = nextCtx(id);
+  if (openStep && (id === 'root' || !stepIdsAll(openStep).some(g => covers(g, id)))) openStep = null;
   /* 點選的節點所在的分支要保留：把它的祖先轉成使用者展開 */
   ancestors(id).forEach(a => { if (a.depth > 0) expanded.add(a.id); });
   /* 關聯終點藏在收合的分支裡時，暫時展開到那一層；換選取時這些會收回 */
@@ -13254,13 +13364,14 @@ function expandBranch(id){
   render(); panTo(id);
 }
 function step(dir){
+  if (stepSel) { const j = stepSel.i + dir; if (j >= 0 && j < flowSteps(BY[stepSel.owner]).length) selectStep(stepSel.owner, j); return; }
   const i = OIDX.get(selected || 'root') + dir;
   if (i >= 0 && i < ORDER.length) navigate(ORDER[i]);
 }
 /* 取消選取：關聯線與淡化消失，自動展開的分支收回，使用者展開的分支保留 */
 function clearSelection(){
-  if (!selected) return;
-  selected = null;
+  if (!selected && !stepSel && !openStep) return;
+  selected = null; stepSel = null; panelStep = null; openStep = null;
   relOpen = new Set();
   render();
   showDetail('root');
@@ -13286,11 +13397,32 @@ function flowSteps(d){
   return (d.flow || []).map(st => ({t: pick(st), x: LANG === 'zh' ? (st.dzh || st.den || '') : (st.den || st.dzh || ''),
     go: (st.go ? st.go.split(',') : []).map(alias).filter(id => BY[id]), back: st.back ? +st.back : 0}));
 }
+function stepGo(s){ const st = s && BY[s.owner] ? flowSteps(BY[s.owner])[s.i] : null; return st ? (st.go.length ? st.go : [s.owner]) : []; }
+/* 步驟的內容：主要節點（go）＋各自底下所有實務重點節點（★★★／★★），依圖上順序 */
+function stepContent(s){
+  const go = stepGo(s), seen = new Set(go);
+  return go.map(id => {
+    const all = descendants(BY[id]), items = all.filter(x => x.imp >= 2 && !seen.has(x.id));
+    items.forEach(x => seen.add(x.id));
+    return {go: id, items, total: all.length};
+  });
+}
+function stepIdsAll(s){ return stepContent(s).flatMap(c => [c.go, ...c.items.map(x => x.id)]); }
+/* 節點 id 跟步驟節點 g 是否在同一條上下層路徑上 */
+function covers(g, id){ return g === id || ancestors(g).some(a => a.id === id) || ancestors(id).some(a => a.id === g); }
+function ownerOf(id){ const o = [BY[id], ...ancestors(id).reverse()].find(x => x && x.flow && x.id !== 'root'); return o ? o.id : null; }
+function nextCtx(id){
+  if (id === 'root') return null;
+  const o = ownerOf(id); if (o) return o;
+  /* 從某主題流程的步驟點進去的節點：留在原本的主題流程 */
+  if (flowCtx && BY[flowCtx] && flowSteps(BY[flowCtx]).some(st => st.go.some(g => covers(g, id)))) return flowCtx;
+  return null;
+}
 function flowHTML(d){
   const st = flowSteps(d); if (!st.length) return '';
   return `<section class="miniflow"><h3>${ui('flowSec')}</h3><ol>${st.map((x, i) => {
     const c = x.go[0] ? lcOf(BY[x.go[0]]) : lcOf(d);
-    return `<li style="--lc:${c}"><div class="mt"><span class="mn">${String(i + 1).padStart(2, '0')}</span>${esc(x.t)}</div>${x.x ? `<p>${linkify(x.x)}</p>` : ''}${x.go.length ? chips(x.go.map(id => BY[id])) : ''}${x.back ? `<span class="back">${esc(ui('flowBack')(x.back))}</span>` : ''}</li>`;
+    return `<li style="--lc:${c}"><div class="mt"><button type="button" class="mstep" data-step="${d.id}/${i}"><span class="mn">${String(i + 1).padStart(2, '0')}</span>${esc(x.t)}</button></div>${x.x ? `<p>${linkify(x.x)}</p>` : ''}${x.go.length ? chips(x.go.map(id => BY[id])) : ''}${x.back ? `<span class="back">${esc(ui('flowBack')(x.back))}</span>` : ''}</li>`;
   }).join('')}</ol></section>`;
 }
 function relList(id, list){
@@ -13340,7 +13472,7 @@ function refsHTML(d){
 }
 function showDetail(id){
   const d = BY[id];
-  panelId = id;
+  panelId = id; panelStep = null;
   const P = d.p ? BY[d.p] : null;
   panel.style.setProperty('--lc', lcOf(d));
   const anc = ancestors(id);
@@ -13362,6 +13494,8 @@ function showDetail(id){
   if (missingEn(d)) h += `<p class="pending">${ui('pending')}</p>`;
   const why = T(d, 'why');
   if (why) h += `<section class="card whycard"><h3>${ui('why')}</h3>${para(linkify(why))}</section>`;
+  const relAll = relsOf(id), same = sameGroup(id);
+  if (same.length) h += `<section class="also"><h3>${ui('alsoSec')} (${same.length})</h3><ul class="rellist">${same.map(c => { const t = sameText(id, c, same); return `<li><div class="relhead"><button type="button" class="chip relchip" data-go="${c.id}" style="--lc:${lcOf(c)}"><i class="dot" aria-hidden="true"></i>${esc(nm(c))}</button></div><p class="relpath">${esc(pathOf(c))}</p>${t ? `<p class="reltext">${linkify(t)}</p>` : ''}</li>`; }).join('')}</ul></section>`;
   if (d.kids.length) {
     const act = d.role !== 'root' ? `<button type="button" class="act" data-expand="${id}">${ui('expandBranch')}</button>` : '';
     h += `<section class="keyset"><h3>${ui('kids')[d.role] || ui('kids').keyword} (${d.kids.length})${act}</h3>${chips(d.kids)}</section>`;
@@ -13379,7 +13513,7 @@ function showDetail(id){
   if (an.length) h += `<section class="card analogy"><h3>${ui('analog')} (${an.length})${an.length > 1 ? `<span class="note">${ui('analogNote')}</span>` : ''}</h3><ul class="anlist">${an.map(o => `<li>${o.t ? `<b>${o.t}</b>` : ''}${linkify(o.x)}</li>`).join('')}</ul></section>`;
   const ks = T(d, 'k');
   if (ks && ks.length) h += `<section><h3>${ui('usage')}</h3><ul>${ks.map(x => `<li>${x}</li>`).join('')}</ul></section>`;
-  const rel = relsOf(id);
+  const rel = relAll.filter(c => !isSame(id, c.id));
   if (rel.length) h += `<section><h3>${ui('rel')} (${rel.length})<span class="note">${showRel ? ui('relNoteOn') : ui('relNoteOff')}</span></h3>${relList(id, rel)}</section>`;
   h += refsHTML(d);
   if (P && d.role === 'keyword') h += `<section class="ctx"><h3>${P.role === 'keyword' ? ui('parentKeyword') : ui('parentConcept')}</h3>${chips([P])}<p>${linkify(T(P, 's') || '')}</p></section>`;
@@ -13405,7 +13539,7 @@ function showDetail(id){
 /* 領域頁：列出全圖有這個應用領域的節點 */
 function showField(f){
   const list = ORDER.map(id => BY[id]).filter(d => d.ap && d.ap.some(a => a.f === f));
-  panelId = null;
+  panelId = null; panelStep = null;
   panel.style.setProperty('--lc', 'var(--ink)');
   let h = `<div class="fieldpage"><button type="button" class="btn back" data-back="1">${ui('back')}</button>`;
   h += `<div class="kicker"><span class="lvl">${ui('apps')}</span></div><h2>${esc(fieldName(f))}</h2><p class="lead">${ui('fieldLead')(list.length)}</p>`;
@@ -13419,7 +13553,7 @@ function showSource(k){
   const o = SRCBY[k]; if (!o) return;
   const all = ORDER.map(id => BY[id]).filter(d => (d.src || []).includes(k));
   const entry = all.filter(d => !(d.p && (BY[d.p].src || []).includes(k)));
-  panelId = null;
+  panelId = null; panelStep = null;
   panel.style.setProperty('--lc', 'var(--ink)');
   let h = `<div class="fieldpage"><button type="button" class="btn back" data-back="1">${ui('back')}</button>`;
   h += `<div class="kicker"><span class="lvl">${ui('srcTitle')}</span>${o.doc ? `<span class="tag">${esc(o.doc)}</span>` : ''}</div>`;
@@ -13441,7 +13575,9 @@ panel.addEventListener('click', e => {
   if (tab) { selectTab(tab); return; }
   const fb = e.target.closest('[data-field]');
   if (fb) { showField(fb.dataset.field); return; }
-  if (e.target.closest('[data-back]')) { showDetail(selected || 'root'); return; }
+  if (e.target.closest('[data-back]')) { if (stepSel) showStep(stepSel.owner, stepSel.i); else showDetail(selected || 'root'); return; }
+  const sp = e.target.closest('[data-step]');
+  if (sp) { const [o, n] = sp.dataset.step.split('/'); selectStep(o, +n); return; }
   const x = e.target.closest('[data-expand]');
   if (x) { expandBranch(x.dataset.expand); return; }
   const g = e.target.closest('[data-go]');
@@ -13480,7 +13616,7 @@ function buildLegend(){
   const kw = DATA.filter(d => d.role === 'keyword').length;
   document.getElementById('sub').textContent = ui('sub')(DOMS.length, DATA.length, UNITS.length, kw, SRC.length);
 }
-legendEl.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { if (flowMode) setFlow(false); navigate(b.dataset.go); } });
+legendEl.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) navigate(b.dataset.go); });
 
 const q = document.getElementById('q'), res = document.getElementById('results');
 function doSearch(){
@@ -13527,15 +13663,13 @@ document.addEventListener('keydown', e => {
 });
 
 document.getElementById('btn-expand').addEventListener('click', () => {
-  if (flowMode) setFlow(false);
   expanded = new Set(DATA.filter(d => d.depth > 0 && d.kids.length).map(d => d.id));
   render(); fit();
 });
 document.getElementById('btn-collapse').addEventListener('click', () => {
-  if (flowMode) setFlow(false);
   expanded = new Set(DOMS.map(d => d.id));
   relOpen = new Set();
-  selected = 'root';
+  selected = 'root'; stepSel = null; panelStep = null; flowCtx = null; openStep = null;
   render(); showDetail('root'); fit();
 });
 const relBtn = document.getElementById('btn-rel');
@@ -13562,32 +13696,105 @@ document.getElementById('z-in').addEventListener('click', () => svg.transition()
 document.getElementById('z-out').addEventListener('click', () => svg.transition().duration(reduceMotion ? 0 : 250).call(zoom.scaleBy, 0.8));
 document.getElementById('z-fit').addEventListener('click', () => fit());
 
-/* ---------- 流程圖檢視：從資料到上線 ---------- */
-const flowEl = document.getElementById('flowview'), mapWrap = document.querySelector('.mapwrap'), flowBtn = document.getElementById('btn-flow'), mapBtn = document.getElementById('btn-map');
-let flowMode = false;
-function renderFlow(){
-  const st = flowSteps(ROOT), loop = st.find(x => x.back);
-  flowEl.innerHTML = `<h2>${esc(ui('flowTitle'))}</h2><p class="flead">${esc(ui('flowLead'))}</p><ol class="fsteps">${st.map((x, i) => {
-    const c0 = x.go[0] ? BY[x.go[0]] : null;
-    return `<li class="fstep" style="--lc:${c0 ? lcOf(c0) : 'var(--ink)'}"><span class="fnum">${String(i + 1).padStart(2, '0')}</span>${c0 && c0.dm ? `<span class="fdom">${esc(nm(BY[c0.dm]))}</span>` : ''}<h3>${esc(x.t)}</h3><p>${linkify(x.x)}</p>${chips(x.go.map(id => BY[id]))}</li>`;
-  }).join('')}</ol>${loop ? `<div class="floop">${esc(ui('flowLoop'))}<button type="button" data-fstep="${loop.back}">${esc(ui('flowBack')(loop.back))} · ${esc(st[loop.back - 1].t)}</button></div>` : ''}`;
+/* ---------- 流程圖：固定在心智圖上方，跟心智圖雙向同步 ---------- */
+/* 第一行永遠是 LLM 生命週期；第二行是目前所在主題自己的流程（例如 RAG、RLHF） */
+const FLOW_EXAMPLES = ['s1-tf', 'rlhf', 'adv', 'a4-react'];
+function stepLi(owner, x, i, near){
+  const on = !!openStep && openStep.owner === owner && openStep.i === i;
+  const c = x.go[0] ? lcOf(BY[x.go[0]]) : lcOf(BY[owner]);
+  const k = stepContent({owner, i}).reduce((a, col) => a + col.items.length, 0);
+  return `<li class="fs${on ? ' on' : ''}${near ? ' near' : ''}" style="--lc:${c}"><button type="button" data-step="${owner}/${i}" aria-expanded="${on}" title="${esc(x.t + (x.x ? ' — ' + strip(x.x) : ''))}"><span class="fn">${String(i + 1).padStart(2, '0')}${k ? `<span class="fk">★${k}</span>` : ''}</span><span class="ft">${esc(x.t)}</span></button></li>`;
 }
-function syncFlowBtn(){ flowBtn.setAttribute('aria-pressed', String(flowMode)); mapBtn.setAttribute('aria-pressed', String(!flowMode)); document.getElementById('dv-view').textContent = flowMode ? ui('viewFlow') : ui('viewMap'); }
-function setFlow(on){
-  flowMode = on; flowEl.hidden = !on; mapWrap.classList.toggle('flowing', on); syncFlowBtn();
-  if (on) { renderFlow(); flowEl.scrollTop = 0; } else render({instant: true});
+const star = d => d.imp === 3 ? '<span class="st">★</span>' : d.imp === 2 ? '<span class="st">☆</span>' : '';
+function drawerHTML(s){
+  const st = flowSteps(BY[s.owner])[s.i]; if (!st) return '';
+  const cols = stepContent(s), n = cols.reduce((a, c) => a + c.items.length, 0);
+  const c0 = st.go[0] ? lcOf(BY[st.go[0]]) : lcOf(BY[s.owner]);
+  return `<div class="fdrawer" style="--lc:${c0}"><div class="fdhead"><b>${String(s.i + 1).padStart(2, '0')} ${esc(st.t)}</b><span>${esc(ui('drawerLead')(n))}</span><button type="button" class="fdx" data-step="${s.owner}/${s.i}" aria-label="${esc(ui('closeStep'))}" title="${esc(ui('closeStep'))}">×</button></div><div class="fdcols">${cols.map(c => {
+    const g = BY[c.go];
+    return `<section class="fdcol" style="--lc:${lcOf(g)}"><button type="button" class="fdgo${selected === g.id ? ' cur' : ''}" data-go="${g.id}">${star(g)}${esc(nm(g))}</button>${c.items.length ? `<ul>${c.items.map(x => `<li style="--ind:${Math.min(3, x.depth - g.depth - 1)}"><button type="button" class="fdi${selected === x.id ? ' cur' : ''}" data-go="${x.id}" title="${esc(strip(T(x, 's') || ''))}">${star(x)}${esc(nm(x))}</button></li>`).join('')}</ul>` : ''}${c.total ? `<button type="button" class="fdall" data-branch="${g.id}">${esc(ui('seeAll')(c.total))}</button>` : ''}</section>`;
+  }).join('')}</div></div>`;
 }
-flowBtn.addEventListener('click', () => { if (!flowMode) setFlow(true); });
-mapBtn.addEventListener('click', () => { if (flowMode) setFlow(false); });
-flowEl.addEventListener('click', e => {
-  const g = e.target.closest('[data-go]');
-  if (g) { setFlow(false); navigate(g.dataset.go); return; }
-  const f = e.target.closest('[data-fstep]');
-  if (f) {
-    const li = flowEl.querySelectorAll('.fstep')[+f.dataset.fstep - 1];
-    if (li) { li.setAttribute('tabindex', '-1'); li.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'center'}); li.focus({preventScroll: true}); }
+function rowHTML(owner, cap, name, nameGo){
+  const st = flowSteps(BY[owner]), loop = st.find(x => x.back);
+  /* 選了節點時，亮起它所在的步驟（選的是這個流程本身就不必） */
+  const cur = selected && selected !== 'root' && selected !== owner ? selected : null;
+  const nameEl = nameGo ? `<button type="button" class="fname" data-go="${nameGo}" style="--lc:${lcOf(BY[nameGo])}">${esc(name)}</button>` : `<b class="fname">${esc(name)}</b>`;
+  return `<div class="frow"><div class="fhead"><span class="fcap">${esc(cap)}</span>${nameEl}</div><ol class="fline">${st.map((x, i) => stepLi(owner, x, i, !!cur && x.go.some(g => covers(g, cur)))).join('')}${loop ? `<li class="floop"><button type="button" data-step="${owner}/${loop.back - 1}" title="${esc(ui('flowBack')(loop.back))} · ${esc(st[loop.back - 1].t)}">↺ ${String(loop.back).padStart(2, '0')}</button></li>` : ''}</ol></div>`;
+}
+function renderDock(){
+  const dock = document.getElementById('flowdock'); if (!dock) return;
+  const a = dock.contains(document.activeElement) ? document.activeElement : null;
+  const keep = a ? (a.dataset.go ? `[data-go="${a.dataset.go}"]` : a.dataset.branch ? `[data-branch="${a.dataset.branch}"]` : null) : null;
+  const oldCols = dock.querySelector('.fdcols'), sc = oldCols ? oldCols.scrollTop : 0, scKey = oldCols ? dock.dataset.open : '';
+  const drawerFor = owner => openStep && openStep.owner === owner ? drawerHTML(openStep) : '';
+  let h = rowHTML('root', ui('lifeCap'), ui('flowTitle')) + drawerFor('root');
+  if (flowCtx && BY[flowCtx]) {
+    const o = BY[flowCtx], P = o.p ? BY[o.p] : null;
+    h += rowHTML(flowCtx, P && P.depth ? nm(P) : ui('flowOfTopic'), nm(o), flowCtx) + drawerFor(flowCtx);
+  } else {
+    h += `<div class="frow empty"><div class="fhead"><span class="fcap">${esc(ui('flowOfTopic'))}</span></div><p class="fempty">${esc(ui('subEmpty'))} ${FLOW_EXAMPLES.filter(id => BY[id]).map(id => `<button type="button" class="chip" data-go="${id}" style="--lc:${lcOf(BY[id])}">${esc(nm(BY[id]))}</button>`).join('')}</p></div>`;
   }
+  if (openStep && openStep.owner !== 'root' && openStep.owner !== flowCtx) openStep = null;
+  dock.innerHTML = h;
+  dock.dataset.open = openStep ? openStep.owner + '/' + openStep.i : '';
+  const cols = dock.querySelector('.fdcols'); if (cols && scKey === dock.dataset.open) cols.scrollTop = sc;
+  /* 用鍵盤操作流程圖時，焦點跟著走 */
+  if (a) { const b = (keep && dock.querySelector(keep)) || dock.querySelector('.fs.on button'); if (b) b.focus({preventScroll: true}); }
+  const on = dock.querySelector('.fs.on, .fs.near');
+  if (on) { const line = on.parentElement, r = on.getBoundingClientRect(), lr = line.getBoundingClientRect(); if (r.left < lr.left || r.right > lr.right) line.scrollLeft += r.left - lr.left - 8; }
+}
+/* 選一個步驟：圖上反白它涉及的所有節點，面板顯示這一步的說明 */
+function selectStep(owner, i, opt = {}){
+  const d = BY[owner]; if (!d) return;
+  const st = flowSteps(d); if (!st[i]) return;
+  stepSel = {owner, i}; openStep = {owner, i}; selected = null; relOpen = new Set();
+  if (owner !== 'root') flowCtx = owner;
+  const ids = stepIdsAll(stepSel);
+  ids.forEach(id => ancestors(id).forEach(a => { if (a.depth > 0 && !expanded.has(a.id)) relOpen.add(a.id); }));
+  render(opt);
+  showStep(owner, i);
+  try { history.replaceState(null, '', '#' + owner + '/' + (i + 1)); } catch (e) {}
+  frame(ids, opt.instant);
+}
+function showStep(owner, i){
+  const d = BY[owner], st = flowSteps(d), x = st[i]; if (!x) return;
+  panelId = null; panelStep = {owner, i};
+  panel.style.setProperty('--lc', x.go[0] ? lcOf(BY[x.go[0]]) : lcOf(d));
+  let h = `<div class="kicker"><span class="lvl">${esc(owner === 'root' ? ui('lifeCap') : ui('flowOfTopic'))}</span><span class="tag">${esc(ui('stepOf')(i + 1, st.length))}</span></div>`;
+  h += `<h2>${esc(x.t)}<small>${esc(owner === 'root' ? ui('flowTitle') : nm(d))}</small></h2>`;
+  if (x.x) h += `<p class="lead">${linkify(x.x)}</p>`;
+  if (x.go.length) h += `<section><h3>${esc(ui('stepNodes')(x.go.length))}</h3><ul class="fieldlist">${x.go.map(id => { const n = BY[id]; return `<li style="--lc:${lcOf(n)}"><button type="button" class="chip relchip" data-go="${id}" style="--lc:${lcOf(n)}"><i class="dot" aria-hidden="true"></i>${esc(nm(n))}<span class="cp">${whereOf(n)}</span></button><p>${linkify(T(n, 's') || '')}</p></li>`; }).join('')}</ul></section>`;
+  if (x.back) h += `<p><button type="button" class="btn" data-step="${owner}/${x.back - 1}">${esc(ui('flowBack')(x.back))} · ${esc(st[x.back - 1].t)}</button></p>`;
+  if (owner !== 'root') h += `<section><h3>${esc(ui('topicOf'))}</h3>${chips([d])}</section>`;
+  h += `<div class="pager">${i > 0 ? `<button type="button" class="btn" data-step="${owner}/${i - 1}">← ${esc(st[i - 1].t)}</button>` : ''}${i < st.length - 1 ? `<button type="button" class="btn" data-step="${owner}/${i + 1}">${esc(st[i + 1].t)} →</button>` : ''}</div><p class="keys">${esc(ui('stepKeys'))}</p>`;
+  panel.innerHTML = h;
+  panel.scrollTop = 0;
+}
+document.getElementById('flowdock').addEventListener('click', e => {
+  const s = e.target.closest('[data-step]');
+  if (s) { const [o, n] = s.dataset.step.split('/'); toggleStep(o, +n); return; }
+  /* 手機上流程圖在地圖上方：點了裡面的節點就捲到地圖，看得到它展開 */
+  const toMap = () => { if (narrowMQ.matches) document.querySelector('.mapwrap').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'}); };
+  const br = e.target.closest('[data-branch]');
+  if (br) { showBranch(br.dataset.branch); toMap(); return; }
+  const g = e.target.closest('[data-go]');
+  if (g) { navigate(g.dataset.go); toMap(); }
 });
+/* 再點一次展開中的步驟（或按 ×）就收起 */
+function toggleStep(owner, i){
+  if (openStep && openStep.owner === owner && openStep.i === i) {
+    if (stepSel) clearSelection(); else { openStep = null; renderDock(); }
+  } else selectStep(owner, i);
+}
+/* 流程圖只列重點；要看完整分支就在心智圖上全部展開 */
+function showBranch(id){
+  const d = BY[id]; if (!d) return;
+  const sub = [d, ...descendants(d)];
+  sub.forEach(x => { if (x.kids.length) expanded.add(x.id); });
+  navigate(id);
+  frame(sub.map(x => x.id));
+}
 
 /* ---------- 語言切換 ---------- */
 const enBtn = document.getElementById('btn-en'), zhBtn = document.getElementById('btn-zh');
@@ -13599,8 +13806,7 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', ui(el.dataset.i18nAria)); });
   enBtn.setAttribute('aria-pressed', String(LANG === 'en')); zhBtn.setAttribute('aria-pressed', String(LANG === 'zh'));
   document.getElementById('dv-lang').textContent = LANG === 'en' ? 'English' : '中文';
-  setFonts(); syncRelBtn(); syncKeyBtn(); syncFlowBtn(); buildLegend(); updateProgress();
-  if (flowMode) renderFlow();
+  setFonts(); syncRelBtn(); syncKeyBtn(); buildLegend(); updateProgress(); renderDock();
   document.getElementById('imp-legend').innerHTML = ui('impLegend');
 }
 function setLang(l){
@@ -13609,7 +13815,7 @@ function setLang(l){
   LSset('llm-mindmap-lang', LANG);
   applyLang();
   render({instant: true});
-  if (panelId) showDetail(panelId); else showDetail(selected || 'root');
+  if (panelStep) showStep(panelStep.owner, panelStep.i); else if (panelId) showDetail(panelId); else showDetail(selected || 'root');
   if (q.value) doSearch();
 }
 enBtn.addEventListener('click', () => setLang('en'));
@@ -13644,8 +13850,10 @@ document.addEventListener('keydown', e => {
 
 applyLang();
 render({instant: true});
-const start = alias(decodeURIComponent(location.hash.slice(1)));
-if (start && BY[start] && start !== 'root') { fit(true); navigate(start, {instant: true}); }
+const h0 = decodeURIComponent(location.hash.slice(1)), hs = /^(.+)\/(\d+)$/.exec(h0);
+const start = hs ? null : alias(h0);
+if (hs && BY[alias(hs[1])] && BY[alias(hs[1])].flow) { showDetail('root'); fit(true); selectStep(alias(hs[1]), +hs[2] - 1, {instant: true}); }
+else if (start && BY[start] && start !== 'root') { fit(true); navigate(start, {instant: true}); }
 else { showDetail('root'); fit(true); }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { render({instant: true}); if (!userMoved) fit(true); });
 })();
