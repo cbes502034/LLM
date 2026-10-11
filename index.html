@@ -12930,7 +12930,7 @@ const I18N = {
     news: 'In the news', analog: 'Everyday analogies', analogNote: 'pick the one that clicks', errata: 'Slide errata',
     refs: 'References & further reading', usage: 'How to use this map', parentConcept: 'Parent concept', parentKeyword: 'Parent keyword',
     sibConcepts: 'Sibling concepts', sibKeywords: 'Sibling keywords', mastered: '✓ Mastered', markMastered: 'Mark as mastered',
-    keys: 'Use ← / → to step through nodes in map order.', jump: 'click to jump',
+    jump: 'click to jump',
     noResult: s => `No match for “${s}”. Try LoRA, Query, RAG or BLEU.`,
     pending: 'The English write-up for this node is still in progress — showing the Chinese notes for now.',
     fieldTitle: f => `${f}`, fieldLead: n => `${n} ideas in this course with a worked application in this field.`, back: '← Back',
@@ -12968,7 +12968,7 @@ const I18N = {
     news: '國際時事', analog: '生活比喻', analogNote: '挑一個最有感覺的', errata: '講義勘誤',
     refs: '延伸閱讀與參考資料', usage: '使用方式', parentConcept: '所屬概念', parentKeyword: '所屬關鍵字',
     sibConcepts: '同層概念', sibKeywords: '同層關鍵字', mastered: '✓ 已掌握', markMastered: '標記為已掌握',
-    keys: '鍵盤左右方向鍵可以照圖上的順序切換節點。', jump: '點一下跳過去',
+    jump: '點一下跳過去',
     noResult: s => `找不到「${s}」。可以試試 LoRA、Query、RAG、BLEU。`,
     pending: '這個節點的英文版還在撰寫中。',
     fieldTitle: f => `${f}`, fieldLead: n => `課程裡有 ${n} 個概念，附了在這個領域的應用說明。`, back: '← 返回',
@@ -13387,10 +13387,11 @@ function expandBranch(id){
   ancestors(id).forEach(a => expanded.add(a.id));
   render(); panTo(id);
 }
+/* 左右方向鍵：只在選了流程圖步驟時切換上一步／下一步 */
 function step(dir){
-  if (stepSel) { const j = stepSel.i + dir; if (j >= 0 && j < flowSteps(BY[stepSel.owner]).length) selectStep(stepSel.owner, j); return; }
-  const i = OIDX.get(selected || 'root') + dir;
-  if (i >= 0 && i < ORDER.length) navigate(ORDER[i]);
+  if (!stepSel) return;
+  const j = stepSel.i + dir;
+  if (j >= 0 && j < flowSteps(BY[stepSel.owner]).length) selectStep(stepSel.owner, j);
 }
 /* 取消選取：關聯線與淡化消失，自動展開的分支收回，使用者展開的分支保留 */
 function clearSelection(){
@@ -13546,12 +13547,8 @@ function showDetail(id){
     const sib = P.kids.filter(x => x !== d);
     if (sib.length) h += `<section><h3>${d.role === 'concept' ? ui('sibConcepts') : ui('sibKeywords')}</h3>${chips(sib)}</section>`;
   }
-  const i = OIDX.get(id), prev = BY[ORDER[i - 1]], next = BY[ORDER[i + 1]];
-  h += `<div class="pager">`;
-  h += prev ? `<button type="button" class="btn" data-go="${prev.id}">← ${prev.role === 'root' ? ui('overview') : esc(nm(prev))}</button>` : '';
-  if (d.role === 'concept') h += `<button type="button" class="btn master${mastered.has(id) ? ' on' : ''}" data-master="${id}" aria-pressed="${mastered.has(id)}">${mastered.has(id) ? ui('mastered') : ui('markMastered')}</button>`;
-  h += next ? `<button type="button" class="btn" data-go="${next.id}">${esc(nm(next))} →</button>` : '';
-  h += `</div><p class="keys">${ui('keys')}</p>`;
+  /* 面板底部只留「標記已掌握」；照圖上順序的上一個／下一個節點已取消（順序沒有知識上的意義） */
+  if (d.role === 'concept') h += `<div class="pager"><button type="button" class="btn master${mastered.has(id) ? ' on' : ''}" data-master="${id}" aria-pressed="${mastered.has(id)}">${mastered.has(id) ? ui('mastered') : ui('markMastered')}</button></div>`;
   panel.innerHTML = h;
   panel.scrollTop = 0;
   if (d.kids.length) panel.querySelectorAll('.plain, .lead').forEach(el => { if (!el.querySelector('.kw')) markKeywords(el, d.kids); });
