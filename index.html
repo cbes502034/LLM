@@ -221,6 +221,16 @@ html[lang="en"] body{line-height:1.65}
 .news p{margin:3px 0 0 !important;font-size:14px;line-height:1.65}
 .refs{list-style:none;padding:0;margin:0;display:grid;gap:5px}
 .refs li{margin:0;display:flex;gap:8px;align-items:baseline;font-size:13.5px;line-height:1.5}
+.refs .sp{font:inherit;font-size:11.5px;color:var(--muted);background:none;border:0;padding:0;margin-left:4px;cursor:pointer;white-space:nowrap;text-decoration:underline dotted;text-underline-offset:3px}
+.refs .sp:hover{color:var(--ink)}
+.deadlink{color:var(--muted);text-decoration:line-through}
+.deadtag{font-size:11px;color:var(--muted);border:1px dashed var(--line-strong);border-radius:5px;padding:0 5px;white-space:nowrap}
+.srclinks{margin-top:18px}
+.srclinks .note{font-size:12.5px;color:var(--muted);margin:0 0 8px !important}
+.srclinks ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.srclinks li{display:flex;gap:10px;align-items:baseline;margin:0;font-size:13.5px;line-height:1.5}
+.srclinks .pgno{flex:none;min-width:52px;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.srclinks .chips{margin-top:4px}
 .refs .kd{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line-strong);border-radius:5px;padding:0 5px;color:var(--muted);min-width:58px;text-align:center}
 .panel a{color:var(--ink);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--lc) 60%,transparent);text-underline-offset:3px}
 .panel a:hover{text-decoration-color:var(--lc)}
@@ -834,7 +844,9 @@ N({id:'tok-tool', p:'token', n:'Tokenizer', nz:'Tokenizer', src:['l1'], imp:2,
  s:`The component that converts text to token IDs and back. Each model family has its own; OpenAI's web tool and the [[trim-tiktoken|tiktoken]] library count tokens exactly for OpenAI models, in any language; other model families split text differently, so exact counts need each model's own tokenizer.`,
  sz:`把文字轉成 Token ID、再轉回文字的元件，每個模型家族都有自己的版本。OpenAI 的網頁工具與 [[trim-tiktoken|tiktoken]] 函式庫能精確計算 OpenAI 模型的 Token 數，任何語言都一樣準；其他模型家族的切法不同，要精確計算就得用各自的分詞器。`,
  why:`Teams count tokens with the model's own tokenizer (e.g. tiktoken) before sending requests, to avoid overflow errors and surprise bills.`,
- whyz:`送出請求前用模型自己的 Tokenizer（例如 tiktoken）算 Token，避免超出上限或帳單暴增。`});
+ whyz:`送出請求前用模型自己的 Tokenizer（例如 tiktoken）算 Token，避免超出上限或帳單暴增。`,
+ ref:[
+  {k:'slide', t:'OpenAI Tokenizer — count the tokens in a text', tz:'OpenAI Tokenizer — 線上計算文字的 Token 數', u:'https://platform.openai.com/tokenizer', sp:'l1:18', o:'243'}]});
 N({id:'tok-tw', p:'token', n:'台灣科技大學', nz:'台灣科技大學', src:['l1'], e:1,
  s:`The slides' example of ambiguous splitting: 台灣 / 科技 / 大學, 台灣 / 科技大學 or 台灣科技 / 大學, depending on the tokenizer.`,
  sz:`講義的切分例子：可能切成「台灣／科技／大學」「台灣／科技大學」或「台灣科技／大學」，取決於 Tokenizer。`});
@@ -992,7 +1004,8 @@ N({id:'emb', p:'s1-input', n:'Word embedding', nz:'Word Embedding', src:['l1'], 
   {k:'paper', t:'Mikolov et al. (2013) — Efficient Estimation of Word Representations in Vector Space (word2vec)', u:'https://arxiv.org/abs/1301.3781'},
   {k:'site', t:'Stanford NLP — GloVe: Global Vectors for Word Representation', u:'https://nlp.stanford.edu/projects/glove/'},
   {k:'blog', t:'Jay Alammar — The Illustrated Word2vec', u:'https://jalammar.github.io/illustrated-word2vec/'},
-  {k:'blog', t:'Lilian Weng — Learning Word Embedding', u:'https://lilianweng.github.io/posts/2017-10-15-word-embedding/'}]});
+  {k:'blog', t:'Lilian Weng — Learning Word Embedding', u:'https://lilianweng.github.io/posts/2017-10-15-word-embedding/'},
+  {k:'slide', t:'Moris — Word embedding matrices (Medium, in Chinese)', tz:'Moris — Word Embedding 編碼矩陣（Medium）', u:'https://medium.com/ml-note/word-embedding-3ca60663999d', sp:'l1:50', o:'250'}]});
 N({id:'emb-layer', p:'emb', n:'Embedding layer', nz:'Embedding Layer', src:['l1'],
  s:`A trainable lookup table with one row per vocabulary entry; feeding token IDs returns their vectors, with output shape (batch, sequence length, dimension).`,
  sz:`可訓練的查表層，詞表中每個字一列；輸入 Token ID 就取出對應向量，輸出形狀是 (batch, 序列長度, 維度)。`});
@@ -1359,7 +1372,8 @@ N({id:'s1-tf', p:'d-theory', n:'Transformer', nz:'Transformer', src:['l1'], imp:
   {k:'site', t:'Georgia Tech Polo Club — Transformer Explainer (interactive)', u:'https://poloclub.github.io/transformer-explainer/'},
   {k:'site', t:'Brendan Bycroft — LLM Visualization (3D walkthrough)', u:'https://bbycroft.net/llm'},
   {k:'video', t:'3Blue1Brown — Attention in transformers (Deep Learning, ch. 6)', u:'https://www.youtube.com/watch?v=eMlx5fFNoYc'},
-  {k:'github', t:'karpathy/nanoGPT — a minimal GPT you can train', u:'https://github.com/karpathy/nanoGPT'}],
+  {k:'github', t:'karpathy/nanoGPT — a minimal GPT you can train', u:'https://github.com/karpathy/nanoGPT'},
+  {k:'slide', t:'The Illustrated Transformer — Chinese translation (CSDN)', tz:'The Illustrated Transformer 中文翻譯（CSDN）', u:'https://blog.csdn.net/yujianmin1990/article/details/85221271', sp:'l1:59-64', o:'261'}],
  flow:[
   {en:`Input tokens`, zh:`輸入 Token`, den:'The text arrives as a sequence of token IDs.', dzh:'文字以一串 Token ID 進入模型。', go:'token'},
   {en:`Embedding + position`, zh:`Embedding 加位置`, den:'Each token becomes a vector, plus a positional encoding.', dzh:'每個 Token 變成向量，再加上位置編碼。', go:'emb,pe'},
@@ -1449,10 +1463,11 @@ print(self_attention(x, Wq, Wk, Wv).shape)       # torch.Size([4, 8])</code></pr
   {k:'paper', t:'Vaswani et al. (2017) — Attention Is All You Need', u:'https://arxiv.org/abs/1706.03762'},
   {k:'blog', t:'Sebastian Raschka — Understanding and Coding the Self-Attention Mechanism from Scratch', u:'https://sebastianraschka.com/blog/2023/self-attention-from-scratch.html'},
   {k:'blog', t:'Lilian Weng — Attention? Attention!', u:'https://lilianweng.github.io/posts/2018-06-24-attention/'},
-  {k:'video', t:'李宏毅 Hung-yi Lee — Self-attention (ML 2021, cited in the slides)', u:'https://www.youtube.com/watch?v=hYdO9CscNes'},
+  {k:'slide', t:'李宏毅 Hung-yi Lee — Self-attention (ML 2021, cited in the slides)', u:'https://www.youtube.com/watch?v=hYdO9CscNes', sp:'l1:52', o:'257', tz:'李宏毅 — Self-attention（ML 2021 課程影片）'},
   {k:'paper', t:'Clark et al. (2019) — What Does BERT Look At? An Analysis of BERT’s Attention', u:'https://arxiv.org/abs/1906.04341'},
   {k:'site', t:'Georgia Tech Polo Club — Transformer Explainer (interactive)', u:'https://poloclub.github.io/transformer-explainer/'},
-  {k:'docs', t:'PyTorch — torch.nn.functional.scaled_dot_product_attention', u:'https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html'}]});
+  {k:'docs', t:'PyTorch — torch.nn.functional.scaled_dot_product_attention', u:'https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html'},
+  {k:'slide', t:'codelove — An intuitive look at Q, K and V in self-attention', tz:'codelove — 直觀解說 Transformer 的 Self Attention 中的 QKV', u:'https://codelove.tw/@tony/post/3Vzd73', sp:'l1:53', o:'258'}]});
 N({id:'sa-q', p:'sa', n:'Query', nz:'Query', src:['l1'], imp:2,
  s:`The Query is the question a token asks — “what am I looking for?” It is compared with every Key to decide where this token should look.`,
  sz:`Query 是 Token 提出的問題：「我在找什麼？」它和每個 Key 比對，決定這個 Token 要看向哪裡。`,
@@ -1538,7 +1553,8 @@ N({id:'mha', p:'s1-tf', n:'Multi-Head Attention', nz:'Multi-Head Attention', src
   {k:'paper', t:'Ainslie et al. (2023) — GQA: Training Generalized Multi-Query Transformer Models', u:'https://arxiv.org/abs/2305.13245'},
   {k:'paper', t:'DeepSeek-AI (2024) — DeepSeek-V2 (introduces Multi-head Latent Attention)', u:'https://arxiv.org/abs/2405.04434'},
   {k:'site', t:'Anthropic — A Mathematical Framework for Transformer Circuits', u:'https://transformer-circuits.pub/2021/framework/index.html'},
-  {k:'docs', t:'PyTorch — torch.nn.MultiheadAttention', u:'https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html'}]});
+  {k:'docs', t:'PyTorch — torch.nn.MultiheadAttention', u:'https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html'},
+  {k:'slide', t:'Peter Li — The Transformer through three kinds of multi-head attention, with plain examples', tz:'李彼德之家 — Transformer 核心原理：從三個 Multi-Head Attention 角度，白話文範例帶您了解', u:'https://peterlihouse.com/%E8%B3%87%E6%BA%90%E4%B8%AD%E5%BF%83/%E7%99%BD%E8%A9%B1%E6%96%87%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/%E7%99%BD%E8%A9%B1%E6%96%87%E7%AF%84%E4%BE%8B%E5%B8%B6%E6%82%A8%E4%BA%86%E8%A7%A3transformer%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86-%E5%BE%9E%E4%B8%89%E5%80%8Bmulti-head-attention%E8%A7%92%E5%BA%A6/', sp:'l1:54', o:'259'}]});
 N({id:'mha-head', p:'mha', n:'Head', nz:'Head', src:['l1'],
  s:`A head is one independent attention computation with its own Q/K/V projections. The original Transformer uses 8 heads of 64 dimensions; GPT-3 175B uses 96.`,
  sz:`一個 Head 是一組獨立的注意力計算，有自己的 Q/K/V 投影。原始 Transformer 用 8 個 64 維的頭；GPT-3 175B 用 96 個。`});
@@ -1643,7 +1659,8 @@ N({id:'ln-bn', p:'ln', n:'Batch normalization', nz:'Batch Normalization', src:['
  sz:`對同一個 batch 裡的所有樣本、逐一特徵做正規化。它很適合影像 CNN，但依賴 batch 大小，處理長短不一的文字也不方便，所以 Transformer 改用 LayerNorm。`,
  ref:[
   {k:'paper', t:'Ioffe & Szegedy (2015) — Batch Normalization', u:'https://arxiv.org/abs/1502.03167'},
-  {k:'wiki', t:'Wikipedia — Batch normalization', u:'https://en.wikipedia.org/wiki/Batch_normalization'}]});
+  {k:'wiki', t:'Wikipedia — Batch normalization', u:'https://en.wikipedia.org/wiki/Batch_normalization'},
+  {k:'slide', t:'LayerNorm vs BatchNorm (HackMD)', tz:'LayerNorm v.s. BatchNorm（HackMD）', u:'https://hackmd.io/@viiccwen/SknZrTYKJg', sp:'l1:57', o:'260'}]});
 N({id:'ffn', p:'s1-tf', n:'Feed-forward network', nz:'FFN', src:['l1'],
  s:`After attention lets tokens exchange information, each token passes on its own through the same small two-layer network: expand from 512 to 2048 dimensions, apply a non-linearity, compress back to 512. This is where most of a Transformer's parameters — and much of its stored knowledge — live.`,
  sz:`注意力讓 Token 交換資訊之後，每個 Token 各自通過同一個兩層小網路：從 512 維擴展到 2048 維、經過非線性函數、再壓回 512 維。Transformer 大部分的參數，以及許多儲存的知識，都在這裡。`,
@@ -2177,7 +2194,9 @@ N({id:'maml', p:'gpt3', n:'MAML', nz:'MAML', src:['l2'],
  ref:[
   {k:'paper', t:'Finn, Abbeel & Levine (2017) — Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks', u:'https://arxiv.org/abs/1703.03400'},
   {k:'wiki', t:'Wikipedia — Meta-learning (computer science)', u:'https://en.wikipedia.org/wiki/Meta-learning_(computer_science)'},
-  {k:'thesis', t:'Chelsea Finn (2018, UC Berkeley PhD) — Learning to Learn with Gradients', u:'https://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-105.pdf'}]});
+  {k:'thesis', t:'Chelsea Finn (2018, UC Berkeley PhD) — Learning to Learn with Gradients', u:'https://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-105.pdf'},
+  {k:'slide', t:'PaddleEdu — Meta-learning basics', tz:'PaddleEdu — 元學習基礎', u:'https://paddlepedia.readthedocs.io/en/latest/tutorials/meta_learning/preliminaries.html', sp:'l2:9', o:'267'},
+  {k:'slide', t:'iThome Ironman 2024, Day 24 — Meta-learning and few-shot learning', tz:'iT 邦幫忙 2024 Day 24：元學習與少樣本學習', u:'https://ithelp.ithome.com.tw/articles/10365424', sp:'l2:10', o:'268'}]});
 N({id:'maml-inner', p:'maml', n:'Inner loop', nz:'內圈更新', src:['l2'],
  s:`For each task, take a few gradient steps on its support set starting from the shared weights.`,
  sz:`每個任務都從共用權重出發，用它的 Support Set 做幾次梯度更新。`});
@@ -2545,10 +2564,11 @@ pred = out.logits.argmax(dim=-1)                     # 0 = 真、1 = 假</code><
     '資深編輯看業配文｜看多了，就能從語氣和用詞看出不對勁。',
     '行員辨識假鈔｜經驗豐富，看過少量樣本就能分辨。'],
  ref:[
-  {k:'docs', t:'Hugging Face Transformers — BERT model documentation', u:'https://huggingface.co/docs/transformers/model_doc/bert'},
+  {k:'slide', t:'Hugging Face Transformers — BERT model documentation', u:'https://huggingface.co/docs/transformers/model_doc/bert', sp:'l2:52', o:'270', tz:'Hugging Face Transformers — BERT 模型文件'},
   {k:'course', t:'Hugging Face LLM Course — Fine-tuning a pretrained model', u:'https://huggingface.co/learn/llm-course/chapter3/1'},
   {k:'wiki', t:'Wikipedia — Fake news', u:'https://en.wikipedia.org/wiki/Fake_news'},
-  {k:'wikiz', t:'維基百科 — 假新聞', u:'https://zh.wikipedia.org/zh-tw/%E5%81%87%E6%96%B0%E8%81%9E'}]});
+  {k:'wikiz', t:'維基百科 — 假新聞', u:'https://zh.wikipedia.org/zh-tw/%E5%81%87%E6%96%B0%E8%81%9E'},
+  {k:'slide', t:'Kaggle — Fake and real news dataset', tz:'Kaggle — 真假新聞資料集', u:'https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset', sp:'l2:51', o:'269'}]});
 N({id:'fake-cls', p:'fake', n:'BertForSequenceClassification', nz:'BertForSequenceClassification', src:['l2'],
  s:`Hugging Face's BERT with a classification layer on [CLS]; pass num_labels and labels and it handles the loss.`,
  sz:`Hugging Face 提供、在 [CLS] 上接分類層的 BERT；傳入 num_labels 與 labels，它就會處理 loss。`});
@@ -2796,7 +2816,8 @@ print(tok.batch_decode(pred, skip_special_tokens=True))</code></pre>`}],
     '會議紀錄｜把兩小時的會議濃縮成幾條決議。'],
  ref:[
   {k:'course', t:'Hugging Face LLM Course — Fine-tuning a pretrained model', u:'https://huggingface.co/learn/llm-course/chapter3/1'},
-  {k:'wiki', t:'Wikipedia — Automatic summarization', u:'https://en.wikipedia.org/wiki/Automatic_summarization'}]});
+  {k:'wiki', t:'Wikipedia — Automatic summarization', u:'https://en.wikipedia.org/wiki/Automatic_summarization'},
+  {k:'slide', t:'Hugging Face docs — T5 (T5ForConditionalGeneration)', tz:'Hugging Face 文件 — T5（T5ForConditionalGeneration）', u:'https://huggingface.co/docs/transformers/model_doc/t5#transformers.T5ForConditionalGeneration.config', sp:'l2:77-78', o:'271'}]});
 N({id:'sum-prefix', p:'t5-sum', n:'summarize:', nz:'summarize:', src:['l2'],
  s:`The task prefix that tells T5 to summarise the text that follows.`,
  sz:`告訴 T5 要摘要後面文字的任務前綴。`});
@@ -4564,8 +4585,11 @@ N({id:'rl-chain', p:'rl-mdp', n:'Markov chain', nz:'馬可夫鏈', src:['rl'],
     '洗牌｜洗夠多次之後，每張牌出現在每個位置的機率都差不多。'],
  ref:[
   {k:'wiki', t:'Wikipedia — Markov chain', u:'https://en.wikipedia.org/wiki/Markov_chain'},
-  {k:'wikiz', t:'維基百科 — 馬可夫鏈', u:'https://zh.wikipedia.org/zh-tw/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE'},
-  {k:'wiki', t:'Wikipedia — Stationary distribution', u:'https://en.wikipedia.org/wiki/Stationary_distribution'}]});
+  {k:'slide', t:'Wikipedia (Chinese) — Markov chain', u:'https://zh.wikipedia.org/zh-tw/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE', sp:'rl:67', o:'323', tz:'維基百科 — 馬可夫鏈'},
+  {k:'wiki', t:'Wikipedia — Stationary distribution', u:'https://en.wikipedia.org/wiki/Stationary_distribution'},
+  {k:'slide', t:'Example code: every state reachable but periodic — stuck in a cycle (numpy)', tz:'範例程式：只滿足「任意狀態都能到達」→ 卡在固定週期（numpy）', u:'https://hackmd.io/s/ry0EssCw7', sp:'rl:73', o:'326'},
+  {k:'slide', t:'Example code: aperiodic but not every state reachable — converges only within the connected part (numpy)', tz:'範例程式：只滿足「不是固定週期」→ 只在連通的部分收斂（numpy）', u:'https://hackmd.io/s/BJmEx20v7', sp:'rl:73', o:'327'},
+  {k:'slide', t:'Example code: neither condition — cycles within the connected states (numpy)', tz:'範例程式：兩個條件都不滿足 → 在連通狀態中出現週期（numpy）', u:'https://hackmd.io/s/r1Kh6jRDm', sp:'rl:73', o:'328'}]});
 N({id:'mc-states', p:'rl-chain', n:'State set', nz:'狀態集', src:['rl'],
  s:`All possible states, such as lying and sitting.`,
  sz:`所有可能的狀態，例如躺著、坐著。`});
@@ -4623,7 +4647,9 @@ N({id:'rl-mdpdef', p:'rl-mdp', n:'MDP', nz:'MDP', src:['rl'],
     '經營遊戲｜每回合選擇投資、存錢或擴張，結果有機率性，還有分數回饋。',
     '醫療決策｜依病人狀態選擇治療方法，病情依機率變化。'],
  ref:[
-  {k:'wiki', t:'Wikipedia — Markov decision process', u:'https://en.wikipedia.org/wiki/Markov_decision_process'}]});
+  {k:'wiki', t:'Wikipedia — Markov decision process', u:'https://en.wikipedia.org/wiki/Markov_decision_process'},
+  {k:'slide', t:'Short link on the slide (expired; the original page cannot be recovered)', tz:'講義上的縮網址（已失效，查不到原本的網頁）', u:'https://reurl.cc/WDaLM5', sp:'rl:38', o:'307', dead:'1'},
+  {k:'slide', t:'Wikipedia (Chinese) — Markov decision process', tz:'維基百科 — 馬可夫決策過程', u:'https://zh.wikipedia.org/zh-tw/%E9%A6%AC%E5%8F%AF%E5%A4%AB%E6%B1%BA%E7%AD%96%E9%81%8E%E7%A8%8B', sp:'rl:74', o:'329'}]});
 N({id:'mdp-actions', p:'rl-mdpdef', n:'Action set', nz:'動作集', src:['rl'],
  s:`All the actions available in each state.`,
  sz:`每個狀態下可以執行的所有動作。`});
@@ -4689,7 +4715,9 @@ N({id:'rl-vfun', p:'rl-mdp', n:'Value function', nz:'價值函數', src:['rl'], 
     "A player's attacking choice｜From the same spot, does passing or shooting have the higher expected score?"],
  az:['西洋棋的局面評分｜不必下完，也能評估目前局面對誰有利。',
     '房地產估價｜評估一間房子（狀態）或一次裝修（動作）能帶來多少價值。',
-    '球員的進攻選擇｜同一個位置，傳球和投籃哪個期望得分比較高。']});
+    '球員的進攻選擇｜同一個位置，傳球和投籃哪個期望得分比較高。'],
+ ref:[
+  {k:'slide', t:'Shusen Wang — Deep Reinforcement Learning (1/5): basic concepts (video, from 16:30)', tz:'王樹森 — 深度強化學習 (1/5)：基本概念（影片，從 16:30 開始）', u:'https://www.youtube.com/watch?v=vmkRMvhCW5c&t=990s', sp:'rl:86', o:'330'}]});
 N({id:'vf-v', p:'rl-vfun', n:'State-value function', nz:'狀態價值函數', src:['rl'],
  s:`V_π(s): the expected return when starting from state s and following policy π.`,
  sz:`V_π(s)：在策略 π 下，從狀態 s 出發的期望 Return。`});
@@ -4825,7 +4853,8 @@ N({id:'rl-softmax', p:'rl-bandit', n:'Softmax policy', nz:'Softmax 策略', src:
     '樂透式獎勵｜表現越好的員工，抽到大獎的機率越高。',
     '歌單推薦｜越常聽的歌越常出現，冷門歌也偶爾會出現。'],
  ref:[
-  {k:'wiki', t:'Wikipedia — Softmax function', u:'https://en.wikipedia.org/wiki/Softmax_function'}]});
+  {k:'wiki', t:'Wikipedia — Softmax function', u:'https://en.wikipedia.org/wiki/Softmax_function'},
+  {k:'slide', t:'Clay-Technology World — The softmax function, with code', tz:'Clay-Technology World — softmax 函式介紹與程式實作', u:'https://clay-atlas.com/blog/2019/10/20/machine-learning-chinese-softmax-function/', sp:'rl:56', o:'312'}]});
 N({id:'sm-tau', p:'rl-softmax', n:'τ', nz:'τ', src:['rl'],
  s:`The temperature: larger values spread probability evenly and explore more; smaller values concentrate on the best action.`,
  sz:`溫度參數：越大機率越平均、越愛探索；越小越集中在最好的動作。`});
@@ -4908,7 +4937,7 @@ N({id:'rl-mc', p:'rl-algo', n:'Monte Carlo method', nz:'蒙地卡羅方法', src
     '期末才檢討｜整學期結束看成績，再決定下學期怎麼讀。'],
  ref:[
   {k:'wiki', t:'Wikipedia — Monte Carlo method', u:'https://en.wikipedia.org/wiki/Monte_Carlo_method'},
-  {k:'wikiz', t:'維基百科 — 蒙地卡羅方法', u:'https://zh.wikipedia.org/zh-tw/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BE%85%E6%96%B9%E6%B3%95'}]});
+  {k:'slide', t:'Wikipedia (Chinese) — Monte Carlo method', u:'https://zh.wikipedia.org/zh-tw/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BE%85%E6%96%B9%E6%B3%95', sp:'rl:44', o:'308', tz:'維基百科 — 蒙地卡羅方法'}]});
 N({id:'mc-sample', p:'rl-mc', n:'Random sampling', nz:'隨機取樣', src:['rl'],
  s:`Estimating a hard-to-compute quantity from many random samples.`,
  sz:`用大量隨機樣本估計難以直接計算的量。`});
@@ -4929,7 +4958,7 @@ N({id:'rl-td', p:'rl-algo', n:'Temporal-difference learning', nz:'時差學習',
     '開車導航即時改道｜不等到終點，每個路口就依最新路況調整預估時間。',
     '天氣預報每天更新｜越接近週六，預測越準。'],
  ref:[
-  {k:'wiki', t:'Wikipedia — Temporal difference learning', u:'https://en.wikipedia.org/wiki/Temporal_difference_learning'},
+  {k:'slide', t:'Wikipedia — Temporal difference learning', u:'https://en.wikipedia.org/wiki/Temporal_difference_learning', sp:'rl:45', o:'309', tz:'英文維基百科 — 時序差分學習（Temporal difference learning）'},
   {k:'wikiz', t:'維基百科 — 時序差分學習', u:'https://zh.wikipedia.org/zh-tw/%E6%97%B6%E5%BA%8F%E5%B7%AE%E5%88%86%E5%AD%A6%E4%B9%A0'},
   {k:'book', t:'Sutton & Barto (2018) — Reinforcement Learning: An Introduction, 2nd ed. (free online)', u:'http://incompleteideas.net/book/the-book-2nd.html'}]});
 N({id:'td-boot', p:'rl-td', n:'Bootstrapping', nz:'Bootstrapping', src:['rl'],
@@ -4954,7 +4983,7 @@ N({id:'rl-qlearn', p:'rl-algo', n:'Q-Learning', nz:'Q-Learning', src:['rl'], imp
     '投資日記｜記錄每種市況下哪個操作最賺。'],
  ref:[
   {k:'wiki', t:'Wikipedia — Q-learning', u:'https://en.wikipedia.org/wiki/Q-learning'},
-  {k:'wikiz', t:'維基百科 — Q學習', u:'https://zh.wikipedia.org/zh-tw/Q%E5%AD%A6%E4%B9%A0'},
+  {k:'slide', t:'Wikipedia (Chinese) — Q-learning', u:'https://zh.wikipedia.org/zh-tw/Q%E5%AD%A6%E4%B9%A0', sp:'rl:46', o:'310', tz:'維基百科 — Q學習'},
   {k:'thesis', t:'Watkins (1989) — Learning from Delayed Rewards (PhD thesis)', u:'https://www.cs.rhul.ac.uk/~chrisw/new_thesis.pdf'}]});
 N({id:'ql-table', p:'rl-qlearn', n:'Q-table', nz:'Q-table', src:['rl'],
  s:`A table holding the Q-value of every (state, action) pair; impossible when states are images or continuous.`,
@@ -5020,7 +5049,7 @@ N({id:'rl-sarsa', p:'rl-algo', n:'SARSA', nz:'SARSA', src:['rl'],
     '練習時照自己的習慣打｜評估的是自己的打法，不是教科書的打法。',
     '五格漫畫｜狀態、動作、獎勵、新狀態、新動作，剛好五格說完一個故事。'],
  ref:[
-  {k:'wiki', t:'Wikipedia — State–action–reward–state–action', u:'https://en.wikipedia.org/wiki/State%E2%80%93action%E2%80%93reward%E2%80%93state%E2%80%93action'},
+  {k:'slide', t:'Wikipedia — State–action–reward–state–action', u:'https://en.wikipedia.org/wiki/State%E2%80%93action%E2%80%93reward%E2%80%93state%E2%80%93action', sp:'rl:47', o:'311', tz:'英文維基百科 — SARSA'},
   {k:'wikiz', t:'維基百科 — SARSA算法', u:'https://zh.wikipedia.org/zh-tw/SARSA%E7%AE%97%E6%B3%95'},
   {k:'book', t:'Sutton & Barto (2018) — Reinforcement Learning: An Introduction, 2nd ed. (free online)', u:'http://incompleteideas.net/book/the-book-2nd.html'}]});
 N({id:'sarsa-5', p:'rl-sarsa', n:'Five-tuple', nz:'五元組', src:['rl'],
@@ -5189,7 +5218,8 @@ N({id:'rl-ppo', p:'rl-po', n:'PPO', nz:'PPO', src:['rl'], imp:3,
   {k:'paper', t:'Shao et al. (2024) — DeepSeekMath (introduces GRPO)', u:'https://arxiv.org/abs/2402.03300'},
   {k:'paper', t:'DeepSeek-AI (2025) — DeepSeek-R1', u:'https://arxiv.org/abs/2501.12948'},
   {k:'wiki', t:'Wikipedia — Proximal policy optimization', u:'https://en.wikipedia.org/wiki/Proximal_policy_optimization'},
-  {k:'wikiz', t:'維基百科 — 近端策略優化', u:'https://zh.wikipedia.org/zh-tw/%E8%BF%91%E7%AB%AF%E7%AD%96%E7%95%A5%E4%BC%98%E5%8C%96'}]});
+  {k:'wikiz', t:'維基百科 — 近端策略優化', u:'https://zh.wikipedia.org/zh-tw/%E8%BF%91%E7%AB%AF%E7%AD%96%E7%95%A5%E4%BC%98%E5%8C%96'},
+  {k:'slide', t:'Notes on Hung-yi Lee’s Deep Reinforcement Learning 2018 course (HackMD)', tz:'李宏毅老師 Deep Reinforcement Learning 2018 課程筆記（HackMD）', u:'https://hackmd.io/@shaoeChen/Bywb8YLKS/https%3A%2F%2Fhackmd.io%2F%40shaoeChen%2FSyez2AmFr', sp:'rl:92-93', o:'331'}]});
 N({id:'ppo-ac', p:'rl-ppo', n:'Actor-Critic', nz:'Actor-Critic', src:['rl'], imp:2,
  s:`The actor chooses actions (the policy); the critic estimates value to judge them; both are trained together, and the critic's estimate turns raw returns into lower-variance advantages.`,
  sz:`Actor 負責選動作（策略），Critic 估計價值來評判它們；兩者一起訓練，Critic 的估計把原始 Return 轉成變異數較低的優勢值。`,
@@ -5333,7 +5363,9 @@ N({id:'app-game', p:'rl-apps', n:'Video games', nz:'電玩遊戲', src:['rl'],
  sz:`俄羅斯方塊、五子棋等遊戲的 AI，也用於測試與平衡商業遊戲。`});
 N({id:'app-robot', p:'rl-apps', n:'Robotics', nz:'機器人', src:['rl'],
  s:`Control tasks such as robotic arms and legged locomotion, usually trained in simulation first.`,
- sz:`機器手臂、足式行走等控制任務，通常先在模擬中訓練。`});
+ sz:`機器手臂、足式行走等控制任務，通常先在模擬中訓練。`,
+ ref:[
+  {k:'slide', t:'Guided Cost Learning: Deep Inverse Optimal Control via Policy Optimization (video)', tz:'Guided Cost Learning：機器人從示範中學習（影片）', u:'https://www.youtube.com/watch?v=hXxaepw0zAw', sp:'rl:4', o:'295'}]});
 N({id:'app-drive', p:'rl-apps', n:'Autonomous driving', nz:'自動駕駛', src:['rl'],
  s:`For example self-parking: the on-board computer learns from sensor data how to steer into the bay.`,
  sz:`例如自動停車：車載電腦依感測器資料學會停進車格。`,
@@ -5972,7 +6004,9 @@ N({id:'a1-groq', p:'api-vendor', n:'Groq', nz:'Groq', src:['a1'],
   {k:'site', t:'Groq', u:'https://groq.com/'},
   {k:'docs', t:'Groq — OpenAI compatibility', u:'https://console.groq.com/docs/openai'},
   {k:'wiki', t:'Wikipedia — Groq', u:'https://en.wikipedia.org/wiki/Groq'},
-  {k:'wikiz', t:'維基百科 — Groq', u:'https://zh.wikipedia.org/zh-tw/Groq'}]});
+  {k:'wikiz', t:'維基百科 — Groq', u:'https://zh.wikipedia.org/zh-tw/Groq'},
+  {k:'slide', t:'Groq — Playground', tz:'Groq — Playground（線上試用）', u:'https://console.groq.com/playground', sp:'a1:24', o:'37'},
+  {k:'slide', t:'Groq — Client libraries', tz:'Groq — 官方函式庫', u:'https://console.groq.com/docs/libraries', sp:'a1:25', o:'44'}]});
 N({id:'groq-lpu', p:'a1-groq', n:'LPU', nz:'LPU', src:['a1'],
  s:`Language Processing Unit: Groq's chip designed specifically to accelerate AI inference, keeping model weights in fast on-chip memory.`,
  sz:`語言處理單元（Language Processing Unit）：Groq 專為加速 AI 推論設計的晶片，把模型權重放在高速的晶片內記憶體。`});
@@ -6114,7 +6148,9 @@ print(clf("This course map is really helpful!"))
   {k:'docs', t:'Hugging Face Hub documentation', u:'https://huggingface.co/docs/hub/index'},
   {k:'docs', t:'Hugging Face Transformers documentation', u:'https://huggingface.co/docs/transformers/index'},
   {k:'course', t:'Hugging Face LLM Course', u:'https://huggingface.co/learn/llm-course/chapter1/4'},
-  {k:'wiki', t:'Wikipedia — Open-source artificial intelligence', u:'https://en.wikipedia.org/wiki/Open-source_artificial_intelligence'}]});
+  {k:'wiki', t:'Wikipedia — Open-source artificial intelligence', u:'https://en.wikipedia.org/wiki/Open-source_artificial_intelligence'},
+  {k:'slide', t:'GitHub — HuggingChat for macOS', tz:'GitHub — HuggingChat macOS 桌面版', u:'https://github.com/huggingface/chat-macOS/', sp:'l5:16', o:'284'},
+  {k:'slide', t:'HuggingChat — Hugging Face’s chat interface', tz:'HuggingChat — Hugging Face 的聊天介面', u:'https://huggingface.co/chat/', sp:'l5:16', o:'291'}]});
 N({id:'hub', p:'hf', n:'Hub', nz:'Hub', src:['l5'], imp:3,
  s:`The Hugging Face Hub is the platform's central repository: Git-based storage for models, datasets and Spaces, each with a card describing its use, licence and limitations. You can search, compare, try, download and upload.`,
  sz:`Hugging Face Hub 是平台的核心儲存庫：以 Git 為基礎，存放模型、資料集與 Spaces，每個都附有說明用途、授權與限制的卡片。你可以搜尋、比較、試用、下載與上傳。`,
@@ -6131,7 +6167,7 @@ N({id:'hub', p:'hf', n:'Hub', nz:'Hub', src:['l5'], imp:3,
     '購物中心｜商品（Models）、原料（Datasets）、體驗區（Spaces）都在同一棟。',
     '影音平台｜可以搜尋、試看、收藏，也能上傳自己的作品。'],
  ref:[
-  {k:'docs', t:'Hugging Face Hub documentation', u:'https://huggingface.co/docs/hub/index'}]});
+  {k:'slide', t:'Hugging Face Hub documentation', u:'https://huggingface.co/docs/hub/index', sp:'l5:10', o:'278', tz:'Hugging Face Hub 文件'}]});
 N({id:'hub-models', p:'hub', n:'Models', nz:'Models', src:['l5'],
  s:`Repositories of pre-trained weights for text, speech, vision and multimodal tasks, each with a model card.`,
  sz:`預訓練權重的儲存庫，涵蓋文字、語音、影像與多模態，每個都附模型卡。`});
@@ -6142,7 +6178,9 @@ N({id:'hub-spaces', p:'hub', n:'Spaces', nz:'Spaces', src:['l5'], imp:2,
  s:`Hosted demo apps (Gradio, Streamlit, Docker) that let anyone try a model in the browser — e.g. generating images with Stable Diffusion 3.5.`,
  sz:`託管的展示應用（Gradio、Streamlit、Docker），任何人都能在瀏覽器試用模型，例如用 Stable Diffusion 3.5 生成圖片。`,
  why:`Spaces demos are a quick way to prototype and share model apps with stakeholders.`,
- whyz:`Spaces 是快速做出模型 Demo、與利害關係人分享的方式。`});
+ whyz:`Spaces 是快速做出模型 Demo、與利害關係人分享的方式。`,
+ ref:[
+  {k:'slide', t:'Hugging Face Spaces — try models in the browser', tz:'Hugging Face Spaces — 在網頁上直接試用模型', u:'https://huggingface.co/spaces', sp:'l5:24', o:'294'}]});
 N({id:'spaces-sd', p:'hub-spaces', n:'Stable Diffusion', nz:'Stable Diffusion', src:['l5'],
  s:`The slides' Space demo: Stability AI's Stable Diffusion 3.5 Large, a text-to-image diffusion model, generating pictures from prompts.`,
  sz:`講義示範的 Space：Stability AI 的 Stable Diffusion 3.5 Large，一個文字生圖的擴散模型。`,
@@ -6173,7 +6211,10 @@ N({id:'hf-transformers', p:'hf-libs', n:'Transformers', nz:'Transformers', src:[
  s:`The core library: load and run BERT, GPT, T5, Llama and thousands more with the same API, on PyTorch (and historically TensorFlow and JAX).`,
  sz:`核心函式庫：用同一套介面載入並執行 BERT、GPT、T5、Llama 等數千種模型，支援 PyTorch（過去也支援 TensorFlow 與 JAX）。`,
  why:`The transformers library is the standard API for loading, fine-tuning and running open models.`,
- whyz:`transformers 函式庫是載入、微調、執行開源模型的標準介面。`});
+ whyz:`transformers 函式庫是載入、微調、執行開源模型的標準介面。`,
+ ref:[
+  {k:'slide', t:'GitHub — huggingface/transformers', tz:'GitHub — huggingface/transformers', u:'https://github.com/huggingface/transformers', sp:'l5:9', o:'273'},
+  {k:'slide', t:'Hugging Face Transformers documentation', tz:'Hugging Face Transformers 文件', u:'https://huggingface.co/docs/transformers/index', sp:'l5:11', o:'279'}]});
 N({id:'tf-pt', p:'hf-transformers', n:'PyTorch', nz:'PyTorch', src:['l5'],
  s:`Meta's deep-learning framework; the main backend for Transformers and most LLM research.`,
  sz:`Meta 的深度學習框架，是 Transformers 與多數 LLM 研究的主要後端。`,
@@ -6198,19 +6239,19 @@ N({id:'hf-tokenizers', p:'hf-libs', n:'Tokenizers', nz:'Tokenizers', src:['l5'],
  why:`Fast tokenizers matter for data pipelines and must match the model you serve.`,
  whyz:`快速分詞器影響資料處理效率，而且必須和上線模型一致。`,
  ref:[
-  {k:'docs', t:'Hugging Face Tokenizers documentation', u:'https://huggingface.co/docs/tokenizers/index'}]});
+  {k:'slide', t:'Hugging Face Tokenizers documentation', u:'https://huggingface.co/docs/tokenizers/index', sp:'l5:12', o:'280', tz:'Hugging Face Tokenizers 文件'}]});
 N({id:'hf-lib-ds', p:'hf-libs', n:'Datasets', nz:'Datasets', src:['l5'], imp:2,
  s:`Load, stream, map and filter datasets efficiently (memory-mapped with Apache Arrow).`,
  sz:`高效率地載入、串流、轉換與過濾資料集（以 Apache Arrow 做記憶體映射）。`,
  why:`The datasets library is the usual way to load and preprocess training and evaluation data.`,
  whyz:`datasets 函式庫是載入與前處理訓練、評估資料的常用方式。`,
  ref:[
-  {k:'docs', t:'Hugging Face Datasets documentation', u:'https://huggingface.co/docs/datasets/index'}]});
+  {k:'slide', t:'Hugging Face Datasets documentation', u:'https://huggingface.co/docs/datasets/index', sp:'l5:13', o:'281', tz:'Hugging Face Datasets 文件'}]});
 N({id:'hf-diffusers', p:'hf-libs', n:'Diffusers', nz:'Diffusers', src:['l5'],
  s:`Library for diffusion models: text-to-image, image editing, inpainting and style transfer.`,
  sz:`擴散模型的函式庫：文字生圖、影像編輯、局部重繪與風格轉換。`,
  ref:[
-  {k:'docs', t:'Hugging Face Diffusers documentation', u:'https://huggingface.co/docs/diffusers/index'},
+  {k:'slide', t:'Hugging Face Diffusers documentation', u:'https://huggingface.co/docs/diffusers/index', sp:'l5:14', o:'282', tz:'Hugging Face Diffusers 文件'},
   {k:'wiki', t:'Wikipedia — Diffusion model', u:'https://en.wikipedia.org/wiki/Diffusion_model'},
   {k:'wikiz', t:'維基百科 — 擴散模型', u:'https://zh.wikipedia.org/zh-tw/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B'}]});
 N({id:'hf-trl', p:'hf-libs', n:'TRL', nz:'TRL', src:['l5'], imp:2,
@@ -6265,7 +6306,7 @@ N({id:'dl-git', p:'hf-dl', n:'Git LFS', nz:'Git LFS', src:['l5'],
  s:`Run git lfs install, then git clone the model repository to get every file, including large weights.`,
  sz:`先執行 git lfs install，再 git clone 模型儲存庫，取得包括大型權重在內的所有檔案。`,
  ref:[
-  {k:'site', t:'Git Large File Storage', u:'https://git-lfs.com/'}]});
+  {k:'slide', t:'Git Large File Storage', u:'https://git-lfs.com/', sp:'l5:21', o:'293', tz:'Git LFS（大型檔案儲存）'}]});
 N({id:'dl-snap', p:'hf-dl', n:'snapshot_download', nz:'snapshot_download', src:['l5'], imp:2,
  s:`A huggingface_hub function that downloads a whole repository snapshot, with caching, file filters and resumable downloads.`,
  sz:`huggingface_hub 套件的函式，下載整個儲存庫快照，支援快取、檔案篩選與中斷續傳。`,
@@ -6281,7 +6322,7 @@ N({id:'dl-api', p:'hf-dl', n:'Inference API', nz:'Inference API', src:['l5'],
  s:`Call a hosted model over HTTP with an API token instead of downloading it; the free tier is rate-limited. Hugging Face has since reorganised serverless inference under “Inference Providers”, so check the current docs for the endpoint.`,
  sz:`用 API Token 透過 HTTP 呼叫託管的模型，而不是下載它；免費方案有速率限制。Hugging Face 後來把無伺服器推論改組到「Inference Providers」底下，端點請以最新文件為準。`,
  ref:[
-  {k:'docs', t:'Hugging Face — Inference Providers documentation', u:'https://huggingface.co/docs/inference-providers/index'}]});
+  {k:'slide', t:'Hugging Face — Inference Providers (replaces the slide’s api-inference.huggingface.co/models/{model ID} endpoint)', u:'https://huggingface.co/docs/inference-providers/index', sp:'l5:18', o:'292', tz:'Hugging Face — Inference Providers（取代講義中 api-inference.huggingface.co/models/{模型ID} 的舊端點）'}]});
 N({id:'api-token', p:'dl-api', n:'API Token', nz:'API Token', src:['l5'],
  s:`A personal access token (starting with hf_) created in your settings and sent as “Authorization: Bearer …”. Treat it like a password.`,
  sz:`在設定頁建立的個人存取權杖（hf_ 開頭），放在「Authorization: Bearer …」標頭中。要像密碼一樣保管。`});
@@ -6399,7 +6440,9 @@ N({id:'a1-ref', p:'a1-strat', n:'Reference text', nz:'參考資料', src:['a1'],
     'A lawyer citing precedent｜An answer with grounds.'],
  az:['給一本字典｜有了字典，就能回答所有字的部首。',
     '開書考｜帶課本進考場。',
-    '律師附上判例｜有根據的回答。']});
+    '律師附上判例｜有根據的回答。'],
+ ref:[
+  {k:'slide', t:'The News Lens — the news article used as reference text in the slide example', tz:'關鍵評論網 — 藍委邀外部顧問共同考察核四，台電：不符保安規定（講義範例的參考文章）', u:'https://www.thenewslens.com/article/241506', sp:'a1:39', o:'48'}]});
 N({id:'ref-quote', p:'a1-ref', n:'Triple-quote delimiters', nz:'三引號分隔', src:['a1'],
  s:`Wrap the reference material in triple quotes (or XML-style tags) so the model can tell it apart from the instructions.`,
  sz:`用三引號（或 XML 標籤）把參考資料包起來，讓模型分得出資料和指令。`});
@@ -6415,7 +6458,9 @@ N({id:'a1-decomp', p:'a1-strat', n:'Task decomposition', nz:'任務拆解', src:
     'Writing a thesis｜Outline first, then write chapter by chapter.'],
  az:['組裝家具｜一步一步照說明書，不要一次全部釘起來。',
     '客服分流｜先判斷是帳務還是技術問題，再轉給對的人。',
-    '寫論文｜先列大綱，再一章一章寫。']});
+    '寫論文｜先列大綱，再一章一章寫。'],
+ ref:[
+  {k:'slide', t:'Divide and conquer, an algorithms note (Medium, in Chinese)', tz:'【演算法】分治法（Divide and conquer）（Medium）', u:'https://yalanin.medium.com/%E6%BC%94%E7%AE%97%E6%B3%95-%E5%88%86%E6%B2%BB%E6%B3%95-divide-and-conquer-592145d72699', sp:'a1:40-41', o:'52'}]});
 N({id:'dc-divide', p:'a1-decomp', n:'Divide-and-conquer', nz:'分治法', src:['a1'],
  s:`Split a big problem into smaller ones and solve each separately.`,
  sz:`把大問題拆成小問題分別解決。`,
@@ -6443,7 +6488,8 @@ N({id:'th-tot', p:'a1-think', n:'Tree of Thoughts', nz:'Tree of Thoughts', src:[
  s:`Expand reasoning into a tree of partial thoughts and search it, so one wrong line of thought does not doom the answer.`,
  sz:`把推理展開成由部分想法組成的樹並在其中搜尋，避免單一思路錯了就全錯。`,
  ref:[
-  {k:'paper', t:'Yao et al. (2023) — Tree of Thoughts: Deliberate Problem Solving with Large Language Models', u:'https://arxiv.org/abs/2305.10601'}]});
+  {k:'paper', t:'Yao et al. (2023) — Tree of Thoughts: Deliberate Problem Solving with Large Language Models', u:'https://arxiv.org/abs/2305.10601'},
+  {k:'slide', t:'AIoT Cloud forum — Tree of Thought (ToT) prompting', tz:'AIoT Cloud 論壇 — Tree of Thought（思維樹）提示技巧', u:'https://forum.aiotcloud.dev/t/topic/154', sp:'a1:48', o:'60'}]});
 N({id:'tot-bfs', p:'th-tot', n:'Breadth-first search', nz:'廣度優先搜尋', src:['a1'],
  s:`BFS: expand all thoughts one level at a time, keeping the most promising few at each level.`,
  sz:`BFS：一層一層展開所有思路，每層保留最有希望的幾個。`,
@@ -6497,7 +6543,7 @@ N({id:'test-evals', p:'a1-test', n:'OpenAI Evals', nz:'OpenAI Evals', src:['a1']
  why:`Eval frameworks turn ad-hoc testing into repeatable checks in CI.`,
  whyz:`評估框架把臨時測試變成 CI 中可重複的檢查。`,
  ref:[
-  {k:'github', t:'openai/evals', u:'https://github.com/openai/evals'}]});
+  {k:'slide', t:'GitHub — openai/evals', u:'https://github.com/openai/evals', sp:'a1:50', o:'61', tz:'GitHub — openai/evals'}]});
 N({id:'pe-adv', p:'prompt-eng', n:'Advanced techniques', nz:'進階技巧', src:['l6'],
  s:`Three techniques that noticeably raise output quality: Role Prompting assigns an expert identity, Few-shot supplies worked examples, and Chain-of-Thought asks the model to reason step by step.`,
  sz:`三種能明顯提升輸出品質的技巧：Role Prompting 指定專業身分；Few-shot 附上成功範例；Chain-of-Thought 要求模型一步一步思考。`,
@@ -6646,7 +6692,8 @@ N({id:'resume', p:'prompt-eng', n:'Résumé generator', nz:'履歷產生器', sr
  ref:[
   {k:'docs', t:'OpenAI — Text generation guide', u:'https://platform.openai.com/docs/guides/text'},
   {k:'github', t:'openai/openai-python — official Python SDK', u:'https://github.com/openai/openai-python'},
-  {k:'wiki', t:'Wikipedia — Prompt engineering', u:'https://en.wikipedia.org/wiki/Prompt_engineering'}]});
+  {k:'wiki', t:'Wikipedia — Prompt engineering', u:'https://en.wikipedia.org/wiki/Prompt_engineering'},
+  {k:'slide', t:'OpenAI — Models (the slide links to a “continuous model upgrades” page that no longer exists)', tz:'OpenAI — 模型總覽（講義原連結「continuous model upgrades」頁面已移除，改連這頁）', u:'https://platform.openai.com/docs/models', sp:'l1:16', o:'232'}]});
 N({id:'msgs', p:'resume', n:'Messages', nz:'Messages', src:['l1'], imp:3,
  s:`The list of conversation turns sent to a chat API; each message has a role (system, user, assistant, and tool for tool results) and content.`,
  sz:`送給聊天 API 的對話陣列，每則訊息都有角色（system、user、assistant，以及工具結果用的 tool）與內容。`,
@@ -6748,7 +6795,8 @@ for c, model in [(client, "gpt-4o-mini"), (groq, "openai/gpt-oss-20b"), (local, 
  ref:[
   {k:'github', t:'openai/openai-python', u:'https://github.com/openai/openai-python'},
   {k:'docs', t:'OpenAI API reference — Chat Completions', u:'https://platform.openai.com/docs/api-reference/chat'},
-  {k:'docs', t:'Groq — OpenAI compatibility', u:'https://console.groq.com/docs/openai'}]});
+  {k:'docs', t:'Groq — OpenAI compatibility', u:'https://console.groq.com/docs/openai'},
+  {k:'slide', t:'OpenAI Platform — Docs overview', tz:'OpenAI 平台 — 文件總覽', u:'https://platform.openai.com/docs/overview', sp:'a1:12,14', o:'5'}]});
 N({id:'a1-structured', p:'a1-oaisdk', n:'Structured Outputs', nz:'Structured Outputs', src:['a1'], imp:3,
  s:`Make the model reply in a JSON structure you specify (a JSON Schema or Pydantic model); in strict mode the output is guaranteed to parse and match the schema.`,
  sz:`讓模型照你指定的 JSON 結構（JSON Schema 或 Pydantic 模型）回覆；在 strict 模式下，輸出保證能解析並符合結構。`,
@@ -6815,12 +6863,12 @@ print(msg.content[0].text)</code></pre><p>和 OpenAI 的兩個差別：系統提
     '官方範例程式｜照著做最不容易出錯。'],
  ref:[
   {k:'github', t:'anthropics/anthropic-sdk-python', u:'https://github.com/anthropics/anthropic-sdk-python'},
-  {k:'docs', t:'Anthropic — Client SDKs', u:'https://docs.anthropic.com/en/api/client-sdks'}]});
+  {k:'slide', t:'Anthropic — Client SDKs', u:'https://docs.anthropic.com/en/api/client-sdks', sp:'a1:11', o:'0', tz:'Anthropic — 官方 SDK 文件'}]});
 N({id:'an-sysprompt', p:'a1-ansdk', n:'System Prompt', nz:'System Prompt', src:['a1'],
  s:`Anthropic publishes, in its release notes, the system prompts used by each Claude model on Claude.ai — a rare real-world example of a production system prompt.`,
  sz:`Anthropic 在版本說明中公開 Claude.ai 上各個 Claude 模型使用的系統提示詞，是難得一見的正式產品系統提示詞範例。`,
  ref:[
-  {k:'docs', t:'Anthropic — System prompts release notes', u:'https://docs.anthropic.com/en/release-notes/system-prompts'}]});
+  {k:'slide', t:'Anthropic — System prompts used on Claude.ai', u:'https://docs.anthropic.com/en/release-notes/system-prompts', sp:'a1:11', o:'3', tz:'Anthropic — Claude.ai 各模型的 System Prompt'}]});
 N({id:'a1-boto3', p:'a1-sdk', n:'Boto3', nz:'Boto3', src:['a1'],
  s:`The AWS SDK for Python. Separate clients handle Bedrock's control plane (bedrock: manage, fine-tune and evaluate models), inference (bedrock-runtime) and agents (bedrock-agent to build them, bedrock-agent-runtime to invoke them).`,
  sz:`AWS 的 Python SDK。不同的 client 各司其職：bedrock 管理、微調與評估模型；bedrock-runtime 執行推論；Agent 則由 bedrock-agent 建立、bedrock-agent-runtime 呼叫。`,
@@ -6851,17 +6899,22 @@ print(resp["output"]["message"]["content"][0]["text"])</code></pre><p>Converse A
   {k:'docs', t:'Boto3 — BedrockRuntime client', u:'https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-runtime.html'}]});
 N({id:'b3-bedrock', p:'a1-boto3', n:'bedrock', nz:'bedrock', src:['a1'],
  s:`The control-plane client: create, manage, fine-tune and evaluate models — the testing and deployment stage.`,
- sz:`控制面的 client：建立、管理、微調、評估模型，屬於測試與部署階段。`});
+ sz:`控制面的 client：建立、管理、微調、評估模型，屬於測試與部署階段。`,
+ ref:[
+  {k:'slide', t:'Boto3 docs — Bedrock client', tz:'Boto3 文件 — Bedrock 用戶端', u:'https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html', sp:'a1:13', o:'8'}]});
 N({id:'b3-runtime', p:'a1-boto3', n:'bedrock-runtime', nz:'bedrock-runtime', src:['a1'],
  s:`The inference client: invoke models (invoke_model, converse) — the stage of interacting with the model.`,
- sz:`推論用的 client：呼叫模型（invoke_model、converse），屬於與模型互動的階段。`});
+ sz:`推論用的 client：呼叫模型（invoke_model、converse），屬於與模型互動的階段。`,
+ ref:[
+  {k:'slide', t:'Boto3 docs — BedrockRuntime client', tz:'Boto3 文件 — BedrockRuntime 用戶端', u:'https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-runtime.html', sp:'a1:13', o:'13'}]});
 N({id:'b3-agent', p:'a1-boto3', n:'bedrock-agent', nz:'bedrock-agent', src:['a1'],
  s:`Bedrock Agents reason and call functions with their tool logic (often AWS Lambda functions) running on AWS, returning only the final result.`,
  sz:`Bedrock Agents 能推理並呼叫函數，工具邏輯（常是 AWS Lambda 函數）在 AWS 上執行，只回傳最終結果。`,
  w:`In Boto3 the bedrock-agent client creates and configures agents; invoking an agent at run time uses a separate client, bedrock-agent-runtime (invoke_agent).`,
  wz:`在 Boto3 中，bedrock-agent client 用來建立與設定 Agent；執行時呼叫 Agent 要用另一個 client：bedrock-agent-runtime（invoke_agent）。`,
  ref:[
-  {k:'docs', t:'AWS — Amazon Bedrock Agents', u:'https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html'}]});
+  {k:'docs', t:'AWS — Amazon Bedrock Agents', u:'https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html'},
+  {k:'slide', t:'Boto3 docs — Agents for Bedrock client', tz:'Boto3 文件 — Agents for Bedrock 用戶端', u:'https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent.html', sp:'a1:13', o:'20'}]});
 /* --- OpenAI API｜OpenAI API --- */
 N({id:'a1-oai', p:'d-talk', n:'OpenAI API', nz:'OpenAI API', src:['a1'], imp:3,
  s:`Calling GPT from code: create an account and an API key, install the openai package, call chat.completions, and understand token billing. The same code can switch to Groq's faster, cheaper hosted open models.`,
@@ -6908,7 +6961,8 @@ N({id:'a1-key', p:'a1-oai', n:'API Key', nz:'API Key', src:['a1'], imp:3,
  ref:[
   {k:'wiki', t:'Wikipedia — API key', u:'https://en.wikipedia.org/wiki/API_key'},
   {k:'wikiz', t:'維基百科 — API密鑰', u:'https://zh.wikipedia.org/zh-tw/API%E5%AF%86%E9%91%B0'},
-  {k:'blog', t:'GitGuardian (2025) — The State of Secrets Sprawl 2025', u:'https://blog.gitguardian.com/the-state-of-secrets-sprawl-2025/'}]});
+  {k:'blog', t:'GitGuardian (2025) — The State of Secrets Sprawl 2025', u:'https://blog.gitguardian.com/the-state-of-secrets-sprawl-2025/'},
+  {k:'slide', t:'OpenAI — API keys page', tz:'OpenAI — API 金鑰管理頁', u:'https://platform.openai.com/account/api-keys', sp:'l1:14', o:'223'}]});
 N({id:'key-secret', p:'a1-key', n:'Secret Key', nz:'Secret Key', src:['a1'],
  s:`The key generated with “Create new secret key”; it is displayed only once, so copy it to a safe place immediately.`,
  sz:`按「create new secret key」產生的金鑰；只會顯示一次，必須立刻複製到安全的地方。`});
@@ -6943,7 +6997,9 @@ N({id:'ch-messages', p:'a1-chat', n:'messages', nz:'messages', src:['a1'], imp:3
  s:`The conversation array; every message has a role (system, user, assistant) and content.`,
  sz:`對話陣列；每則訊息都有 role（system、user、assistant）與 content。`,
  why:`The messages array is where prompts, history and tool results all go.`,
- whyz:`messages 陣列裝著提示詞、對話紀錄與工具結果。`});
+ whyz:`messages 陣列裝著提示詞、對話紀錄與工具結果。`,
+ ref:[
+  {k:'slide', t:'OpenAI API reference — Create chat completion (Python)', tz:'OpenAI API 參考 — 建立 Chat Completion（Python）', u:'https://developers.openai.com/api/reference/python/resources/chat/subresources/completions/methods/create', sp:'a1:28', o:'46'}]});
 N({id:'ch-temp', p:'a1-chat', n:'temperature', nz:'temperature', src:['a1'],
  s:`The sampling temperature, controlling how random the reply is (0–2 in OpenAI's API).`,
  sz:`取樣溫度，控制回答的隨機性（OpenAI API 的範圍是 0–2）。`});
@@ -6975,7 +7031,10 @@ N({id:'a1-price', p:'a1-oai', n:'Pricing', nz:'計費', src:['a1'], imp:3,
  ref:[
   {k:'docs', t:'OpenAI — Pricing', u:'https://platform.openai.com/docs/pricing'},
   {k:'github', t:'openai/tiktoken', u:'https://github.com/openai/tiktoken'},
-  {k:'docs', t:'OpenAI Cookbook — How to count tokens with tiktoken', u:'https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken'}]});
+  {k:'docs', t:'OpenAI Cookbook — How to count tokens with tiktoken', u:'https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken'},
+  {k:'slide', t:'OpenAI — API pricing', tz:'OpenAI — API 價格', u:'https://openai.com/api/pricing/', sp:'a1:21', o:'28'},
+  {k:'slide', t:'OpenAI Tokenizer — count the tokens in a text', tz:'OpenAI Tokenizer — 線上計算文字的 Token 數', u:'https://platform.openai.com/tokenizer', sp:'a1:22', o:'34'},
+  {k:'slide', t:'Roy Kwok — How Unicode and UTF-8 relate (Medium)', tz:'Roy Kwok — Unicode 與 UTF-8 的關係？（Medium）', u:'https://roykwokcode.medium.com/unicode-%E8%88%87-utf-8-%E7%9A%84%E9%97%9C%E4%BF%82-1c9b7a0b7c29', sp:'a1:22', o:'36'}]});
 N({id:'pr-million', p:'a1-price', n:'Per million tokens', nz:'百萬 Token', src:['a1'],
  s:`The unit API price lists use: dollars per million input or output tokens.`,
  sz:`API 價目表的計價單位：每百萬個輸入或輸出 Token 多少美元。`});
@@ -7114,7 +7173,9 @@ N({id:'a1-ctx', p:'a1-param', n:'Context limit', nz:'上下文限制', src:['a1'
     "A backpack's capacity｜Too much stuff and it will not fit."],
  az:['白板的大小｜寫滿了就得擦掉一些才能繼續寫。',
     '手機容量｜照片存太多就得刪舊的。',
-    '背包容量｜東西太多就裝不下。']});
+    '背包容量｜東西太多就裝不下。'],
+ ref:[
+  {k:'slide', t:'OpenAI — GPT-4o mini model page (context window, max output tokens)', tz:'OpenAI — GPT-4o mini 模型頁（上下文視窗與最大輸出 Token）', u:'https://platform.openai.com/docs/models/gpt-4o-mini', sp:'a1:34', o:'47'}]});
 N({id:'ctx-window', p:'a1-ctx', n:'context window', nz:'context window', src:['a1'],
  s:`The maximum number of tokens — input and output together — a model can handle in one call; 128,000 for gpt-4o-mini.`,
  sz:`模型單次呼叫能處理的 Token 總量上限（輸入加輸出）；gpt-4o-mini 是 128,000。`});
@@ -8362,7 +8423,9 @@ N({id:'nn-trade', p:'ann', n:'Accuracy for speed', nz:'準確換速度', src:['a
  sz:`接受極小的誤差，換來大幅加速。`});
 N({id:'nn-catalog', p:'ann', n:'Index as table of contents', nz:'索引目錄', src:['a6'],
  s:`An index is like a book's contents page, jumping straight to the relevant region.`,
- sz:`索引就像書的目錄，幫你直接跳到相關的區域。`});
+ sz:`索引就像書的目錄，幫你直接跳到相關的區域。`,
+ ref:[
+  {k:'slide', t:'KouWei Lee — What is an index, and why does it make SELECT queries faster? (Medium)', tz:'KouWei Lee — 索引是什麼？為什麼加了索引查詢會變快（Medium）', u:'https://medium.com/weis-note/%E7%B4%A2%E5%BC%95%E6%98%AF%E4%BB%80%E9%BA%BC-%E7%82%BA%E4%BB%80%E9%BA%BC%E5%8A%A0%E4%BA%86%E7%B4%A2%E5%BC%95%E6%9F%A5%E8%A9%A2%E6%9C%83%E8%AE%8A%E5%BF%AB-what-is-indexing-how-the-indexing-makes-select-queries-faster-1310ca328b3c', sp:'a6:18', o:'222'}]});
 N({id:'a6-lsh', p:'ann', n:'LSH', nz:'LSH', src:['a6'],
  s:`Locality-Sensitive Hashing: special hash functions make nearby vectors likely to land in the same bucket, so a query compares only against its bucket's members.`,
  sz:`局部敏感雜湊（Locality-Sensitive Hashing）：特殊設計的雜湊函式讓相近的向量更可能落進同一個桶，查詢時只需和同桶的成員比對。`,
@@ -9164,22 +9227,25 @@ N({id:'ext-wttr', p:'a2-flask', n:'wttr.in', nz:'wttr.in', src:['a2'],
  s:`A minimalist weather service: request a city name and get the weather back as text or JSON.`,
  sz:`極簡的天氣查詢服務：用城市名稱就能取得文字或 JSON 格式的天氣。`,
  ref:[
-  {k:'github', t:'chubin/wttr.in', u:'https://github.com/chubin/wttr.in'}]});
+  {k:'github', t:'chubin/wttr.in', u:'https://github.com/chubin/wttr.in'},
+  {k:'slide', t:'wttr.in — weather by city name, as text or JSON', tz:'wttr.in — 用城市名稱查天氣（文字或 JSON）', u:'https://wttr.in/', sp:'a2:18,23', o:'66'}]});
 N({id:'ext-fakestore', p:'a2-flask', n:'Fake Store API', nz:'Fake Store API', src:['a2'],
  s:`A free test API with fake e-commerce products, carts and categories, handy for prototypes.`,
  sz:`提供假的電商商品、購物車與類別資料的免費測試 API，很適合做原型。`,
  ref:[
-  {k:'site', t:'Fake Store API', u:'https://fakestoreapi.com/'}]});
+  {k:'slide', t:'Fake Store API — mock e-commerce products and carts', u:'https://fakestoreapi.com/', sp:'a2:19,23', o:'72', tz:'Fake Store API — 模擬電商商品與購物車資料'}]});
 N({id:'ext-github', p:'a2-flask', n:'GitHub API', nz:'GitHub API', src:['a2'],
  s:`GitHub's REST API for users, repositories, commits, issues and more.`,
  sz:`GitHub 的 REST API，可查詢使用者、儲存庫、Commit、Issue 等。`,
  ref:[
-  {k:'docs', t:'GitHub REST API documentation', u:'https://docs.github.com/en/rest'}]});
+  {k:'slide', t:'GitHub REST API documentation', u:'https://docs.github.com/en/rest', sp:'a2:23', o:'99', tz:'GitHub REST API 文件'},
+  {k:'slide', t:'GitHub REST API — root endpoint called in the slide example', tz:'GitHub REST API — 講義範例呼叫的根端點', u:'https://api.github.com/', sp:'a2:20', o:'78'}]});
 N({id:'ext-gmaps', p:'a2-flask', n:'Google Maps API', nz:'Google Maps API', src:['a2'],
  s:`Google's Places API returns real places' ratings, addresses and opening status; it needs an API key with billing enabled.`,
  sz:`Google 的 Places API 回傳真實地點的評分、地址與營業狀態；需要啟用計費的 API 金鑰。`,
  ref:[
-  {k:'docs', t:'Google Maps Platform — Places API', u:'https://developers.google.com/maps/documentation/places/web-service/overview'}]});
+  {k:'docs', t:'Google Maps Platform — Places API', u:'https://developers.google.com/maps/documentation/places/web-service/overview'},
+  {k:'slide', t:'Google Maps Platform', tz:'Google 地圖平台', u:'https://developers.google.com/maps?hl=zh-tw', sp:'a2:21-22', o:'79'}]});
 N({id:'a2-free', p:'a2-ext', n:'Free API catalogue', nz:'免費 API 清單', src:['a2'],
  s:`The slides list 50 free APIs in eight categories; here each category's two names are split into separate branches. Free APIs come and go and often have rate limits, so check that one is alive before building on it.`,
  sz:`講義整理 50 個免費 API，分成 8 類；每類的兩個名稱在這裡拆成獨立的分支。免費 API 來來去去、常有速率限制，使用前先確認它還在運作。`,
@@ -9195,46 +9261,106 @@ N({id:'free-weather', p:'a2-free', n:'Weather', nz:'天氣', src:['a2'],
  s:`wttr.in, Open-Meteo, Sunrise Sunset and OpenAQ air quality.`,
  sz:`wttr.in、Open-Meteo、Sunrise Sunset、OpenAQ 空氣品質。`,
  ref:[
-  {k:'site', t:'Open-Meteo', u:'https://open-meteo.com/'}]});
+  {k:'slide', t:'Open-Meteo — global weather, no API key', u:'https://open-meteo.com/', sp:'a2:23', o:'102', tz:'Open-Meteo — 免 API Key 的全球天氣（歷史、即時、16 天預報）'},
+  {k:'slide', t:'wttr.in — weather by city name', tz:'wttr.in — 用城市名稱查天氣', u:'https://wttr.in/', sp:'a2:18,23', o:'66'},
+  {k:'slide', t:'Sunrise Sunset API — sunrise and sunset times', tz:'Sunrise Sunset API — 任意地點的日出日落時間', u:'https://sunrise-sunset.org/api', sp:'a2:23', o:'108'},
+  {k:'slide', t:'OpenAQ — open air-quality data', tz:'OpenAQ — 全球開放空氣品質資料（PM2.5、PM10）', u:'https://openaq.org/', sp:'a2:23', o:'109'}]});
 N({id:'free-geo', p:'a2-free', n:'Geography', nz:'地理', src:['a2'],
  s:`REST Countries, IP-API, Nominatim, Geocoding API and USGS earthquakes.`,
- sz:`REST Countries、IP-API、Nominatim、Geocoding API、USGS 地震。`});
+ sz:`REST Countries、IP-API、Nominatim、Geocoding API、USGS 地震。`,
+ ref:[
+  {k:'slide', t:'REST Countries — capitals, population, flags, currencies', tz:'REST Countries — 各國首都、人口、國旗與貨幣', u:'https://restcountries.com/', sp:'a2:23', o:'103'},
+  {k:'slide', t:'IP-API — geolocation from an IP address', tz:'IP-API — 由 IP 查地理位置、電信業者與時區', u:'https://ip-api.com/', sp:'a2:23', o:'104'},
+  {k:'slide', t:'OpenStreetMap Nominatim — geocoding and reverse geocoding', tz:'OpenStreetMap Nominatim — 地址與經緯度互轉', u:'https://nominatim.openstreetmap.org/', sp:'a2:23', o:'105'},
+  {k:'slide', t:'Geocoding API (maps.co) — address to coordinates', tz:'Geocoding API（maps.co）— 地址轉經緯度', u:'https://geocode.maps.co/', sp:'a2:23', o:'106'},
+  {k:'slide', t:'USGS Earthquake API — global earthquake data', tz:'USGS 地震 API — 全球即時與歷史地震資料', u:'https://earthquake.usgs.gov/fdsnws/event/1/', sp:'a2:23', o:'107'}]});
 N({id:'free-fin', p:'a2-free', n:'Finance', nz:'金融', src:['a2'],
  s:`CoinGecko, CoinCap, Binance public data and WallstreetCN quotes.`,
- sz:`CoinGecko、CoinCap、Binance 公開資料、WallstreetCN 行情。`});
+ sz:`CoinGecko、CoinCap、Binance 公開資料、WallstreetCN 行情。`,
+ ref:[
+  {k:'slide', t:'CoinGecko API — crypto prices, market caps and volumes', tz:'CoinGecko API — 加密貨幣價格、市值與交易量', u:'https://www.coingecko.com/en/api', sp:'a2:23', o:'112'},
+  {k:'slide', t:'CoinCap API — real-time crypto prices', tz:'CoinCap API — 即時加密貨幣行情', u:'https://coincap.io/', sp:'a2:23', o:'113'},
+  {k:'slide', t:'Binance public market-data API — prices, candlesticks, order books', tz:'幣安公開行情 API — 幣價、K 線與深度圖', u:'https://binance-docs.github.io/apidocs/spot/en/', sp:'a2:24', o:'114'},
+  {k:'slide', t:'WallstreetCN — stock indices, futures and commodities', tz:'華爾街見聞 — 全球股市指數、期貨與大宗商品行情', u:'https://wallstreetcn.com/', sp:'a2:24', o:'115'}]});
 N({id:'free-fx', p:'a2-free', n:'Exchange rates', nz:'匯率', src:['a2'],
  s:`Frankfurter and ExchangeRate-API.`,
- sz:`Frankfurter、ExchangeRate-API。`});
+ sz:`Frankfurter、ExchangeRate-API。`,
+ ref:[
+  {k:'slide', t:'Frankfurter — European Central Bank exchange rates', tz:'Frankfurter — 歐洲央行的歷史與即時匯率', u:'https://www.frankfurter.app/', sp:'a2:23', o:'110'},
+  {k:'slide', t:'ExchangeRate-API — currency conversion', tz:'ExchangeRate-API — 全球貨幣匯率換算', u:'https://www.exchangerate-api.com/', sp:'a2:23', o:'111'}]});
 N({id:'free-film', p:'a2-free', n:'Film', nz:'影視', src:['a2'],
  s:`OMDb, TVmaze, TMDB, Jikan and AniList for films, TV and anime.`,
- sz:`OMDb、TVmaze、TMDB、Jikan、AniList，涵蓋電影、影集與動畫。`});
+ sz:`OMDb、TVmaze、TMDB、Jikan、AniList，涵蓋電影、影集與動畫。`,
+ ref:[
+  {k:'slide', t:'Jikan — unofficial MyAnimeList API', tz:'Jikan — MyAnimeList 非官方 API（動畫、漫畫、聲優）', u:'https://jikan.moe/', sp:'a2:24', o:'117'},
+  {k:'slide', t:'OMDb — Open Movie Database', tz:'OMDb — 電影與影集資料（含 IMDb、爛番茄評分）', u:'http://www.omdbapi.com/', sp:'a2:24', o:'118'},
+  {k:'slide', t:'TVmaze API — TV schedules and episodes', tz:'TVmaze API — 電視節目播出表與分集介紹', u:'https://www.tvmaze.com/api', sp:'a2:24', o:'119'},
+  {k:'slide', t:'TMDB API — The Movie Database', tz:'TMDB API — 電影、影集與劇照資料庫', u:'https://www.themoviedb.org/documentation/api', sp:'a2:24', o:'120'},
+  {k:'slide', t:'AniList API — anime and manga (GraphQL)', tz:'AniList API — 動畫與漫畫（GraphQL）', u:'https://anilist.gitbook.io/anilist-apiv2-docs/', sp:'a2:24', o:'123'}]});
 N({id:'free-ent', p:'a2-free', n:'Entertainment', nz:'娛樂', src:['a2'],
  s:`PokeAPI, Open Trivia DB and Board Game Atlas.`,
- sz:`PokeAPI、Open Trivia DB、Board Game Atlas。`});
+ sz:`PokeAPI、Open Trivia DB、Board Game Atlas。`,
+ ref:[
+  {k:'slide', t:'PokeAPI — Pokémon data', tz:'PokeAPI — 寶可夢資料庫', u:'https://pokeapi.co/', sp:'a2:24', o:'116'},
+  {k:'slide', t:'Open Trivia DB — quiz questions', tz:'Open Trivia DB — 多主題的英文問答題庫', u:'https://opentdb.com/', sp:'a2:24', o:'121'},
+  {k:'slide', t:'Board Game Atlas — board-game database (the service has shut down)', tz:'Board Game Atlas — 桌遊資料庫（服務已停止）', u:'https://www.boardgameatlas.com/', sp:'a2:24', o:'122', dead:'1'}]});
 N({id:'free-food', p:'a2-free', n:'Food', nz:'飲食', src:['a2'],
  s:`TheCocktailDB, TheMealDB and Open Food Facts.`,
- sz:`TheCocktailDB、TheMealDB、Open Food Facts。`});
+ sz:`TheCocktailDB、TheMealDB、Open Food Facts。`,
+ ref:[
+  {k:'slide', t:'TheCocktailDB — cocktail recipes', tz:'TheCocktailDB — 調酒酒譜', u:'https://www.thecocktaildb.com/', sp:'a2:24', o:'124'},
+  {k:'slide', t:'TheMealDB — recipes from around the world', tz:'TheMealDB — 各國料理食譜', u:'https://www.themealdb.com/', sp:'a2:24', o:'125'},
+  {k:'slide', t:'Open Food Facts — ingredients and nutrition labels', tz:'Open Food Facts — 食品成分與營養標示', u:'https://world.openfoodfacts.org/data', sp:'a2:24', o:'126'}]});
 N({id:'free-sci', p:'a2-free', n:'Science', nz:'科學', src:['a2'],
  s:`NASA, Crossref and PubMed.`,
- sz:`NASA、Crossref、PubMed。`});
+ sz:`NASA、Crossref、PubMed。`,
+ ref:[
+  {k:'slide', t:'NASA Open APIs — astronomy picture of the day, Mars rover photos', tz:'NASA Open APIs — 每日天文圖、火星探測車照片', u:'https://api.nasa.gov/', sp:'a2:24', o:'127'},
+  {k:'slide', t:'Crossref REST API — DOIs and citation metadata', tz:'Crossref REST API — 論文 DOI 與引用中繼資料', u:'https://www.crossref.org/documentation/retrieve-metadata/rest-api/', sp:'a2:25', o:'131'},
+  {k:'slide', t:'NCBI APIs (PubMed) — biomedical literature', tz:'NCBI API（PubMed）— 生醫文獻檢索', u:'https://www.ncbi.nlm.nih.gov/home/develop/api/', sp:'a2:25', o:'132'}]});
 N({id:'free-know', p:'a2-free', n:'Knowledge', nz:'知識', src:['a2'],
  s:`Wikipedia, Wikidata and Open Library.`,
- sz:`Wikipedia、Wikidata、Open Library。`});
+ sz:`Wikipedia、Wikidata、Open Library。`,
+ ref:[
+  {k:'slide', t:'MediaWiki API — Wikipedia content and search', tz:'MediaWiki API — 維基百科條目查詢與搜尋', u:'https://www.mediawiki.org/wiki/API:Main_page', sp:'a2:24', o:'128'},
+  {k:'slide', t:'Wikidata REST API — structured knowledge', tz:'Wikidata REST API — 結構化知識查詢', u:'https://www.wikidata.org/wiki/Wikidata:REST_API', sp:'a2:25', o:'129'},
+  {k:'slide', t:'Open Library API — books by ISBN', tz:'Open Library API — 用 ISBN 查書籍、作者與封面', u:'https://openlibrary.org/developers/api', sp:'a2:25', o:'130'}]});
 N({id:'free-tool', p:'a2-free', n:'Utilities', nz:'工具', src:['a2'],
  s:`Public Holidays, Universities, a QR-code generator and a user-agent parser.`,
- sz:`Public Holidays、Universities、QR Code Generator、User Agent Parser。`});
+ sz:`Public Holidays、Universities、QR Code Generator、User Agent Parser。`,
+ ref:[
+  {k:'slide', t:'Nager.Date — public holidays in 100+ countries', tz:'Nager.Date — 100 多國的國定假日', u:'https://date.nager.at/', sp:'a2:25', o:'133'},
+  {k:'slide', t:'Universities API — university names and websites', tz:'Universities API — 各國大學名稱與網址', u:'http://universities.hipolabs.com/', sp:'a2:25', o:'134'},
+  {k:'slide', t:'goQR.me — QR code generator API', tz:'goQR.me — QR Code 產生 API', u:'https://goqr.me/api/', sp:'a2:25', o:'135'},
+  {k:'slide', t:'userstack — user-agent parser', tz:'userstack — 解析 User-Agent（裝置與作業系統）', u:'https://userstack.com/', sp:'a2:25', o:'136'}]});
 N({id:'free-net', p:'a2-free', n:'Networking', nz:'網路', src:['a2'],
  s:`DNS over HTTPS and the WordPress.com REST API.`,
- sz:`DNS over HTTPS、WordPress.com REST API。`});
+ sz:`DNS over HTTPS、WordPress.com REST API。`,
+ ref:[
+  {k:'slide', t:'Cloudflare DNS over HTTPS', tz:'Cloudflare DNS over HTTPS — 透過 HTTPS 查詢 DNS', u:'https://cloudflare-dns.com/', sp:'a2:25', o:'137'},
+  {k:'slide', t:'WordPress.com REST API — public blog posts and media', tz:'WordPress.com REST API — 讀取公開網誌文章與媒體', u:'https://developer.wordpress.com/docs/api/', sp:'a2:25', o:'138'}]});
 N({id:'free-social', p:'a2-free', n:'Social media', nz:'社群', src:['a2'],
  s:`Reddit, Twitch and Discord.`,
- sz:`Reddit、Twitch、Discord。`});
+ sz:`Reddit、Twitch、Discord。`,
+ ref:[
+  {k:'slide', t:'Reddit API — posts, subreddits and comments', tz:'Reddit API — 熱門貼文、討論板與留言', u:'https://www.reddit.com/dev/api/', sp:'a2:25', o:'139'},
+  {k:'slide', t:'Twitch API — streams and channels', tz:'Twitch API — 實況狀態與頻道資料', u:'https://dev.twitch.tv/', sp:'a2:25', o:'140'},
+  {k:'slide', t:'Discord developer docs — bots and servers', tz:'Discord 開發者文件 — 機器人與伺服器頻道', u:'https://discord.com/developers/docs/intro', sp:'a2:25', o:'141'}]});
 N({id:'free-random', p:'a2-free', n:'Random fun', nz:'隨機', src:['a2'],
  s:`Dog API, The Cat API, HTTP Cats and the Official Joke API.`,
- sz:`Dog API、The Cat API、HTTP Cats、Official Joke API。`});
+ sz:`Dog API、The Cat API、HTTP Cats、Official Joke API。`,
+ ref:[
+  {k:'slide', t:'Dog API — photos by breed', tz:'Dog API — 各犬種照片', u:'https://dog.ceo/dog-api/', sp:'a2:25', o:'142'},
+  {k:'slide', t:'The Cat API — cat photos and breeds', tz:'The Cat API — 貓咪照片與品種', u:'https://thecatapi.com/', sp:'a2:25', o:'143'},
+  {k:'slide', t:'Official Joke API — jokes and puns', tz:'Official Joke API — 英文笑話與雙關語', u:'https://official-joke-api.appspot.com/', sp:'a2:25', o:'146'},
+  {k:'slide', t:'HTTP Cats — HTTP status codes as cat pictures', tz:'HTTP Cats — 用貓咪圖看 HTTP 狀態碼', u:'https://http.cat/', sp:'a2:25', o:'147'}]});
 N({id:'free-quote', p:'a2-free', n:'Quotes', nz:'語錄', src:['a2'],
  s:`Advice Slip, Kanye Rest and ZenQuotes.`,
- sz:`Advice Slip、Kanye Rest、ZenQuotes。`});
+ sz:`Advice Slip、Kanye Rest、ZenQuotes。`,
+ ref:[
+  {k:'slide', t:'Advice Slip — random advice', tz:'Advice Slip — 隨機人生建議', u:'https://api.adviceslip.com/', sp:'a2:25', o:'144'},
+  {k:'slide', t:'Kanye Rest — Kanye West quotes', tz:'Kanye Rest — Kanye West 語錄', u:'https://api.kanye.rest/', sp:'a2:25', o:'145'},
+  {k:'slide', t:'ZenQuotes — famous quotes', tz:'ZenQuotes — 名人語錄與佳句', u:'https://zenquotes.io/', sp:'a2:25', o:'148'}]});
 /* --- MCP｜MCP --- */
 N({id:'a5-mcp', p:'d-ext', n:'MCP', nz:'MCP', src:['a5'], imp:3,
  s:`The Model Context Protocol, an open standard introduced by Anthropic in November 2024, lets any AI application connect to tools and data sources in one uniform way. Build an MCP server once and every MCP-capable host — Claude, ChatGPT, Cursor, Copilot — can use it; often called “USB-C for AI”.`,
@@ -10140,7 +10266,8 @@ print(chain.invoke({"term": "Flash"}))</code></pre>`},
   {k:'docs', t:'LangChain documentation — Introduction', u:'https://python.langchain.com/docs/introduction/'},
   {k:'github', t:'langchain-ai/langchain', u:'https://github.com/langchain-ai/langchain'},
   {k:'wiki', t:'Wikipedia — LangChain', u:'https://en.wikipedia.org/wiki/LangChain'},
-  {k:'wikiz', t:'維基百科 — LangChain', u:'https://zh.wikipedia.org/zh-tw/LangChain'}]});
+  {k:'wikiz', t:'維基百科 — LangChain', u:'https://zh.wikipedia.org/zh-tw/LangChain'},
+  {k:'slide', t:'LangChain documentation', tz:'LangChain 官方文件', u:'https://docs.langchain.com/', sp:'a3:40', o:'180'}]});
 N({id:'a3-need', p:'a3-lc', n:'Engineering needs', nz:'工程需求', src:['a3'],
  s:`Six recurring challenges in building LLM applications — managing prompts, memory, multi-step flows, tool choice, external data and debugging. They are application-layer problems the model itself cannot solve, and they are what frameworks exist for.`,
  sz:`打造 LLM 應用時反覆出現的六個挑戰——管理提示詞、記憶、多步驟流程、工具選擇、外部資料與除錯。這些是模型本身解決不了的應用層問題，也是框架存在的理由。`,
@@ -10413,7 +10540,8 @@ N({id:'lol-riot', p:'a3-lol', n:'Data Dragon', nz:'Data Dragon', src:['a3'],
  s:`Riot Games' static-data API for League of Legends, downloadable by game version and language.`,
  sz:`Riot Games 提供的英雄聯盟靜態資料 API，可依遊戲版本與語言下載。`,
  ref:[
-  {k:'docs', t:'Riot Developer Portal — League of Legends (Data Dragon)', u:'https://developer.riotgames.com/docs/lol'}]});
+  {k:'docs', t:'Riot Developer Portal — League of Legends (Data Dragon)', u:'https://developer.riotgames.com/docs/lol'},
+  {k:'slide', t:'Data Dragon — champion list (v13.19.1); each champion is at …/data/<lang>/champion/<name>.json', tz:'Data Dragon — 英雄清單 champion.json（13.19.1 版）；個別英雄在 …/data/<語言>/champion/<英雄>.json', u:'http://ddragon.leagueoflegends.com/cdn/13.19.1/data/en_US/champion.json', sp:'a3:20', o:'149'}]});
 N({id:'lol-lang', p:'a3-lol', n:'en_US', nz:'en_US', src:['a3'],
  s:`The English locale; champions are also indexed by their English names.`,
  sz:`英文語系資料，英雄索引也用英文名稱。`});
@@ -10486,15 +10614,20 @@ N({id:'a3-pkg', p:'a3-li', n:'Packages', nz:'套件', src:['a3'],
     '工具箱與替換刀頭｜一支握把，換不同刀頭。']});
 N({id:'pkg-starter', p:'a3-pkg', n:'llama-index', nz:'llama-index', src:['a3'],
  s:`The starter package with the core plus common integrations such as OpenAI.`,
- sz:`包含核心與 OpenAI 等常用整合的入門套件。`});
+ sz:`包含核心與 OpenAI 等常用整合的入門套件。`,
+ ref:[
+  {k:'slide', t:'PyPI — llama-index', tz:'PyPI — llama-index（入門整合套件）', u:'https://pypi.org/project/llama-index/', sp:'a3:57', o:'183'}]});
 N({id:'pkg-core', p:'a3-pkg', n:'llama-index-core', nz:'llama-index-core', src:['a3'],
  s:`Install only the core, then add integrations one by one.`,
- sz:`只安裝核心，再自行逐一加上需要的整合。`});
+ sz:`只安裝核心，再自行逐一加上需要的整合。`,
+ ref:[
+  {k:'slide', t:'PyPI — llama-index-core', tz:'PyPI — llama-index-core', u:'https://pypi.org/project/llama-index-core/', sp:'a3:57', o:'187'}]});
 N({id:'pkg-hub', p:'a3-pkg', n:'LlamaHub', nz:'LlamaHub', src:['a3'],
  s:`The hub of data readers and integration packages — over 300 of them.`,
  sz:`資料讀取器與整合套件的集散地，超過 300 個。`,
  ref:[
-  {k:'site', t:'LlamaHub', u:'https://llamahub.ai/'}]});
+  {k:'slide', t:'LlamaHub', u:'https://llamahub.ai/', sp:'a3:57', o:'193', tz:'LlamaHub'},
+  {k:'slide', t:'LlamaIndex — Community integrations', tz:'LlamaIndex — 社群整合清單', u:'https://developers.llamaindex.ai/python/framework/community/integrations/', sp:'a3:65', o:'197'}]});
 N({id:'a3-doc', p:'a3-li', n:'Document', nz:'Document', src:['a3'],
  s:`LlamaIndex's universal container for any data source: the text plus metadata (path, author, page…), settings for which metadata the LLM and embedding model should not see, and relationships to other documents.`,
  sz:`LlamaIndex 封裝任何資料來源的通用容器：文字本身加上 metadata（路徑、作者、頁碼……）、指定哪些 metadata 不給 LLM 或 Embedding 看的設定，以及和其他文件的關係。`,
@@ -10505,7 +10638,9 @@ N({id:'a3-doc', p:'a3-li', n:'Document', nz:'Document', src:['a3'],
     "A patient's record envelope｜The record plus the patient's basic details."],
  az:['檔案夾｜內容放在裡面，封面寫上標籤與分類。',
     '包裹｜內容物加上寄件資訊與備註。',
-    '病歷袋｜病歷本身加上病人基本資料。']});
+    '病歷袋｜病歷本身加上病人基本資料。'],
+ ref:[
+  {k:'slide', t:'iPAS Information Security Engineer exam brochure — the PDF the slide example loads', tz:'iPAS 資訊安全工程師能力鑑定簡章 — 講義讀檔範例用的 PDF', u:'https://www.ipas.org.tw/api/proxy/uploads/certification/ISE/115%E5%B9%B4%E5%BA%A6%E8%B3%87%E8%A8%8A%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%83%BD%E5%8A%9B%E9%91%91%E5%AE%9A%E7%B0%A1%E7%AB%A0(%E5%88%9D%E3%80%81%E4%B8%AD%E7%B4%9A)_1150410_20260410115218.pdf', sp:'a3:62', o:'194'}]});
 N({id:'doc-text', p:'a3-doc', n:'text', nz:'text', src:['a3'],
  s:`The document's main content — the text that is later split into Nodes, embedded and finally shown to the LLM.`,
  sz:`文件的主要內容，也就是之後會被切成 Node、轉成向量、最後交給 LLM 讀的文字。`});
@@ -10539,7 +10674,9 @@ N({id:'node-chunk', p:'a3-node', n:'Chunk', nz:'Chunk', src:['a3'],
  sz:`文件切出來的小片段。`});
 N({id:'node-parser', p:'a3-node', n:'Node Parser', nz:'Node Parser', src:['a3'],
  s:`Splits Documents into Nodes and can parse structured formats.`,
- sz:`把 Document 切成 Node，也能解析不同的結構化格式。`});
+ sz:`把 Document 切成 Node，也能解析不同的結構化格式。`,
+ ref:[
+  {k:'slide', t:'LlamaIndex docs — Node parser modules', tz:'LlamaIndex 文件 — Node Parser 模組', u:'https://docs.llamaindex.ai/en/stable/module_guides/loading/node_parsers/modules/', sp:'a3:64', o:'196'}]});
 N({id:'a3-parse', p:'a3-li', n:'LlamaParse', nz:'LlamaParse', src:['a3'], imp:3,
  s:`LlamaIndex's hosted document-parsing service: OCR, layout and table extraction to Markdown or JSON, with asynchronous batch processing. Tables survive as structured Markdown that LLMs can read, instead of being flattened into word soup.`,
  sz:`LlamaIndex 的雲端文件解析服務：OCR、版面與表格擷取，輸出成 Markdown 或 JSON，並支援非同步批次處理。表格會保留成 LLM 讀得懂的 Markdown 結構，而不是被壓成一團文字。`,
@@ -10554,7 +10691,8 @@ N({id:'a3-parse', p:'a3-li', n:'LlamaParse', nz:'LlamaParse', src:['a3'], imp:3,
     '翻譯成 LLM 熟悉的語言｜Markdown 就是它最常讀的格式。',
     '整理凌亂的筆記｜把手寫表格重新排版。'],
  ref:[
-  {k:'docs', t:'LlamaParse — Getting started', u:'https://docs.cloud.llamaindex.ai/llamaparse/getting_started'}]});
+  {k:'docs', t:'LlamaParse — Getting started', u:'https://docs.cloud.llamaindex.ai/llamaparse/getting_started'},
+  {k:'slide', t:'LlamaCloud sign-in — get a LlamaParse API key', tz:'LlamaCloud 登入 — 取得 LlamaParse API 金鑰', u:'https://cloud.llamaindex.ai/login', sp:'a3:66', o:'200'}]});
 N({id:'parse-ocr', p:'a3-parse', n:'OCR', nz:'OCR', src:['a3'],
  s:`Optical character recognition: reading text from images and scans.`,
  sz:`光學字元辨識：從圖片或掃描檔辨識文字。`,
@@ -10583,7 +10721,10 @@ N({id:'llm-openai', p:'a3-llm', n:'llama-index-llms-openai', nz:'llama-index-llm
  sz:`LlamaIndex 串接 OpenAI 模型的整合套件。`});
 N({id:'llm-ollama', p:'a3-llm', n:'Ollama', nz:'Ollama', src:['a3'],
  s:`Runs open models on an ordinary computer; LlamaIndex connects to it through llama-index-llms-ollama.`,
- sz:`在一般電腦上執行開源模型；LlamaIndex 透過 llama-index-llms-ollama 串接。`});
+ sz:`在一般電腦上執行開源模型；LlamaIndex 透過 llama-index-llms-ollama 串接。`,
+ ref:[
+  {k:'slide', t:'Ollama', tz:'Ollama 官網', u:'https://ollama.com/', sp:'a3:73', o:'202'},
+  {k:'slide', t:'Ollama model library', tz:'Ollama 模型庫', u:'https://ollama.com/library', sp:'a3:74', o:'203'}]});
 N({id:'ollama-tag', p:'llm-ollama', n:'Quantisation tag', nz:'量化標籤', src:['a3'],
  s:`For example 8b-instruct-q3_K_S: 8 billion parameters, instruction-tuned, 3-bit quantisation, the “K” (k-quant) method, small variant.`,
  sz:`例如 8b-instruct-q3_K_S：80 億參數、指令微調版、3 位元量化、K（k-quant）量化方法、S（小型）變體。`});
@@ -10712,7 +10853,9 @@ N({id:'a3-query', p:'a3-li', n:'Querying', nz:'Querying', src:['a3'],
   {en:`Synthesise`, zh:`生成回答`, den:'The LLM writes the answer from the Nodes.', dzh:'LLM 依據 Node 寫出回答。', go:'q-synth'}]});
 N({id:'q-retriever', p:'a3-query', n:'Retriever', nz:'Retriever', src:['a3'],
  s:`Fetches the Nodes most relevant to the query.`,
- sz:`依查詢取得最相關的 Node。`});
+ sz:`依查詢取得最相關的 Node。`,
+ ref:[
+  {k:'slide', t:'LlamaIndex docs — Retriever modules', tz:'LlamaIndex 文件 — Retriever 模組', u:'https://docs.llamaindex.ai/en/stable/module_guides/querying/retriever/retrievers/', sp:'a3:106', o:'206'}]});
 N({id:'qr-vector', p:'q-retriever', n:'Vector Index Retriever', nz:'Vector Index Retriever', src:['a3'],
  s:`Finds the top-k most similar Nodes by vector (similarity_top_k).`,
  sz:`用向量找出最相似的前 k 個 Node（similarity_top_k）。`});
@@ -10721,12 +10864,16 @@ N({id:'qr-keyword', p:'q-retriever', n:'Keyword Table Retriever', nz:'Keyword Ta
  sz:`先用 LLM 從查詢抽出關鍵字，再依關鍵字過濾 Node。`});
 N({id:'qr-bm25', p:'q-retriever', n:'BM25 Retriever', nz:'BM25 Retriever', src:['a3'],
  s:`Ranks Nodes with the BM25 keyword algorithm.`,
- sz:`用 BM25 關鍵字演算法替 Node 排序。`});
+ sz:`用 BM25 關鍵字演算法替 Node 排序。`,
+ ref:[
+  {k:'slide', t:'CH.Tseng — RAG techniques: TF-IDF and BM25', tz:'CH.Tseng — RAG 的技巧：TF-IDF 與 BM25 的介紹與使用', u:'https://chtseng.wordpress.com/2024/11/18/rag%E7%9A%84%E6%8A%80%E5%B7%A7%EF%BC%9Atf-idf%E8%88%87bm25%E7%9A%84%E4%BB%8B%E7%B4%B9%E8%88%87%E4%BD%BF%E7%94%A8/', sp:'a3:105', o:'205'}]});
 N({id:'q-post', p:'a3-query', n:'Node Postprocessor', nz:'Node Postprocessor', src:['a3'], imp:2,
  s:`Filters and reorders retrieved Nodes to improve precision before they reach the LLM.`,
  sz:`在交給 LLM 之前過濾並重新排序檢索結果，提升精準度。`,
  why:`Postprocessors (filters, rerankers) are where retrieval precision is tuned.`,
- whyz:`後處理器（過濾、重排序）是調整檢索精準度的地方。`});
+ whyz:`後處理器（過濾、重排序）是調整檢索精準度的地方。`,
+ ref:[
+  {k:'slide', t:'LlamaIndex docs — Node postprocessors', tz:'LlamaIndex 文件 — Node Postprocessor', u:'https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/', sp:'a3:111', o:'212'}]});
 N({id:'qp-sim', p:'q-post', n:'SimilarityPostprocessor', nz:'SimilarityPostprocessor', src:['a3'],
  s:`Drops Nodes whose similarity score is below a cutoff.`,
  sz:`刪除相似度低於門檻的 Node。`});
@@ -10740,7 +10887,10 @@ N({id:'qp-cohere', p:'q-post', n:'CohereRerank', nz:'CohereRerank', src:['a3'], 
  s:`Reranks Nodes with Cohere's hosted rerank API, putting the most relevant first.`,
  sz:`用 Cohere 的雲端重排序 API 重新排序，把最相關的排到前面。`,
  why:`Hosted rerankers like Cohere Rerank are a common quick win.`,
- whyz:`Cohere Rerank 這類託管重排序服務是常見的快速改善手段。`});
+ whyz:`Cohere Rerank 這類託管重排序服務是常見的快速改善手段。`,
+ ref:[
+  {k:'slide', t:'Cohere API reference — Rerank', tz:'Cohere API 參考 — Rerank', u:'https://docs.cohere.com/reference/rerank', sp:'a3:109', o:'209'},
+  {k:'slide', t:'Cohere dashboard — API keys', tz:'Cohere 後台 — 取得 API 金鑰', u:'https://dashboard.cohere.com/api-keys', sp:'a3:109', o:'211'}]});
 N({id:'qp-st', p:'q-post', n:'SentenceTransformerRerank', nz:'SentenceTransformerRerank', src:['a3'],
  s:`Reranks with a sentence-transformers cross-encoder you run yourself — no API fees.`,
  sz:`用自己執行的 sentence-transformers Cross-Encoder 重排序，不必付 API 費用。`});
@@ -10761,7 +10911,8 @@ N({id:'a3-qe', p:'a3-li', n:'Query Engine', nz:'Query Engine', src:['a3'], imp:2
     '客服專線｜查完系統再回覆你。',
     '搜尋引擎加摘要｜不只給連結，還幫你整理答案。'],
  ref:[
-  {k:'docs', t:'LlamaIndex — Response modes', u:'https://docs.llamaindex.ai/en/stable/module_guides/deploying/query_engine/response_modes/'}]});
+  {k:'docs', t:'LlamaIndex — Response modes', u:'https://docs.llamaindex.ai/en/stable/module_guides/deploying/query_engine/response_modes/'},
+  {k:'slide', t:'LlamaIndex docs — Settings (LLM, embedding model, chunk size)', tz:'LlamaIndex 文件 — Settings（LLM、Embedding、Chunk 大小等設定）', u:'https://docs.llamaindex.ai/en/stable/module_guides/supporting_modules/settings/', sp:'a3:114', o:'215'}]});
 N({id:'qe-topk', p:'a3-qe', n:'similarity_top_k', nz:'similarity_top_k', src:['a3'],
  s:`How many of the most relevant Nodes to retrieve per query.`,
  sz:`每次檢索最相關的 k 個 Node。`});
@@ -10839,7 +10990,7 @@ N({id:'a3-router', p:'a3-li', n:'Router', nz:'Router', src:['a3'], imp:2,
     '醫院掛號櫃台｜依症狀決定看哪一科。',
     '郵局分揀｜依地址送到對的地區。'],
  ref:[
-  {k:'docs', t:'LlamaIndex — Routers', u:'https://docs.llamaindex.ai/en/stable/module_guides/querying/router/'}]});
+  {k:'slide', t:'LlamaIndex docs — Routers', u:'https://docs.llamaindex.ai/en/stable/module_guides/querying/router/', sp:'a3:125', o:'216', tz:'LlamaIndex 文件 — Router'}]});
 N({id:'a3-sql', p:'a3-li', n:'Text-to-SQL', nz:'Text-to-SQL', src:['a3'], imp:3,
  s:`Ask a database questions in plain language: the LLM writes the SQL, the database runs it, and the LLM explains the result. It opens structured data to non-programmers — but generated SQL must run with read-only, least-privilege access.`,
  sz:`用自然語言詢問資料庫：LLM 寫出 SQL、資料庫執行、LLM 再解釋結果。它讓不會寫程式的人也能使用結構化資料——但產生的 SQL 必須以唯讀、最小權限的帳號執行。`,
@@ -10876,7 +11027,8 @@ print(r.metadata["sql_query"]); print(r)</code></pre>`}],
     '翻譯官｜把你的問題翻成資料庫看得懂的語言。'],
  ref:[
   {k:'wiki', t:'Wikipedia — SQL', u:'https://en.wikipedia.org/wiki/SQL'},
-  {k:'wikiz', t:'維基百科 — SQL', u:'https://zh.wikipedia.org/zh-tw/SQL'}]});
+  {k:'wikiz', t:'維基百科 — SQL', u:'https://zh.wikipedia.org/zh-tw/SQL'},
+  {k:'slide', t:'data.gov.tw — daily trading data per stock (sample data for the Text-to-SQL example)', tz:'政府資料開放平臺 — 個股日成交資訊（講義 Text-to-SQL 範例資料）', u:'https://data.gov.tw/dataset/11549', sp:'a3:128', o:'220'}]});
 N({id:'sql-nlsql', p:'a3-sql', n:'NLSQLRetriever', nz:'NLSQLRetriever', src:['a3'],
  s:`A retrieval-only module that turns natural language into SQL and returns the rows, without writing a final answer.`,
  sz:`只做「自然語言轉 SQL 並取回資料列」的檢索模組，不寫最終回答。`});
@@ -10885,7 +11037,8 @@ N({id:'sql-mysql', p:'a3-sql', n:'MySQL', nz:'MySQL', src:['a3'],
  sz:`講義用 Docker 快速啟動來做實驗的開源關聯式資料庫。`,
  ref:[
   {k:'wiki', t:'Wikipedia — MySQL', u:'https://en.wikipedia.org/wiki/MySQL'},
-  {k:'wikiz', t:'維基百科 — MySQL', u:'https://zh.wikipedia.org/zh-tw/MySQL'}]});
+  {k:'wikiz', t:'維基百科 — MySQL', u:'https://zh.wikipedia.org/zh-tw/MySQL'},
+  {k:'slide', t:'Docker Hub — official MySQL image', tz:'Docker Hub — MySQL 官方映像檔', u:'https://hub.docker.com/_/mysql/', sp:'a3:128', o:'218'}]});
 N({id:'sql-prompt', p:'a3-sql', n:'text_to_sql_prompt', nz:'text_to_sql_prompt', src:['a3'],
  s:`The prompt template controlling how natural language is turned into SQL — where to add schema hints and rules.`,
  sz:`控制自然語言轉 SQL 的提示詞模板——可以在這裡加入結構提示與規則。`});
@@ -11326,7 +11479,8 @@ N({id:'hgpt', p:'a4-ma', n:'HuggingGPT', nz:'HuggingGPT', src:['l5'],
     '婚禮顧問｜了解需求、找攝影師與花藝師、協調執行、交出完整的婚禮。'],
  ref:[
   {k:'paper', t:'Shen et al. (2023) — HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face', u:'https://arxiv.org/abs/2303.17580'},
-  {k:'github', t:'microsoft/JARVIS — HuggingGPT code', u:'https://github.com/microsoft/JARVIS'}]});
+  {k:'github', t:'microsoft/JARVIS — HuggingGPT code', u:'https://github.com/microsoft/JARVIS'},
+  {k:'slide', t:'Hugging Face Space — microsoft/HuggingGPT demo', tz:'Hugging Face Space — HuggingGPT 線上展示', u:'https://huggingface.co/spaces/microsoft/HuggingGPT', sp:'l5:15', o:'283'}]});
 N({id:'hg-plan', p:'hgpt', n:'Task planning', nz:'任務規劃', src:['l5'],
  s:`ChatGPT analyses the request and breaks it into concrete sub-tasks with dependencies.`,
  sz:`ChatGPT 分析需求，拆成有先後關係的具體子任務。`});
@@ -12293,7 +12447,8 @@ export LANGSMITH_PROJECT=lol-translator</code></pre>`}],
     '監視器錄影雲端備份｜隨時調閱、比對。',
     '病歷系統｜每次看診都記錄，醫生可以回顧與比較。'],
  ref:[
-  {k:'docs', t:'LangSmith documentation', u:'https://docs.smith.langchain.com/'}]});
+  {k:'docs', t:'LangSmith documentation', u:'https://docs.smith.langchain.com/'},
+  {k:'slide', t:'LangSmith (sign in)', tz:'LangSmith 平台（登入）', u:'https://smith.langchain.com/', sp:'a3:43', o:'181'}]});
 N({id:'sm-trace', p:'a3-smith', n:'Trace', nz:'Trace', src:['a3'],
  s:`The record of one complete run: prompts, responses, timing and token usage, organised as a tree of steps.`,
  sz:`一次完整執行的紀錄：提示詞、回應、耗時與 Token 用量，以步驟樹的方式組織。`});
@@ -12322,7 +12477,8 @@ N({id:'a3-langfuse', p:'a3-obs', n:'Langfuse', nz:'Langfuse', src:['a3'], imp:2,
     '自建的倉庫｜鑰匙在自己手上。'],
  ref:[
   {k:'docs', t:'Langfuse documentation', u:'https://langfuse.com/docs'},
-  {k:'github', t:'langfuse/langfuse', u:'https://github.com/langfuse/langfuse'}]});
+  {k:'github', t:'langfuse/langfuse', u:'https://github.com/langfuse/langfuse'},
+  {k:'slide', t:'Langfuse', tz:'Langfuse 官網', u:'https://langfuse.com/', sp:'a3:48', o:'182'}]});
 /* --- AI safety｜AI 安全 --- */
 N({id:'safety', p:'d-trust', n:'AI safety', nz:'AI 安全', src:['l7'], imp:3,
  s:`Responsible AI starts with four risks every LLM deployment must manage: hallucination, bias, privacy leakage and misuse. As LLMs spread into high-stakes areas, these move from research topics to legal obligations.`,
@@ -12681,7 +12837,8 @@ N({id:'im-pydantic', p:'a3-impl', n:'Pydantic validation', nz:'Pydantic 驗證',
  why:`Pydantic models are the standard way to validate LLM inputs and outputs in Python.`,
  whyz:`Pydantic 是 Python 中驗證 LLM 輸入與輸出的標準方式。`,
  ref:[
-  {k:'docs', t:'Pydantic documentation', u:'https://docs.pydantic.dev/'}]});
+  {k:'docs', t:'Pydantic documentation', u:'https://docs.pydantic.dev/'},
+  {k:'slide', t:'Kiwi Lee — An introduction to Pydantic (Medium)', tz:'Kiwi Lee — Pydantic 的介紹（Medium）', u:'https://medium.com/kiwibyteswalk/pydantic-%E7%9A%84%E4%BB%8B%E7%B4%B9-3721a0691162', sp:'a3:143', o:'221'}]});
 N({id:'a5-threat', p:'a3-sec', n:'Security risks', nz:'安全風險', src:['a5'], imp:3,
  s:`Malicious or compromised servers, preference-manipulation and tool-poisoning attacks hidden in tool descriptions, and too little security auditing of the ecosystem. Treat every MCP server like third-party code with access to your data.`,
  sz:`惡意或遭入侵的 Server、藏在工具描述裡的偏好操控與工具投毒攻擊，以及生態系缺乏安全稽核。要把每個 MCP Server 當成能存取你資料的第三方程式碼看待。`,
@@ -13547,12 +13704,12 @@ const I18N = {
     jump: 'click to jump',
     noResult: s => `No match for “${s}”. Try LoRA, Query, RAG or BLEU.`,
     pending: 'The English write-up for this node is still in progress — showing the Chinese notes for now.',
-    fieldTitle: f => `${f}`, fieldLead: n => `${n} ideas in this course with a worked application in this field.`, back: '← Back',
+    fieldTitle: f => `${f}`, fieldLead: n => `${n} ideas in this course with a worked application in this field.`, srcLinks: n => `Links in this deck (${n})`, srcLinksLead: 'Every link printed in the slides, by page. Short links have been expanded; dead links are marked.', dead: 'dead link', pg: 'p.', back: '← Back',
     level: {root: 'Overview', domain: 'Domain', topic: 'Topic', concept: 'Concept', keyword: 'Keyword', sub: 'Sub-keyword'},
     kids: {root: 'Domains', domain: 'Topics', topic: 'Concepts', concept: 'Keywords', keyword: 'Sub-keywords'},
     view: {intuition: 'Intuition', technical: 'Under the hood', math: 'The math', example: 'Worked example', code: 'Hands-on',
       history: 'History', compare: 'Comparison', steps: 'Step by step', pitfalls: 'Common pitfalls', plain: 'Explanation', story: 'Story'},
-    ref: {wiki: 'Wikipedia', wikiz: '維基百科', paper: 'Paper', thesis: 'Thesis', blog: 'Blog', docs: 'Docs', course: 'Course',
+    ref: {slide: 'Slides', wiki: 'Wikipedia', wikiz: '維基百科', paper: 'Paper', thesis: 'Thesis', blog: 'Blog', docs: 'Docs', course: 'Course',
       github: 'GitHub', book: 'Book', video: 'Video', news: 'News', site: 'Site'},
   },
   zh: {
@@ -13585,12 +13742,12 @@ const I18N = {
     jump: '點一下跳過去',
     noResult: s => `找不到「${s}」。可以試試 LoRA、Query、RAG、BLEU。`,
     pending: '這個節點的英文版還在撰寫中。',
-    fieldTitle: f => `${f}`, fieldLead: n => `課程裡有 ${n} 個概念，附了在這個領域的應用說明。`, back: '← 返回',
+    fieldTitle: f => `${f}`, fieldLead: n => `課程裡有 ${n} 個概念，附了在這個領域的應用說明。`, srcLinks: n => `講義中的連結（${n}）`, srcLinksLead: '講義裡印出的每個連結，依頁碼排列。縮網址已換成原網址，失效的會標出來。', dead: '已失效', pg: 'p.', back: '← 返回',
     level: {root: '總覽', domain: '領域', topic: '主題', concept: '概念', keyword: '關鍵字', sub: '子關鍵字'},
     kids: {root: '領域', domain: '主題', topic: '概念', concept: '關鍵字', keyword: '子關鍵字'},
     view: {intuition: '直覺理解', technical: '技術細節', math: '數學推導', example: '實例演練', code: '動手實作',
       history: '歷史脈絡', compare: '比較', steps: '步驟拆解', pitfalls: '常見誤解', plain: '說明', story: '故事'},
-    ref: {wiki: 'Wikipedia', wikiz: '維基百科', paper: '論文', thesis: '學位論文', blog: '部落格', docs: '官方文件', course: '課程',
+    ref: {slide: '講義', wiki: 'Wikipedia', wikiz: '維基百科', paper: '論文', thesis: '學位論文', blog: '部落格', docs: '官方文件', course: '課程',
       github: 'GitHub', book: '書籍', video: '影片', news: '新聞', site: '網站'},
   },
 };
@@ -13610,7 +13767,7 @@ const FIELDS = {
 };
 const fieldName = f => FIELDS[f] ? FIELDS[f][LANG === 'zh' ? 1 : 0] : f;
 const tagName = t => LANG === 'zh' ? t : (TAG_EN[t] || t);
-const REF_ORDER = ['wiki', 'wikiz', 'paper', 'thesis', 'blog', 'docs', 'course', 'book', 'video', 'github', 'news', 'site'];
+const REF_ORDER = ['slide', 'wiki', 'wikiz', 'paper', 'thesis', 'blog', 'docs', 'course', 'book', 'video', 'github', 'news', 'site'];
 
 /* ---------- 資料 ---------- */
 const BY = {};
@@ -14233,11 +14390,16 @@ function viewsHTML(d){
   const panes = vs.map((x, i) => `<div class="tabpanel plain" role="tabpanel" id="tp-${i}" aria-labelledby="tab-${i}"${i === cur ? '' : ' hidden'}>${para(linkify(pick(x)))}</div>`).join('');
   return `<section><h3>${ui('explain')}</h3><div class="views"><div class="tabs" role="tablist">${tabs}</div>${panes}</div></section>`;
 }
+/* 講義連結：sp = 'a2:23' 或 'l1:59-62' → 「API 第二講 p.23」；失效的不做成連結 */
+const spPages = sp => sp.split(':')[1].replace(/-/g, '–').replace(/,/g, ', ');
+const spLabel = sp => `${srcName(sp.split(':')[0])} ${ui('pg')}${spPages(sp)}`;
+const refTitle = r => (LANG === 'zh' && r.tz) || r.t;
+const refLink = r => r.dead ? `<span class="deadlink">${esc(refTitle(r))}</span> <span class="deadtag">${ui('dead')}</span>` : `<a class="ext" href="${esc(r.u)}" target="_blank" rel="noopener noreferrer">${esc(refTitle(r))}</a>`;
 function refsHTML(d){
   if (!d.ref || !d.ref.length) return '';
-  const ord = LANG === 'zh' ? ['wikiz', 'wiki', ...REF_ORDER.slice(2)] : REF_ORDER;
+  const ord = LANG === 'zh' ? ['slide', 'wikiz', 'wiki', ...REF_ORDER.slice(3)] : REF_ORDER;
   const list = [...d.ref].sort((a, b) => ord.indexOf(a.k) - ord.indexOf(b.k));
-  return `<section><h3>${ui('refs')}</h3><ul class="refs">${list.map(r => `<li><span class="kd">${esc(ui('ref')[r.k] || r.k)}</span><a class="ext" href="${esc(r.u)}" target="_blank" rel="noopener noreferrer">${esc(r.t)}</a></li>`).join('')}</ul></section>`;
+  return `<section><h3>${ui('refs')}</h3><ul class="refs">${list.map(r => `<li><span class="kd">${esc(ui('ref')[r.k] || r.k)}</span><span>${refLink(r)}${r.sp ? ` <button type="button" class="sp" data-src="${esc(r.sp.split(':')[0])}">${esc(spLabel(r.sp))}</button>` : ''}</span></li>`).join('')}</ul></section>`;
 }
 function showDetail(id){
   const d = BY[id];
@@ -14314,6 +14476,18 @@ function showField(f){
   panel.scrollTop = 0;
   if (narrowMQ.matches) panel.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
 }
+/* 出處頁的「講義中的連結」：從各節點的講義連結彙整，同一網址合併，依第一個頁碼排序 */
+function srcLinksHTML(k){
+  const m = new Map();
+  ORDER.forEach(id => (BY[id].ref || []).forEach(r => {
+    if (r.k !== 'slide' || r.sp.split(':')[0] !== k) return;
+    if (!m.has(r.u)) m.set(r.u, {r, p: parseInt(r.sp.split(':')[1], 10), nodes: []});
+    m.get(r.u).nodes.push(BY[id]);
+  }));
+  if (!m.size) return '';
+  const list = [...m.values()].sort((a, b) => a.p - b.p || (a.r.o || 0) - (b.r.o || 0));
+  return `<section class="srclinks"><h3>${esc(ui('srcLinks')(list.length))}</h3><p class="note">${esc(ui('srcLinksLead'))}</p><ol>${list.map(o => `<li><span class="pgno">${ui('pg')}${esc(spPages(o.r.sp))}</span><div>${refLink(o.r)}${chips(o.nodes)}</div></li>`).join('')}</ol></section>`;
+}
 /* 出處頁：列出這份講義在圖上的入口節點，依領域分組 */
 function showSource(k){
   const o = SRCBY[k]; if (!o) return;
@@ -14330,6 +14504,7 @@ function showSource(k){
   const groups = new Map();
   entry.forEach(d => { const D = d.dm || 'root'; if (!groups.has(D)) groups.set(D, []); groups.get(D).push(d); });
   h += [...groups].map(([D, list]) => `<section class="srcgroup" style="--lc:${D !== 'root' ? lcOf(BY[D]) : 'var(--ink)'}"><h4>${esc(D !== 'root' ? nm(BY[D]) : ui('overview'))}</h4>${chips(list)}</section>`).join('');
+  h += srcLinksHTML(k);
   panel.innerHTML = h + '</div>';
   panel.scrollTop = 0;
   if (narrowMQ.matches) panel.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
