@@ -221,6 +221,26 @@ html[lang="en"] body{line-height:1.65}
 .news p{margin:3px 0 0 !important;font-size:14px;line-height:1.65}
 .refs{list-style:none;padding:0;margin:0;display:grid;gap:5px}
 .refs li{margin:0;display:flex;gap:8px;align-items:baseline;font-size:13.5px;line-height:1.5}
+.dgm .note{font-size:12.5px;color:var(--muted);margin:0 0 8px !important}
+.dgmbox{width:100%;overflow:hidden}
+.dgmbox svg{display:block;max-width:100%;height:auto}
+.dgmbox text{font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',system-ui,sans-serif;fill:var(--ink);font-size:12px}
+.dgmbox .ct{fill:var(--surface-2);stroke:var(--line-strong)}
+.dgmbox .hd{font-weight:700;font-size:12.5px}
+.dgmbox .nmx{font-weight:500;font-size:12.5px}
+.dgmbox .sub{fill:var(--muted);font-size:11px}
+.dgmbox .st{fill:var(--gold);font-size:12px}
+.dgmbox .rw rect{fill:var(--surface);stroke:var(--line-strong)}
+.dgmbox .rw.sup rect{stroke-dasharray:3 2}
+.dgmbox .rw.fo rect{stroke:var(--lc);stroke-width:2;fill:color-mix(in srgb,var(--lc) 12%,var(--surface))}
+.dgmbox .ex rect{fill:var(--surface);stroke-width:1.3}
+.dgmbox [data-go]{cursor:pointer}
+.dgmbox [data-go]:hover rect{stroke-width:2.2}
+.dgmbox .hdgo:hover text{text-decoration:underline}
+.dgmbox .ln{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+.dgmbox .seq{fill:none;stroke:var(--muted);stroke-width:1.3}
+.dgmbox .pl rect{fill:var(--surface);stroke:var(--line-strong)}
+.dgmbox .pl text{font-size:10.5px;font-weight:700;fill:var(--muted)}
 .refs .sp{font:inherit;font-size:11.5px;color:var(--muted);background:none;border:0;padding:0;margin-left:4px;cursor:pointer;white-space:nowrap;text-decoration:underline dotted;text-underline-offset:3px}
 .refs .sp:hover{color:var(--ink)}
 .deadlink{color:var(--muted);text-decoration:line-through}
@@ -446,8 +466,9 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     `Click a node to read its article on the right and open the next level; the round button beside a node expands or collapses it.`,
     `The flowchart above the map follows the LLM lifecycle from data to production and keeps to what you use most in practice. Click a step and it unfolds to list its main nodes and every starred item under them; click one and the mind map opens it there. The mind map itself is the full territory: click any node and the steps it belongs to light up.`,
     `Topics with a process of their own, such as the RAG pipeline or the function-calling loop, show it on the flowchart’s second row while you are inside that topic.`,
-    `Source tags such as “Lecture 6” show which slide decks a node comes from; click one to list everything from that deck.`,
+    `Source tags such as “Lecture 6” show which slide decks a node comes from; click one to list everything from that deck, plus every link printed in it, by page.`,
     `Highlighted words inside explanations are links to other nodes; related nodes are joined by dashed lines that explain why. When the same concept appears in several places, opening any of them lists the others under “The same concept also appears in”.`,
+    `Every node’s article starts with a “Structure and links” diagram: the large box is the idea, the boxes inside are its parts, and each dashed line starts from the part that a related idea actually connects to, labelled with the kind of relation. Click any box to go there.`,
     `A star means the node itself is important in practice (★★★ core, ★★ important). A node without a star but marked “★N” is a grouping that contains N starred nodes. “★ Key nodes” in the Display menu opens every starred node and fades the rest.`,
     `Dotted, italic nodes are extra knowledge beyond the slides; dashed pale nodes are examples.`,
     `The Language menu switches the whole page between English and 中文, and the search box finds any node in either language.`,
@@ -456,8 +477,9 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     `點節點：右邊顯示條目，並展開下一層；節點旁的圓鈕可以展開或收合。`,
     `心智圖上方的流程圖照「從資料到上線」的順序排，只放實務上最常用的重點：點一個步驟，它會展開列出主要節點和底下所有標星的重點；點其中一個，心智圖就在那裡展開它。心智圖則是包含全部內容的大地圖，點任何節點，它所在的步驟也會亮起來。`,
     `有自己流程的主題（例如 RAG 流程、Function Calling 的呼叫循環），在你瀏覽該主題時會出現在流程圖的第二行。`,
-    `「第六講」這類出處標籤標示節點來自哪份講義；點一下就列出那份講義的所有內容。`,
+    `「第六講」這類出處標籤標示節點來自哪份講義；點一下就列出那份講義的所有內容，以及講義裡印出的每個連結（依頁碼排列）。`,
     `說明文字裡反白的詞是連結；有關聯的節點用虛線連起來，並寫明為什麼相關。同一個概念出現在好幾處時，打開任何一處，「同一概念也出現在」都會列出其他位置。`,
+    `每個節點的說明裡都有「圖解：內容結構與關聯」：大框是這個概念，框內是它的組成部分；每條虛線從真正和對方有關的那個部分拉出去，線上寫關係類型。圖上每一格都可以點。`,
     `星星代表這個節點本身是實務重點（★★★ 核心、★★ 重要）；沒有星、但標著「★N」的節點是分類，表示裡面有 N 個重點。「顯示」選單裡的「★ 只看重點」會展開所有有星的節點，其餘淡化。`,
     `點狀外框、斜體的節點是講義之外的補充；淡色虛框的節點是例子。`,
     `右上角的「語言」選單切換整個頁面的中英文，搜尋框可以用兩種語言找到任何節點。`,
@@ -1554,7 +1576,7 @@ N({id:'mha', p:'s1-tf', n:'Multi-Head Attention', nz:'Multi-Head Attention', src
   {k:'paper', t:'DeepSeek-AI (2024) — DeepSeek-V2 (introduces Multi-head Latent Attention)', u:'https://arxiv.org/abs/2405.04434'},
   {k:'site', t:'Anthropic — A Mathematical Framework for Transformer Circuits', u:'https://transformer-circuits.pub/2021/framework/index.html'},
   {k:'docs', t:'PyTorch — torch.nn.MultiheadAttention', u:'https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html'},
-  {k:'slide', t:'Peter Li — The Transformer through three kinds of multi-head attention, with plain examples', tz:'李彼德之家 — Transformer 核心原理：從三個 Multi-Head Attention 角度，白話文範例帶您了解', u:'https://peterlihouse.com/%E8%B3%87%E6%BA%90%E4%B8%AD%E5%BF%83/%E7%99%BD%E8%A9%B1%E6%96%87%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/%E7%99%BD%E8%A9%B1%E6%96%87%E7%AF%84%E4%BE%8B%E5%B8%B6%E6%82%A8%E4%BA%86%E8%A7%A3transformer%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86-%E5%BE%9E%E4%B8%89%E5%80%8Bmulti-head-attention%E8%A7%92%E5%BA%A6/', sp:'l1:54', o:'259'}]});
+  {k:'slide', t:'peterlihouse.com — The Transformer through three kinds of multi-head attention, with plain examples', tz:'李彼德之家 — Transformer 核心原理：從三個 Multi-Head Attention 角度，白話文範例帶您了解', u:'https://peterlihouse.com/%E8%B3%87%E6%BA%90%E4%B8%AD%E5%BF%83/%E7%99%BD%E8%A9%B1%E6%96%87%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/%E7%99%BD%E8%A9%B1%E6%96%87%E7%AF%84%E4%BE%8B%E5%B8%B6%E6%82%A8%E4%BA%86%E8%A7%A3transformer%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86-%E5%BE%9E%E4%B8%89%E5%80%8Bmulti-head-attention%E8%A7%92%E5%BA%A6/', sp:'l1:54', o:'259'}]});
 N({id:'mha-head', p:'mha', n:'Head', nz:'Head', src:['l1'],
  s:`A head is one independent attention computation with its own Q/K/V projections. The original Transformer uses 8 heads of 64 dimensions; GPT-3 175B uses 96.`,
  sz:`一個 Head 是一組獨立的注意力計算，有自己的 Q/K/V 投影。原始 Transformer 用 8 個 64 維的頭；GPT-3 175B 用 96 個。`});
@@ -2196,7 +2218,7 @@ N({id:'maml', p:'gpt3', n:'MAML', nz:'MAML', src:['l2'],
   {k:'wiki', t:'Wikipedia — Meta-learning (computer science)', u:'https://en.wikipedia.org/wiki/Meta-learning_(computer_science)'},
   {k:'thesis', t:'Chelsea Finn (2018, UC Berkeley PhD) — Learning to Learn with Gradients', u:'https://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-105.pdf'},
   {k:'slide', t:'PaddleEdu — Meta-learning basics', tz:'PaddleEdu — 元學習基礎', u:'https://paddlepedia.readthedocs.io/en/latest/tutorials/meta_learning/preliminaries.html', sp:'l2:9', o:'267'},
-  {k:'slide', t:'iThome Ironman 2024, Day 24 — Meta-learning and few-shot learning', tz:'iT 邦幫忙 2024 Day 24：元學習與少樣本學習', u:'https://ithelp.ithome.com.tw/articles/10365424', sp:'l2:10', o:'268'}]});
+  {k:'slide', t:'iT Help (iThome) 2024, Day 24 — Meta-learning and few-shot learning', tz:'iT 邦幫忙 2024 Day 24：元學習與少樣本學習', u:'https://ithelp.ithome.com.tw/articles/10365424', sp:'l2:10', o:'268'}]});
 N({id:'maml-inner', p:'maml', n:'Inner loop', nz:'內圈更新', src:['l2'],
  s:`For each task, take a few gradient steps on its support set starting from the shared weights.`,
  sz:`每個任務都從共用權重出發，用它的 Support Set 做幾次梯度更新。`});
@@ -4958,7 +4980,7 @@ N({id:'rl-td', p:'rl-algo', n:'Temporal-difference learning', nz:'時差學習',
     '開車導航即時改道｜不等到終點，每個路口就依最新路況調整預估時間。',
     '天氣預報每天更新｜越接近週六，預測越準。'],
  ref:[
-  {k:'slide', t:'Wikipedia — Temporal difference learning', u:'https://en.wikipedia.org/wiki/Temporal_difference_learning', sp:'rl:45', o:'309', tz:'英文維基百科 — 時序差分學習（Temporal difference learning）'},
+  {k:'slide', t:'Wikipedia — Temporal difference learning', u:'https://en.wikipedia.org/wiki/Temporal_difference_learning', sp:'rl:45', o:'309', tz:'英文維基百科 — 時差學習（Temporal difference learning）'},
   {k:'wikiz', t:'維基百科 — 時序差分學習', u:'https://zh.wikipedia.org/zh-tw/%E6%97%B6%E5%BA%8F%E5%B7%AE%E5%88%86%E5%AD%A6%E4%B9%A0'},
   {k:'book', t:'Sutton & Barto (2018) — Reinforcement Learning: An Introduction, 2nd ed. (free online)', u:'http://incompleteideas.net/book/the-book-2nd.html'}]});
 N({id:'td-boot', p:'rl-td', n:'Bootstrapping', nz:'Bootstrapping', src:['rl'],
@@ -13613,7 +13635,7 @@ W('pd-rbac','pr-least','原理相同',`Only roles with permission may perform se
 W('ckpt-session','rg-thread','實作使用',`Each session's state is distinguished by its thread_id.`,`每個 Session 用 thread_id 區分各自的狀態。`);
 W('a4-lcpos','a3-lc','同一概念',`The “developer toolbox” is LangChain itself.`,`開發工具箱指的就是 LangChain。`);
 W('gp-vis','a3-smith','對照比較',`LangGraph's visualisation shows the flow's structure; LangSmith shows each run's record.`,`LangGraph 的視覺化看流程結構；LangSmith 看每次執行的紀錄。`);
-W('pk-single','ch-flow','對照比較',`One rule says choose LangChain for flows and agents; this one refines it — complex multi-agent systems move to LangGraph.`,`一說需要流程與 Agent 管理就選 LangChain；這裡再細分：多 Agent 的複雜系統改用 LangGraph。`);
+W('pk-single','ch-flow','同一主題',`Both point to LangChain: it is enough for a single-task assistant, and it is also the choice when you need more LLM calls, agents and management features, because it puts more weight on customisation.`,`兩處都建議用 LangChain：只做單一任務的助手時它就夠用；需要串更多 LLM 呼叫、Agent 與管理功能時，也選更注重自訂的 LangChain。`);
 W('hgpt','a5-mm','對照比較',`HuggingGPT routes between single-modality experts; multimodal models handle several modalities in one network.`,`HuggingGPT 由 LLM 調度各模態的專家模型；多模態模型則由單一模型直接處理多種資料。`);
 W('ml-feedback','a4-hitl','實例',`A person editing and then approving before sending is human-in-the-loop.`,`人類先修改再批准寄出，就是 Human-in-the-Loop。`);
 W('ml-exp','a3-mem','對照比較',`Memory handles short-term memory within a conversation; experience memory is long-term memory kept across conversations.`,`Memory 管的是當次對話的短期記憶；經驗記憶是跨對話保存的長期記憶。`);
@@ -13704,7 +13726,7 @@ const I18N = {
     jump: 'click to jump',
     noResult: s => `No match for “${s}”. Try LoRA, Query, RAG or BLEU.`,
     pending: 'The English write-up for this node is still in progress — showing the Chinese notes for now.',
-    fieldTitle: f => `${f}`, fieldLead: n => `${n} ideas in this course with a worked application in this field.`, srcLinks: n => `Links in this deck (${n})`, srcLinksLead: 'Every link printed in the slides, by page. Short links have been expanded; dead links are marked.', dead: 'dead link', pg: 'p.', back: '← Back',
+    fieldTitle: f => `${f}`, fieldLead: n => `${n} ideas in this course with a worked application in this field.`, srcLinks: n => `Links in this deck (${n})`, srcLinksLead: 'Every link printed in the slides, by page. Short links have been expanded; dead links are marked.', dead: 'dead link', pg: 'p.', dgmTitle: 'Structure and links', dgmLead: 'The large box is this idea and the boxes inside are its parts. Each dashed line starts from the part a related idea actually connects to. Click any box to go there.', dgmLeafLead: 'The large box is the level above; the highlighted box is this idea. Dashed lines show what it connects to. Click any box to go there.', dgmMore: n => `+${n} more`, dgmLinks: n => `${n} links`, dgmIn: 'Part of', back: '← Back',
     level: {root: 'Overview', domain: 'Domain', topic: 'Topic', concept: 'Concept', keyword: 'Keyword', sub: 'Sub-keyword'},
     kids: {root: 'Domains', domain: 'Topics', topic: 'Concepts', concept: 'Keywords', keyword: 'Sub-keywords'},
     view: {intuition: 'Intuition', technical: 'Under the hood', math: 'The math', example: 'Worked example', code: 'Hands-on',
@@ -13742,7 +13764,7 @@ const I18N = {
     jump: '點一下跳過去',
     noResult: s => `找不到「${s}」。可以試試 LoRA、Query、RAG、BLEU。`,
     pending: '這個節點的英文版還在撰寫中。',
-    fieldTitle: f => `${f}`, fieldLead: n => `課程裡有 ${n} 個概念，附了在這個領域的應用說明。`, srcLinks: n => `講義中的連結（${n}）`, srcLinksLead: '講義裡印出的每個連結，依頁碼排列。縮網址已換成原網址，失效的會標出來。', dead: '已失效', pg: 'p.', back: '← 返回',
+    fieldTitle: f => `${f}`, fieldLead: n => `課程裡有 ${n} 個概念，附了在這個領域的應用說明。`, srcLinks: n => `講義中的連結（${n}）`, srcLinksLead: '講義裡印出的每個連結，依頁碼排列。縮網址已換成原網址，失效的會標出來。', dead: '已失效', pg: 'p.', dgmTitle: '圖解：內容結構與關聯', dgmLead: '大框是這個概念，框內是它的組成部分；每條虛線從「真正和對方有關的那個部分」拉出去，線上寫關係類型。每一格都可以點。', dgmLeafLead: '大框是上一層，框內反白的是這個節點；虛線標出它和哪些概念有關、是什麼關係。每一格都可以點。', dgmMore: n => `還有 ${n} 個`, dgmLinks: n => `${n} 條`, dgmIn: '所屬', back: '← 返回',
     level: {root: '總覽', domain: '領域', topic: '主題', concept: '概念', keyword: '關鍵字', sub: '子關鍵字'},
     kids: {root: '領域', domain: '主題', topic: '概念', concept: '關鍵字', keyword: '子關鍵字'},
     view: {intuition: '直覺理解', technical: '技術細節', math: '數學推導', example: '實例演練', code: '動手實作',
@@ -13752,8 +13774,8 @@ const I18N = {
   },
 };
 const ui = k => I18N[LANG][k];
-const TAG_EN = {'同一概念': 'Same concept', '同一主題': 'Same topic', '實例': 'Instance', '演進改良': 'Evolution', '前後步驟': 'Next step',
-  '因果影響': 'Cause → effect', '解決問題': 'Solves', '構成元件': 'Component', '實作使用': 'Implements', '搭配使用': 'Used together',
+const TAG_EN = {'同一概念': 'Same concept', '同一主題': 'Same topic', '實例': 'Instance', '演進改良': 'Evolution', '前後步驟': 'Sequence',
+  '因果影響': 'Cause & effect', '解決問題': 'Problem & fix', '構成元件': 'Component', '實作使用': 'Implementation', '搭配使用': 'Used together',
   '替代方案': 'Alternative', '對照比較': 'Contrast', '原理相同': 'Same principle', '評估指標': 'Metric', '資料來源': 'Data source', '相關': 'Related'};
 const FIELDS = {
   healthcare: ['Healthcare', '醫療'], finance: ['Finance', '金融'], law: ['Law', '法律'], education: ['Education', '教育'],
@@ -14401,6 +14423,136 @@ function refsHTML(d){
   const list = [...d.ref].sort((a, b) => ord.indexOf(a.k) - ord.indexOf(b.k));
   return `<section><h3>${ui('refs')}</h3><ul class="refs">${list.map(r => `<li><span class="kd">${esc(ui('ref')[r.k] || r.k)}</span><span>${refLink(r)}${r.sp ? ` <button type="button" class="sp" data-src="${esc(r.sp.split(':')[0])}">${esc(spLabel(r.sp))}</button>` : ''}</span></li>`).join('')}</ul></section>`;
 }
+/* ── 圖解：節點的內容結構＋每條關聯接在哪一個部分 ──
+   有子節點：大框＝這個節點，框內每一格＝一個子節點（分支不大時，孫節點列在格子第二行，它們的關聯也算進那一格）
+   葉節點：大框＝上一層，框內反白的是自己
+   右側＝外部關聯，線從「這條關聯實際所屬的那一格」拉出；左側弧線＝框內各部分之間的關聯；編號連續的步驟用箭頭串起來 */
+const subSize = d => d.kids.reduce((s, k) => s + 1 + subSize(k), 0);
+function dgmModel(d){
+  const leaf = !d.kids.length, C = leaf ? (d.p ? BY[d.p] : null) : d;
+  if (!C || !C.kids.length) return null;
+  const rows = C.kids, idx = new Map(rows.map((r, i) => [r.id, i]));
+  const deep = !leaf && subSize(C) <= 60;
+  const rowFor = id => { if (id === C.id) return -1; let x = BY[id]; while (x && x.p && x.p !== C.id) x = BY[x.p]; return x && x.p === C.id ? idx.get(x.id) : undefined; };
+  const members = leaf ? [d.id] : [C.id, ...rows.map(r => r.id), ...(deep ? rows.flatMap(r => r.kids.map(g => g.id)) : [])];
+  const ext = new Map(), intl = new Map();
+  members.forEach(a => (RELS[a] || []).forEach(b => {
+    const ra = rowFor(a), rb = rowFor(b);
+    if (rb === undefined) { const k = ra + '|' + b; if (!ext.has(k)) ext.set(k, {row: ra, a, b}); }
+    else if (ra >= 0 && rb >= 0 && ra !== rb) {
+      const i = Math.min(ra, rb), j = Math.max(ra, rb), k = i + '|' + j;
+      if (!intl.has(k)) intl.set(k, {i, j, list: []});
+      const L = intl.get(k).list; if (!L.some(x => pairKey(x.a, x.b) === pairKey(a, b))) L.push({a, b});
+    }
+  }));
+  return {leaf, C, rows, deep, focus: leaf ? d.id : null, ext: [...ext.values()], intl: [...intl.values()]};
+}
+function dgmSlot(d){
+  const M = dgmModel(d); if (!M) return '';
+  return `<section class="dgm"><h3>${ui('dgmTitle')}</h3><p class="note">${esc(M.leaf ? ui('dgmLeafLead') : ui('dgmLead'))}</p><div class="dgmbox"></div></section>`;
+}
+function drawDgm(d){
+  const box = panel.querySelector('.dgmbox'); if (!box) return;
+  const M = dgmModel(d); if (!M) return;
+  const W = Math.max(280, Math.floor(box.clientWidth) || 400);
+  const side = W >= 560;   /* 寬：關聯放右側；窄（一般桌面的說明欄）：關聯掛在那一格下方 */
+  const FN = `500 12.5px ${FONT_B}`, FS = `400 11px ${FONT_B}`, FP = `700 10.5px ${FONT_B}`, FE = `500 12px ${FONT_B}`, FH = `700 12.5px ${FONT_B}`;
+  const tw = (s, f) => { mctx.font = f; return mctx.measureText(s).width; };
+  const fit = (s, w, f) => { if (tw(s, f) <= w) return s; let t = s; while (t.length > 1 && tw(t + '…', f) > w) t = t.slice(0, -1); return t + '…'; };
+  const X = s => esc(String(s));
+  const sep = LANG === 'zh' ? '、' : ', ';
+  const pillW = s => Math.ceil(tw(s, FP)) + 12;
+  const labOf = e => isSame(e.a, e.b) ? tagName('同一概念') : reasonOf(e.a, e.b).tag;
+  /* 外部關聯依所屬的格子分組，同一概念排最後；每格最多顯示 4 個 */
+  const byRow = new Map();
+  M.ext.forEach(e => { if (!byRow.has(e.row)) byRow.set(e.row, []); byRow.get(e.row).push(e); });
+  byRow.forEach(L => L.sort((x, y) => (isSame(x.a, x.b) - isSame(y.a, y.b)) || OIDX.get(x.b) - OIDX.get(y.b)));
+  const MAXR = 4, GAP = 8, PAD = 10, HDR = 26;
+  const EXH = side ? 26 : 24, EXS = side ? 32 : 29;
+  const shownN = L => L.length > MAXR ? MAXR - 1 : L.length;
+  const extH = row => { const L = byRow.get(row) || []; return L.length ? shownN(L) * EXS - (EXS - EXH) + (L.length > MAXR ? 18 : 0) : 0; };
+  /* 框內關聯的弧線：依跨距分車道，同一車道不重疊 */
+  const arcs = [...M.intl].sort((p, q) => (p.j - p.i) - (q.j - q.i) || p.i - q.i), lanes = [];
+  arcs.forEach(a => {
+    let L = 0; while ((lanes[L] || []).some(b => !(a.j < b.i || a.i > b.j))) L++;
+    (lanes[L] = lanes[L] || []).push(a); a.lane = L;
+    a.lab = a.list.length === 1 ? reasonOf(a.list[0].a, a.list[0].b).tag : ui('dgmLinks')(a.list.length);
+  });
+  const maxArcPill = arcs.reduce((m, a) => Math.max(m, pillW(a.lab)), 0);
+  const leftM = arcs.length ? Math.ceil(maxArcPill / 2) + 14 + (lanes.length - 1) * 12 : 0;
+  const hasExt = M.ext.length > 0;
+  const TAGW = side && hasExt ? M.ext.reduce((m, e) => Math.max(m, pillW(labOf(e))), 0) + 26 : 0;
+  const xC = leftM, CW = side && hasExt ? Math.round((W - leftM - TAGW) * 0.55) : W - leftM - 1;
+  const EX = xC + CW + TAGW, EW = W - EX - 1, RX = xC + PAD, RW = CW - 2 * PAD;
+  let rowsS = '', extS = '', lines = '', pills = '', arcS = '', y = PAD;
+  /* 一格的外部關聯：side＝畫在右側、從格子右緣拉線；hang＝掛在格子下方、從左側的枝幹接出 */
+  const extBlock = (row, top, aTop, aH) => {
+    const L = byRow.get(row) || []; if (!L.length) return;
+    const shown = L.slice(0, shownN(L)), more = L.length - shown.length;
+    const spineX = RX + 12;
+    shown.forEach((e, k) => {
+      const b = BY[e.b], ey = top + k * EXS + EXH / 2, r = reasonOf(e.a, e.b), lab = labOf(e), pw = pillW(lab);
+      const label = isSame(e.a, e.b) ? `＝ ${b.p && BY[b.p].depth ? nm(BY[b.p]) : nm(b)}` : nm(b);
+      const own = e.a === (M.leaf ? M.focus : M.C.id) ? '' : `\n（${nm(BY[e.a])}）`;
+      const tip = `${pathOf(b)}\n${lab}：${r.text}${own}`;
+      let px, bx, bw;
+      if (side) {
+        const sx = RX + RW, sy = Math.min(Math.max(ey, aTop + 7), aTop + aH - 7);
+        px = xC + CW + 8; bx = EX; bw = EW;
+        lines += `<path class="ln" d="M${sx} ${sy} C${sx + 12} ${sy} ${px - 12} ${ey} ${px} ${ey} L${bx} ${ey}"/>`;
+      } else {
+        px = spineX + 12; bx = px + pw + 8; bw = RX + RW - bx;
+        lines += `<path class="ln" d="M${spineX} ${k ? top + (k - 1) * EXS + EXH / 2 : aTop + aH} L${spineX} ${ey} L${bx} ${ey}"/>`;
+      }
+      pills += `<g class="pl"><title>${X(tip)}</title><rect x="${px}" y="${ey - 8.5}" width="${pw}" height="17" rx="8.5"/><text x="${px + pw / 2}" y="${ey + 3.7}" text-anchor="middle">${X(lab)}</text></g>`;
+      extS += `<g class="ex" data-go="${b.id}"><title>${X(tip)}</title><rect x="${bx}" y="${ey - EXH / 2}" width="${bw}" height="${EXH}" rx="6" style="stroke:${lcOf(b)}"/><text x="${bx + 8}" y="${ey + 4.2}">${X(fit(label, bw - 14, FE))}</text></g>`;
+    });
+    if (more) extS += `<text class="sub" x="${side ? EX + 4 : spineX + 12}" y="${top + shown.length * EXS + 10}">${X(ui('dgmMore')(more))}</text>`;
+  };
+  /* 標題列：有子節點時是節點本身，葉節點時是上一層 */
+  const hName = M.leaf ? `${ui('dgmIn')}：${nm(M.C)}` : nm(M.C);
+  const head = `<text class="hd" x="${xC + 12}" y="${y + 13}">${X(fit(hName, CW - 24, FH))}</text>`;
+  if (side) { extBlock(-1, y, y, 20); y += Math.max(HDR, extH(-1) + 4) + 2; }
+  else { const h0 = extH(-1); extBlock(-1, y + HDR, y, 20); y += HDR + (h0 ? h0 + GAP : 0); }
+  const pos = [];
+  M.rows.forEach((r, i) => {
+    const gk = M.deep && r.kids.length ? r.kids.map(nm).join(sep) : '';
+    const rh = gk ? 40 : 28, eh = extH(i);
+    let ry;
+    if (side) { const bh = Math.max(rh, eh); ry = y + Math.round((bh - rh) / 2); extBlock(i, y, ry, rh); y += bh + GAP; }
+    else { ry = y; extBlock(i, y + rh + 5, ry, rh); y += rh + (eh ? eh + 5 : 0) + GAP; }
+    pos[i] = {y: ry, h: rh};
+    const star = r.imp >= 3 ? '★' : r.imp === 2 ? '☆' : '';
+    const cls = `rw${r.id === M.focus ? ' fo' : ''}${r.x ? ' sup' : ''}`, nx = RX + 8 + (star ? 14 : 0);
+    rowsS += `<g class="${cls}" data-go="${r.id}"><title>${X(nm(r))}${gk ? '\n' + X(gk) : ''}</title><rect x="${RX}" y="${ry}" width="${RW}" height="${rh}" rx="7"/>`
+      + (star ? `<text class="st" x="${RX + 8}" y="${ry + 18}">${star}</text>` : '')
+      + `<text x="${nx}" y="${ry + 18}" class="nmx">${X(fit(nm(r), RX + RW - 8 - nx, FN))}</text>`
+      + (gk ? `<text class="sub" x="${RX + 8}" y="${ry + 33}">${X(fit(gk, RW - 16, FS))}</text>` : '') + '</g>';
+  });
+  const H = y - GAP + PAD;
+  /* 編號連續的步驟（例如 bpe-1 → bpe-2）用箭頭串起來；窄版放右側，避開關聯的枝幹 */
+  const step = r => /^(.*)-(\d+)$/.exec(r.id), sxA = side ? RX + 18 : RX + RW - 18;
+  for (let i = 0; i + 1 < M.rows.length; i++) {
+    const a = step(M.rows[i]), b = step(M.rows[i + 1]);
+    if (a && b && a[1] === b[1] && +b[2] === +a[2] + 1) arcS += `<path class="seq" d="M${sxA} ${pos[i].y + pos[i].h + 1} L${sxA} ${pos[i + 1].y - 2}" marker-end="url(#dgm-arr)"/>`;
+  }
+  /* 框內關聯：左側弧線，標籤放在弧線上，彼此錯開 */
+  const placed = [];
+  arcs.forEach(a => {
+    const x = xC - 10 - a.lane * 12, y1 = pos[a.i].y + pos[a.i].h / 2, y2 = pos[a.j].y + pos[a.j].h / 2, pw = pillW(a.lab);
+    arcS += `<path class="ln arc" d="M${RX} ${y1} L${x + 6} ${y1} Q${x} ${y1} ${x} ${y1 + 6} L${x} ${y2 - 6} Q${x} ${y2} ${x + 6} ${y2} L${RX} ${y2}"/>`;
+    let py = (y1 + y2) / 2;
+    while (placed.some(q => Math.abs(q.y - py) < 19 && Math.abs(q.x - x) < (q.w + pw) / 2 + 2) && py + 19 < y2 - 4) py += 19;
+    placed.push({x, y: py, w: pw});
+    const tip = a.list.map(o => { const r = reasonOf(o.a, o.b); return `${nm(BY[o.a])} — ${nm(BY[o.b])}｜${r.tag}：${r.text}`; }).join('\n');
+    pills += `<g class="pl"><title>${X(tip)}</title><rect x="${x - pw / 2}" y="${py - 8.5}" width="${pw}" height="17" rx="8.5"/><text x="${x}" y="${py + 3.7}" text-anchor="middle">${X(a.lab)}</text></g>`;
+  });
+  const ct = `<rect class="ct" x="${xC + 0.5}" y="0.5" width="${CW - 1}" height="${H - 1}" rx="12"/>`
+    + (M.leaf ? `<g class="hdgo" data-go="${M.C.id}"><title>${X(nm(M.C))}</title>${head}</g>` : head);
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${X(ui('dgmTitle'))}"><defs><marker id="dgm-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--muted)" stroke-width="1.5" stroke-linecap="round"/></marker></defs>${ct}${lines}${arcS}${rowsS}${extS}${pills}</svg>`;
+}
+let dgmTimer = null;
+window.addEventListener('resize', () => { clearTimeout(dgmTimer); dgmTimer = setTimeout(() => { if (panelId && BY[panelId] && panel.querySelector('.dgmbox')) drawDgm(BY[panelId]); }, 150); });
 function showDetail(id){
   const d = BY[id];
   panelId = id; panelStep = null;
@@ -14426,6 +14578,7 @@ function showDetail(id){
   if (missingEn(d)) h += `<p class="pending">${ui('pending')}</p>`;
   const why = T(d, 'why');
   if (why) h += `<section class="card whycard"><h3>${ui('why')}</h3>${para(linkify(why))}</section>`;
+  h += dgmSlot(d);
   const relAll = relsOf(id), same = sameGroup(id);
   if (same.length) h += `<section class="also"><h3>${ui('alsoSec')} (${same.length})</h3><ul class="rellist">${same.map(c => { const t = sameText(id, c, same); return `<li><div class="relhead"><button type="button" class="chip relchip" data-go="${c.id}" style="--lc:${lcOf(c)}"><i class="dot" aria-hidden="true"></i>${esc(nm(c))}</button></div><p class="relpath">${esc(pathOf(c))}</p>${t ? `<p class="reltext">${linkify(t)}</p>` : ''}</li>`; }).join('')}</ul></section>`;
   if (d.kids.length) {
@@ -14458,6 +14611,7 @@ function showDetail(id){
   panel.innerHTML = h;
   panel.scrollTop = 0;
   if (d.kids.length) panel.querySelectorAll('.plain, .lead').forEach(el => { if (!el.querySelector('.kw')) markKeywords(el, d.kids); });
+  drawDgm(d);
   const tex = panel.querySelector('.tex');
   if (tex) {
     try { katex.render(d.f, tex, {displayMode: true, output: 'mathml', throwOnError: false}); }
