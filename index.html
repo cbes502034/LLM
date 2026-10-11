@@ -48,7 +48,7 @@ button{font:inherit;color:inherit}
 .search{position:relative;flex:1 1 220px;max-width:360px;min-width:0}
 #q{width:100%;height:36px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);padding:0 12px;font:inherit;font-size:14px}
 #q::placeholder{color:var(--muted)}
-#q:focus-visible,.btn:focus-visible,.legend button:focus-visible,.chip:focus-visible,.mapctl button:focus-visible,.crumbs button:focus-visible,.kw:focus-visible{outline:2px solid var(--l1);outline-offset:2px}
+#q:focus-visible,.btn:focus-visible,.chip:focus-visible,.mapctl button:focus-visible,.crumbs button:focus-visible,.kw:focus-visible{outline:2px solid var(--l1);outline-offset:2px}
 #results{position:absolute;z-index:30;left:0;right:0;top:41px;margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line-strong);border-radius:12px;box-shadow:0 12px 32px rgba(8,16,32,.2);max-height:380px;overflow:auto}
 #results button{width:100%;text-align:left;border:0;background:none;padding:7px 9px;border-radius:8px;display:grid;gap:1px;cursor:pointer}
 #results button:hover,#results button:focus-visible{background:var(--surface-2);outline:none}
@@ -59,14 +59,6 @@ button{font:inherit;color:inherit}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--lc);flex:none;display:inline-block}
 .btn{height:36px;padding:0 13px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);font-size:13.5px;cursor:pointer;white-space:nowrap}
 .btn:hover{border-color:var(--ink)}
-.subbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
-.legend{display:flex;flex-wrap:wrap;gap:6px}
-.legend{gap:6px 14px}
-.legend .lg{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px}
-.legend button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 11px 2px 8px;font-size:12.5px;cursor:pointer}
-.legend button:hover{border-color:var(--lc)}
-.legend .lg-name{border:0;background:none;padding:0 2px;font-weight:700;color:var(--muted);font-size:12px;letter-spacing:.06em}
-.legend .lg-name:hover{color:var(--ink)}
 .node.ds rect.pill{fill:var(--surface);stroke:var(--ink);stroke-width:2.2}
 .node.ds text.lbl{font-family:var(--font-display);font-size:17px;font-weight:700}
 .node.ds.sel rect.pill{stroke:var(--l1);stroke-width:3}
@@ -254,7 +246,6 @@ html[lang="en"] body{line-height:1.65}
 .imp-legend{display:inline-flex;gap:10px;align-items:center;font-size:12.5px;color:var(--muted)}
 .imp-legend b{color:var(--gold);font-weight:700}
 #results .star{color:var(--gold);font-size:12px}
-.legend .lsub{color:var(--muted);margin-left:4px}
 /* 工具列：四個下拉選單（檢視、顯示、分支、語言）；按鈕上顯示目前的選擇 */
 .dd{position:relative}
 .dd summary{list-style:none;display:inline-flex;align-items:center;user-select:none}
@@ -281,7 +272,10 @@ html[lang="en"] .dd .ddval:not(:empty)::before{content:': '}
 .flowdock{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .frow{display:flex;flex-direction:column;gap:3px;min-width:0}
 .frow + .frow{border-top:1px dashed var(--line);padding-top:8px}
-.fhead{display:flex;align-items:baseline;gap:8px;min-width:0;padding-left:2px}
+.fhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;min-width:0;padding-left:2px}
+/* 星等說明與掌握進度：放在流程圖第一行標題的右側，不另佔一行，讓心智圖多一點高度 */
+.dockmeta{margin-left:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:2px 16px}
+.dockmeta .bar{width:90px}
 .fcap{font-size:11px;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
 .fname{font-family:var(--font-display);font-weight:700;font-size:13.5px;line-height:1.25;color:var(--ink);text-align:left;padding:0;border:0;background:none}
 button.fname{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
@@ -291,17 +285,12 @@ button.fname:hover{color:var(--lc,var(--ink))}
 .fs + .fs::before{content:'›';position:absolute;left:-10px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:15px}
 .fs button{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid color-mix(in srgb,var(--lc) 35%,var(--line));border-top:3px solid var(--lc);border-radius:9px;background:var(--surface);padding:3px 7px 4px;cursor:pointer;color:var(--ink);min-height:40px;font:inherit}
 .fs button:hover{background:color-mix(in srgb,var(--lc) 10%,var(--surface))}
-.fs button:focus-visible,.floop button:focus-visible,button.fname:focus-visible{outline:2px solid var(--l1);outline-offset:1px}
+.fs button:focus-visible,button.fname:focus-visible{outline:2px solid var(--l1);outline-offset:1px}
 .fs .fn{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);line-height:1.2}
 .fs .ft{font-size:12.5px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .fs.near button{background:color-mix(in srgb,var(--lc) 18%,var(--surface));border-color:var(--lc)}
 .fs.on button{background:var(--lc);border-color:var(--lc);color:var(--on-l)}
 .fs.on .fn{color:inherit;opacity:.8}
-.floop{flex:0 0 auto;display:flex;align-items:center}
-.floop button{border:1px dashed var(--line-strong);background:none;border-radius:999px;padding:2px 9px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
-.floop button:hover{border-color:var(--ink);color:var(--ink)}
-.fempty{margin:0;padding-left:2px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.fempty .chip{font-size:12px;padding:1px 9px}
 .node.stp rect.pill{stroke:var(--ink);stroke-width:2.6}
 .fs .fk{color:var(--gold);margin-left:4px}
 .fs.on .fk{color:inherit}
@@ -362,7 +351,6 @@ button.fname:hover{color:var(--lc,var(--ink))}
 .tag.src:hover{border-color:var(--ink)}
 .srcgroup{margin:0 0 14px}
 .srcgroup h4{margin:0 0 6px;font-size:13px;color:var(--lc);letter-spacing:.04em}
-.legend button.on{border-color:var(--lc);background:color-mix(in srgb,var(--lc) 12%,var(--surface))}
 </style>
 
 
@@ -370,7 +358,6 @@ button.fname:hover{color:var(--lc,var(--ink))}
   <header class="top">
     <div class="brand">
       <h1 data-i18n="title">LLM Course Mind Map</h1>
-      <p id="sub"></p>
     </div>
     <div class="tools">
       <div class="search">
@@ -400,13 +387,8 @@ button.fname:hover{color:var(--lc,var(--ink))}
       </details>
     </div>
   </header>
-  <div class="subbar">
-    <nav class="legend" id="legend" data-i18n-aria="legendAria"></nav>
-    <span class="imp-legend" id="imp-legend"></span>
-    <div class="progress"><span id="prog-text"></span><span class="bar" aria-hidden="true"><i id="prog-bar"></i></span></div>
-  </div>
   <main class="main">
-    <section class="flowdock" id="flowdock" data-i18n-aria="dockAria"></section>
+    <section class="flowdock" id="flowdock" data-i18n-aria="dockAria"><div class="dockmeta" id="dockmeta"><span class="imp-legend" id="imp-legend"></span><div class="progress"><span id="prog-text"></span><span class="bar" aria-hidden="true"><i id="prog-bar"></i></span></div></div></section>
     <section class="mapwrap" data-i18n-aria="mapAria">
       <svg id="map" role="tree" data-i18n-aria="title"></svg>
       <div class="hint" data-i18n="hint"></div>
@@ -12928,7 +12910,7 @@ const I18N = {
     keyLbl: '★ Key nodes', relLbl: 'Relation lines', relTitle: 'Show or hide the dashed lines between related nodes',
     flowTitle: 'From data to production', flowBack: n => `↺ Back to step ${n}`, flowSec: 'Flowchart', domainOf: 'Domain',
     dockAria: 'Flowcharts', lifeCap: 'LIFECYCLE', flowOfTopic: 'Topic process', topicOf: 'Topic',
-    subEmpty: 'Topics with their own process show it here, e.g.', stepOf: (i, n) => `Step ${i} of ${n}`,
+    stepOf: (i, n) => `Step ${i} of ${n}`,
     stepNodes: n => `Main nodes (${n})`, stepKeys: 'Use ← / → to move between steps · Esc clears the highlight.',
     drawerLead: n => n ? `${n} key items in practice · click one and the mind map opens it` : 'No starred items here · open the full branch on the map',
     seeAll: n => `Open all ${n} on the map`, closeStep: 'Close',
@@ -12937,10 +12919,9 @@ const I18N = {
     fwdTo: n => `Forward: ${n} →`, fwdTitle: 'Go forward again to where you were before going back (Shift + Backspace).',
     srcTitle: 'Source deck', srcLead: (n, f) => `${n} entry points on the map come from this deck${f ? ` (${f})` : ''}.`, keyTitle: 'Expand to every node marked important in practice and fade the rest',
     imp: {3: 'Core in practice', 2: 'Important in practice'}, why: 'Why it matters in practice', impLegend: '<b>★</b> core · <b>☆</b> important', 
-    langAria: 'Language', legendAria: 'Domains', mapAria: 'Mind map',
+    langAria: 'Language', mapAria: 'Mind map',
     hint: 'Drag to pan · scroll to zoom · click a dashed line to jump · click empty space or press Esc to deselect',
     zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Reset view',
-    sub: (l, n, c, k, s) => `${l} domains · ${n} nodes · ${c} concepts · ${k} keywords · from ${s} slide decks`,
     prog: (m, t) => `${m} / ${t} concepts mastered`,
     overview: 'Overview', crumbs: 'You are here', sup: 'Beyond the slides', ex: 'Example',
     conceptCount: (u, m) => `${u} concepts · ${m} mastered`, expandBranch: 'Expand whole branch',
@@ -12967,7 +12948,7 @@ const I18N = {
     keyLbl: '★ 只看重點', relLbl: '關聯線', relTitle: '顯示或隱藏關聯節點之間的虛線',
     flowTitle: '從資料到上線', flowBack: n => `↺ 回到第 ${n} 步`, flowSec: '流程圖', domainOf: '所屬領域',
     dockAria: '流程圖', lifeCap: '生命週期', flowOfTopic: '主題流程', topicOf: '所屬主題',
-    subEmpty: '有自己流程的主題會顯示在這裡，例如', stepOf: (i, n) => `第 ${i} 步，共 ${n} 步`,
+    stepOf: (i, n) => `第 ${i} 步，共 ${n} 步`,
     stepNodes: n => `主要節點（${n}）`, stepKeys: '鍵盤左右方向鍵切換上一步／下一步，Esc 取消反白。',
     drawerLead: n => n ? `實務重點 ${n} 個 · 點一個，心智圖就展開它` : '這一步沒有標星的重點 · 可以在心智圖展開完整分支',
     seeAll: n => `在心智圖展開全部 ${n} 個`, closeStep: '收起',
@@ -12976,10 +12957,9 @@ const I18N = {
     fwdTo: n => `前進：${n} →`, fwdTitle: '返回之後，再前進到原本看的內容（Shift + Backspace）。',
     srcTitle: '出處講義', srcLead: (n, f) => `圖上有 ${n} 個入口來自這份講義${f ? `（${f}）` : ''}。`, keyTitle: '展開所有實務重點節點，其餘淡化',
     imp: {3: '實務核心', 2: '實務重要'}, why: '為什麼實務上重要', impLegend: '<b>★</b> 核心 · <b>☆</b> 重要', 
-    langAria: '語言', legendAria: '領域', mapAria: '心智圖',
+    langAria: '語言', mapAria: '心智圖',
     hint: '拖曳平移 · 滾輪縮放 · 點虛線跳到關聯節點 · 點空白處或按 Esc 取消選取',
     zoomIn: '放大', zoomOut: '縮小', zoomFit: '重設視圖',
-    sub: (l, n, c, k, s) => `${l} 大領域 · ${n} 個節點 · ${c} 個概念 · ${k} 個關鍵字 · 整理自 ${s} 份講義`,
     prog: (m, t) => `已掌握 ${m} / ${t} 個概念`,
     overview: '總覽', crumbs: '所在位置', sup: '補充・講義外', ex: '例子',
     conceptCount: (u, m) => `${u} 個概念 · 已掌握 ${m}`, expandBranch: '展開整個分支',
@@ -13415,8 +13395,8 @@ function step(dir){
 /* 取消選取：關聯線與淡化消失，自動展開的分支收回，使用者展開的分支保留 */
 function clearSelection(){
   navHist = []; navFwd = [];
-  if (!selected && !stepSel && !openStep) return;
-  selected = null; stepSel = null; panelStep = null; openStep = null;
+  if (!selected && !stepSel && !openStep && !flowCtx) return;
+  selected = null; stepSel = null; panelStep = null; openStep = null; flowCtx = null;
   relOpen = new Set();
   render();
   showDetail('root');
@@ -13656,14 +13636,6 @@ function updateProgress(){
   document.getElementById('prog-text').textContent = ui('prog')(m, UNITS.length);
   document.getElementById('prog-bar').style.width = (UNITS.length ? 100 * m / UNITS.length : 0) + '%';
 }
-const legendEl = document.getElementById('legend');
-function buildLegend(){
-  /* 圖例：八大領域，顏色與圖上的分支一致 */
-  legendEl.innerHTML = DOMS.map(d => `<button type="button" data-go="${d.id}" style="--lc:${lcOf(d)}" title="${esc(strip(T(d, 's') || ''))}"><i class="dot"></i>${esc(nm(d))}</button>`).join('');
-  const kw = DATA.filter(d => d.role === 'keyword').length;
-  document.getElementById('sub').textContent = ui('sub')(DOMS.length, DATA.length, UNITS.length, kw, SRC.length);
-}
-legendEl.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) navigate(b.dataset.go); });
 
 const q = document.getElementById('q'), res = document.getElementById('results');
 function doSearch(){
@@ -13746,8 +13718,8 @@ document.getElementById('z-out').addEventListener('click', () => svg.transition(
 document.getElementById('z-fit').addEventListener('click', () => fit());
 
 /* ---------- 流程圖：固定在心智圖上方，跟心智圖雙向同步 ---------- */
-/* 第一行永遠是 LLM 生命週期；第二行是目前所在主題自己的流程（例如 RAG、RLHF） */
-const FLOW_EXAMPLES = ['s1-tf', 'rlhf', 'adv', 'a4-react'];
+/* 第一行永遠是 LLM 生命週期；第二行只在進入有自己流程的主題時出現（例如 RAG、RLHF） */
+const DOCK_META = document.getElementById('dockmeta');
 function stepLi(owner, x, i, near){
   const on = !!openStep && openStep.owner === owner && openStep.i === i;
   const c = x.go[0] ? lcOf(BY[x.go[0]]) : lcOf(BY[owner]);
@@ -13765,11 +13737,11 @@ function drawerHTML(s){
   }).join('')}</div></div>`;
 }
 function rowHTML(owner, cap, name, nameGo){
-  const st = flowSteps(BY[owner]), loop = st.find(x => x.back);
+  const st = flowSteps(BY[owner]);
   /* 選了節點時，亮起它所在的步驟（選的是這個流程本身就不必） */
   const cur = selected && selected !== 'root' && selected !== owner ? selected : null;
   const nameEl = nameGo ? `<button type="button" class="fname" data-go="${nameGo}" style="--lc:${lcOf(BY[nameGo])}">${esc(name)}</button>` : `<b class="fname">${esc(name)}</b>`;
-  return `<div class="frow"><div class="fhead"><span class="fcap">${esc(cap)}</span>${nameEl}</div><ol class="fline">${st.map((x, i) => stepLi(owner, x, i, !!cur && x.go.some(g => covers(g, cur)))).join('')}${loop ? `<li class="floop"><button type="button" data-step="${owner}/${loop.back - 1}" title="${esc(ui('flowBack')(loop.back))} · ${esc(st[loop.back - 1].t)}">↺ ${String(loop.back).padStart(2, '0')}</button></li>` : ''}</ol></div>`;
+  return `<div class="frow"><div class="fhead"><span class="fcap">${esc(cap)}</span>${nameEl}</div><ol class="fline">${st.map((x, i) => stepLi(owner, x, i, !!cur && x.go.some(g => covers(g, cur)))).join('')}</ol></div>`;
 }
 function renderDock(){
   const dock = document.getElementById('flowdock'); if (!dock) return;
@@ -13781,11 +13753,11 @@ function renderDock(){
   if (flowCtx && BY[flowCtx]) {
     const o = BY[flowCtx], P = o.p ? BY[o.p] : null;
     h += rowHTML(flowCtx, P && P.depth ? nm(P) : ui('flowOfTopic'), nm(o), flowCtx) + drawerFor(flowCtx);
-  } else {
-    h += `<div class="frow empty"><div class="fhead"><span class="fcap">${esc(ui('flowOfTopic'))}</span></div><p class="fempty">${esc(ui('subEmpty'))} ${FLOW_EXAMPLES.filter(id => BY[id]).map(id => `<button type="button" class="chip" data-go="${id}" style="--lc:${lcOf(BY[id])}">${esc(nm(BY[id]))}</button>`).join('')}</p></div>`;
   }
   if (openStep && openStep.owner !== 'root' && openStep.owner !== flowCtx) openStep = null;
   dock.innerHTML = h;
+  /* 星等說明與掌握進度是固定元素（進度會更新），每次重畫後放回第一行標題右側 */
+  const fh = dock.querySelector('.frow .fhead'); if (fh && DOCK_META) fh.appendChild(DOCK_META);
   dock.dataset.open = openStep ? openStep.owner + '/' + openStep.i : '';
   const cols = dock.querySelector('.fdcols'); if (cols && scKey === dock.dataset.open) cols.scrollTop = sc;
   /* 用鍵盤操作流程圖時，焦點跟著走 */
@@ -13856,7 +13828,7 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', ui(el.dataset.i18nAria)); });
   enBtn.setAttribute('aria-pressed', String(LANG === 'en')); zhBtn.setAttribute('aria-pressed', String(LANG === 'zh'));
   document.getElementById('dv-lang').textContent = LANG === 'en' ? 'English' : '中文';
-  setFonts(); syncRelBtn(); syncKeyBtn(); buildLegend(); updateProgress(); renderDock();
+  setFonts(); syncRelBtn(); syncKeyBtn(); updateProgress(); renderDock();
   document.getElementById('imp-legend').innerHTML = ui('impLegend');
 }
 function setLang(l){
