@@ -239,6 +239,11 @@ html[lang="en"] body{line-height:1.65}
 .imp.i3 text{fill:var(--on-gold)}
 .imp.i2 circle{fill:var(--surface)}
 .imp.i2 text{fill:var(--gold)}
+/* 「★N」：分類節點裡有 N 個重點（虛線框，和節點本身的星號區分） */
+.cnt rect{fill:var(--surface);stroke:var(--gold);stroke-width:1.2;stroke-dasharray:2.5 2}
+.cnt text{fill:var(--gold);font-size:9.5px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cntk{display:inline-block;border:1px dashed var(--gold);color:var(--gold);border-radius:999px;padding:0 6px;font-size:11px;font-weight:700;line-height:1.5}
+.tag.cnt{border:1px dashed var(--gold);color:var(--gold);background:none}
 .tag.imp{background:color-mix(in srgb,var(--gold) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--gold) 55%,transparent);color:var(--ink);font-weight:700}
 .tag.imp b{color:var(--gold)}
 .whycard{background:color-mix(in srgb,var(--gold) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--gold) 40%,transparent)}
@@ -432,7 +437,7 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     `Topics with a process of their own, such as the RAG pipeline or the function-calling loop, show it on the flowchart’s second row while you are inside that topic.`,
     `Source tags such as “Lecture 6” show which slide decks a node comes from; click one to list everything from that deck.`,
     `Highlighted words inside explanations are links to other nodes; related nodes are joined by dashed lines that explain why. When the same concept appears in several places, opening any of them lists the others under “The same concept also appears in”.`,
-    `“★ Key nodes” in the Display menu opens every node marked important in practice (★★★ core, ★★ important) and fades the rest.`,
+    `A star means the node itself is important in practice (★★★ core, ★★ important). A node without a star but marked “★N” is a grouping that contains N starred nodes. “★ Key nodes” in the Display menu opens every starred node and fades the rest.`,
     `Dotted, italic nodes are extra knowledge beyond the slides; dashed pale nodes are examples.`,
     `The Language menu switches the whole page between English and 中文, and the search box finds any node in either language.`,
     `Concepts can be marked as mastered; progress stays in your browser. While something is selected, ← Back and Forward → at the top of the reading panel (Backspace / Shift + Backspace) return to what you looked at before.`],
@@ -442,7 +447,7 @@ N({id:'root', p:null, n:'LLM Course', nz:'LLM 課程',
     `有自己流程的主題（例如 RAG 流程、Function Calling 的呼叫循環），在你瀏覽該主題時會出現在流程圖的第二行。`,
     `「第六講」這類出處標籤標示節點來自哪份講義；點一下就列出那份講義的所有內容。`,
     `說明文字裡反白的詞是連結；有關聯的節點用虛線連起來，並寫明為什麼相關。同一個概念出現在好幾處時，打開任何一處，「同一概念也出現在」都會列出其他位置。`,
-    `「顯示」選單裡的「★ 只看重點」會展開所有實務重點節點（★★★ 核心、★★ 重要），其餘淡化。`,
+    `星星代表這個節點本身是實務重點（★★★ 核心、★★ 重要）；沒有星、但標著「★N」的節點是分類，表示裡面有 N 個重點。「顯示」選單裡的「★ 只看重點」會展開所有有星的節點，其餘淡化。`,
     `點狀外框、斜體的節點是講義之外的補充；淡色虛框的節點是例子。`,
     `右上角的「語言」選單切換整個頁面的中英文，搜尋框可以用兩種語言找到任何節點。`,
     `「概念」層可以標記已掌握，進度只存在你的瀏覽器。選取中可以用說明面板上方的「← 返回」「前進 →」（Backspace／Shift + Backspace）回到剛才看的內容。`],
@@ -4858,9 +4863,11 @@ N({id:'drl-e2e', p:'rl-drl', n:'End-to-end', nz:'端到端', src:['rl'],
  ref:[
   {k:'wiki', t:'Wikipedia — Lidar', u:'https://en.wikipedia.org/wiki/Lidar'},
   {k:'wikiz', t:'維基百科 — 光学雷达', u:'https://zh.wikipedia.org/zh-tw/%E5%85%89%E5%AD%A6%E9%9B%B7%E8%BE%BE'}]});
-N({id:'rl-po', p:'rl', n:'Policy optimization', nz:'策略優化', src:['rl'],
+N({id:'rl-po', p:'rl', n:'Policy optimization', nz:'策略優化', src:['rl'], imp:2,
  s:`The family of methods that learn the policy directly, from Policy Gradient to PPO. RL methods split into value-based (learn values, then pick actions) and policy-based (adjust action probabilities directly); PPO is policy-based and reuses data a little to improve sample efficiency.`,
  sz:`直接學策略的一派，從 Policy Gradient 到 PPO。強化學習方法分成 Value-based（先學價值再選動作）與 Policy-based（直接調整動作機率）；PPO 屬於後者，並少量重複使用資料來提升樣本效率。`,
+ why:`PPO, the algorithm behind RLHF, is a policy-optimisation method: it directly adjusts how likely each output is. Knowing this family is what makes RLHF's training step readable.`,
+ whyz:`RLHF 用的 PPO 就屬於策略優化：直接調整模型每個輸出的機率。懂這一派的想法，才看得懂 RLHF 在調什麼。`,
  sl:`The slides divide RL methods into two camps: value-based methods learn values first and then choose actions; policy-based methods learn the policy directly. PPO belongs to the latter and borrows the off-policy idea to improve sample efficiency.`,
  slz:`講義說強化學習方法分成兩派：Value-based 先學價值再選動作；Policy-based 直接學策略。PPO 屬於後者，並借用 Off-policy 的想法提升樣本效率。`,
  v:[
@@ -7362,9 +7369,11 @@ N({id:'fz-semantic', p:'a2-fuzzy', n:'Semantic search', nz:'語意檢索', src:[
  ref:[
   {k:'wiki', t:'Wikipedia — Semantic search', u:'https://en.wikipedia.org/wiki/Semantic_search'}]});
 /* --- Embedding space｜Embedding 空間 --- */
-N({id:'kn-emb', p:'d-know', n:'Embedding space', nz:'Embedding 空間',
+N({id:'kn-emb', p:'d-know', n:'Embedding space', nz:'Embedding 空間', imp:2,
  s:`Where meaning becomes geometry: an embedding model turns text, images or products into vectors, similarity measures — cosine, dot product, Euclidean distance — compare them, and in high-dimensional space similar things cluster together.`,
  sz:`意思變成幾何位置的地方：Embedding 模型把文字、圖片或商品轉成向量，相似度量（餘弦、內積、歐氏距離）比較它們，而在高維空間裡，相似的東西會聚在一起。`,
+ why:`RAG, semantic search and recommendations all rest on this space, where similar meanings sit close together. Choosing an embedding model or a similarity measure, or working out why retrieval misses, starts here.`,
+ whyz:`RAG、語意搜尋與推薦都建立在這個空間上：意思相近的東西距離近。挑 Embedding 模型、選相似度量、判斷檢索為什麼失準，都要先懂它。`,
  a:['A map of meaning｜Similar ideas live on the same street.',
     'Coordinates on a star chart｜Every item gets a position; neighbours are related.',
     'Fingerprints｜Each passage gets a characteristic print that can be compared.'],
@@ -8665,9 +8674,11 @@ N({id:'tools-desc', p:'a2-tools', n:'description', nz:'description', src:['a2'],
  sz:`說明在什麼情況下應該使用這個工具。它實際上就是提示詞，也是模型選擇工具的主要依據。`,
  why:`Tool descriptions are prompts in disguise; vague descriptions are the top cause of wrong tool choices.`,
  whyz:`工具描述其實就是提示詞，描述模糊是選錯工具的頭號原因。`});
-N({id:'tools-params', p:'a2-tools', n:'parameters', nz:'parameters', src:['a2'],
+N({id:'tools-params', p:'a2-tools', n:'parameters', nz:'parameters', src:['a2'], imp:2,
  s:`The specification of the arguments the tool needs.`,
- sz:`工具需要的參數規格。`});
+ sz:`工具需要的參數規格。`,
+ why:`Whether a model calls a tool correctly depends on how clearly its parameters are specified: a JSON Schema giving each argument's type, description and whether it is required is what lets the model produce arguments your code can run.`,
+ whyz:`模型能不能正確呼叫工具，取決於 parameters 寫得清不清楚：用 JSON Schema 寫明每個參數的型別、說明與是否必填，模型才會填出程式能直接執行的參數。`});
 N({id:'tools-schema', p:'tools-params', n:'JSON Schema', nz:'JSON Schema', src:['a2'], imp:3,
  s:`A standard JSON vocabulary for describing data: field names, types, descriptions, required fields and allowed values.`,
  sz:`描述資料的標準 JSON 詞彙：欄位名稱、型別、說明、必填欄位與允許值。`,
@@ -9506,9 +9517,11 @@ N({id:'tf-gpt4o', p:'a5-tfm', n:'GPT-4o', nz:'GPT-4o', src:['a5'],
 N({id:'tf-gemini', p:'a5-tfm', n:'Gemini', nz:'Gemini', src:['a5'],
  s:`Google's family of natively multimodal models.`,
  sz:`Google 原生多模態的模型系列。`});
-N({id:'a5-contrast', p:'a5-mmtech', n:'Contrastive learning', nz:'對比學習', src:['a5'],
+N({id:'a5-contrast', p:'a5-mmtech', n:'Contrastive learning', nz:'對比學習', src:['a5'], imp:2,
  s:`Train image and text encoders so matching pairs end up close in the shared space and mismatched pairs far apart — giving zero-shot classification and image–text search.`,
  sz:`訓練影像與文字編碼器，讓配對的組合在共享空間中靠近、不配對的分開——因此能零樣本分類與圖文互搜。`,
+ why:`Image–text models such as CLIP are trained this way, and many multimodal LLMs take their image encoder from them; image–text search and zero-shot classification rest on it.`,
+ whyz:`CLIP 這類圖文模型就是靠對比學習訓練的，許多多模態 LLM 的影像編碼器也來自它；圖文搜尋與零樣本分類都建立在這個做法上。`,
  v:[
   {k:'code', en:`<pre><code>from transformers import CLIPModel, CLIPProcessor
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
@@ -9833,9 +9846,11 @@ N({id:'mem-hist', p:'a3-mem', n:'Conversation history', nz:'對話歷史', src:[
 N({id:'mem-summary', p:'a3-mem', n:'Summary memory', nz:'總結式記憶', src:['a3'],
  s:`Condenses older turns into a running summary to save context space — keeps the gist, loses details.`,
  sz:`把較舊的對話濃縮成持續更新的摘要，節省上下文空間——保留重點，失去細節。`});
-N({id:'a3-tool', p:'a3-lc', n:'Tool', nz:'Tool', src:['a3'],
+N({id:'a3-tool', p:'a3-lc', n:'Tool', nz:'Tool', src:['a3'], imp:2,
  s:`A Tool defines an extra capability the model can invoke — check the weather, query a database — with a name, description and argument schema, built on the model's function calling.`,
  sz:`Tool 定義模型能額外執行的功能——查天氣、查資料庫——包含名稱、描述與參數結構，建立在模型的 Function Calling 之上。`,
+ why:`Everything a LangChain agent can do comes through its tools: how well the name, description and argument schema are written decides whether the agent picks the right tool and fills it in correctly.`,
+ whyz:`LangChain 的 Agent 能做的事全靠 Tool：名稱、描述與參數結構寫得好不好，直接決定 Agent 會不會選對工具、填對參數。`,
  sl:`The slides: paired with an Agent, the model decides dynamically which tool to use and when, gaining the ability to choose its own actions.`,
  slz:`講義說：搭配 Agent，讓模型依問題動態決定何時使用哪個工具，具備自主選擇行動的能力。`,
  v:[
@@ -12918,7 +12933,7 @@ const I18N = {
     backTo: n => `← Back: ${n}`, backTitle: 'Return to what you were looking at before (Backspace). Cleared when you deselect.',
     fwdTo: n => `Forward: ${n} →`, fwdTitle: 'Go forward again to where you were before going back (Shift + Backspace).',
     srcTitle: 'Source deck', srcLead: (n, f) => `${n} entry points on the map come from this deck${f ? ` (${f})` : ''}.`, keyTitle: 'Expand to every node marked important in practice and fade the rest',
-    imp: {3: 'Core in practice', 2: 'Important in practice'}, why: 'Why it matters in practice', impLegend: '<b>★</b> core · <b>☆</b> important', 
+    imp: {3: 'Core in practice', 2: 'Important in practice'}, why: 'Why it matters in practice', impLegend: '<b>★</b> core · <b>☆</b> important · <span class="cntk">★N</span> contains N starred', holds: n => `Contains ${n} starred`, 
     langAria: 'Language', mapAria: 'Mind map',
     hint: 'Drag to pan · scroll to zoom · click a dashed line to jump · click empty space or press Esc to deselect',
     zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Reset view',
@@ -12956,7 +12971,7 @@ const I18N = {
     backTo: n => `← 返回：${n}`, backTitle: '回到剛才看的內容（Backspace）。取消選取後清空。',
     fwdTo: n => `前進：${n} →`, fwdTitle: '返回之後，再前進到原本看的內容（Shift + Backspace）。',
     srcTitle: '出處講義', srcLead: (n, f) => `圖上有 ${n} 個入口來自這份講義${f ? `（${f}）` : ''}。`, keyTitle: '展開所有實務重點節點，其餘淡化',
-    imp: {3: '實務核心', 2: '實務重要'}, why: '為什麼實務上重要', impLegend: '<b>★</b> 核心 · <b>☆</b> 重要', 
+    imp: {3: '實務核心', 2: '實務重要'}, why: '為什麼實務上重要', impLegend: '<b>★</b> 核心 · <b>☆</b> 重要 · <span class="cntk">★N</span> 含 N 個重點', holds: n => `含 ${n} 個實務重點`, 
     langAria: '語言', mapAria: '心智圖',
     hint: '拖曳平移 · 滾輪縮放 · 點虛線跳到關聯節點 · 點空白處或按 Esc 取消選取',
     zoomIn: '放大', zoomOut: '縮小', zoomFit: '重設視圖',
@@ -13102,6 +13117,11 @@ function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': 
 function lcOf(d){ return d.dm ? `var(--dm-${BY[d.dm].dom})` : 'var(--ink)'; }
 function ancestors(id){ const out = []; let x = BY[id]; while (x && x.p) { x = BY[x.p]; out.unshift(x); } return out; }
 function descendants(d){ return d.kids.flatMap(k => [k, ...descendants(k)]); }
+/* 分類節點：本身沒有星、但底下有幾個有星的節點——地圖上標「★N」，不打星 */
+const KEYCOUNT = new Map();
+DATA.forEach(d => { if (d.imp >= 2) ancestors(d.id).forEach(a => KEYCOUNT.set(a.id, (KEYCOUNT.get(a.id) || 0) + 1)); });
+const holdsKeys = d => d.depth > 0 && !(d.imp >= 2) && (KEYCOUNT.get(d.id) || 0) > 0;
+const CNT_FONT = `700 9.5px 'Noto Sans TC','PingFang TC','Microsoft JhengHei',system-ui,sans-serif`;
 const KEYPATH = new Set();
 DATA.forEach(d => { if (d.imp >= 2) { KEYPATH.add(d.id); ancestors(d.id).forEach(a => KEYPATH.add(a.id)); } });
 function levelOf(d){ return d.role === 'keyword' && BY[d.p] && BY[d.p].role === 'keyword' ? ui('level').sub : ui('level')[d.role]; }
@@ -13181,7 +13201,7 @@ const LAB_H = 20, LAB_PAD = 3;
 /* 每個節點佔的範圍：膠囊本身，加上外側的展開圓鈕與左上角的星號 */
 function nodeBoxes(nodes){
   return nodes.map(n => {
-    const tog = n.depth && n.data.kids.length ? 21 : 0, star = n.data.imp >= 2;
+    const tog = n.depth && n.data.kids.length ? 21 : 0, star = n.data.imp >= 2 || holdsKeys(n.data);
     return {x0: n.px - (n.dir < 0 ? tog : 0) - (star ? 5 : 0), x1: n.px + n.w + (n.dir > 0 ? tog : 0) + (star ? 5 : 0), y0: n.py - n.h / 2 - (star ? 8 : 0), y1: n.py + n.h / 2};
   });
 }
@@ -13320,6 +13340,8 @@ function render(opt = {}){
   const ib = en.append('g').attr('class', 'imp');
   ib.append('circle').attr('r', 7.5);
   ib.append('text').text('★');
+  const cb = en.append('g').attr('class', 'cnt');
+  cb.append('rect'); cb.append('text');
   en.on('click', (e, n) => onNodeClick(n.data.id))
     .on('keydown', (e, n) => {
       if (e.key === 'Enter') { e.preventDefault(); onNodeClick(n.data.id); }
@@ -13345,6 +13367,16 @@ function render(opt = {}){
     .attr('display', n => n.data.imp >= 2 ? null : 'none')
     .attr('class', n => `imp i${n.data.imp || 0}`)
     .attr('transform', n => `translate(${n.dir < 0 ? n.w - 3 : 3},${-n.h / 2 + 1})`);
+  /* 分類節點左上角（左半邊在右上角）的「★N」：裡面有 N 個有星的節點 */
+  all.select('g.cnt')
+    .attr('display', n => holdsKeys(n.data) ? null : 'none')
+    .each(function(n){
+      if (!holdsKeys(n.data)) return;
+      const t = '★' + KEYCOUNT.get(n.data.id); mctx.font = CNT_FONT; const w = Math.ceil(mctx.measureText(t).width) + 10;
+      const s = d3.select(this).attr('transform', `translate(${n.dir < 0 ? n.w + 4 - w : -4},${-n.h / 2 - 7})`);
+      s.select('rect').attr('width', w).attr('height', 14).attr('rx', 7);
+      s.select('text').attr('x', w / 2).attr('y', 7).text(t);
+    });
   all.transition().duration(dur).attr('transform', n => `translate(${n.px},${n.py})`)
     .style('opacity', n => (dimOn && !focus.has(n.data.id)) || (keyMode && !KEYPATH.has(n.data.id)) ? 0.3 : 1);
 
@@ -13607,6 +13639,7 @@ function showDetail(id){
   if (d.x) kick.push(`<span class="tag sup">${ui('sup')}</span>`);
   if (d.e) kick.push(`<span class="tag ex">${ui('ex')}</span>`);
   if (d.imp >= 2) kick.push(`<span class="tag imp"><b>${d.imp === 3 ? '★★★' : '★★'}</b> ${ui('imp')[d.imp]}</span>`);
+  if (d.depth > 0 && KEYCOUNT.get(d.id)) kick.push(`<span class="tag cnt">${ui('holds')(KEYCOUNT.get(d.id))}</span>`);
   kick.push(`<span class="lvl">${levelOf(d)}</span>`);
   if (['root', 'domain', 'topic'].includes(d.role)) { const u = [d, ...descendants(d)].filter(x => x.role === 'concept'); kick.push(`<span>${ui('conceptCount')(u.length, u.filter(isDone).length)}</span>`); }
   h += `<div class="kicker">${kick.join('')}</div>`;
