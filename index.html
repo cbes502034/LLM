@@ -122,7 +122,6 @@ button{font:inherit;color:inherit}
 .anlist b{display:block;font-size:13.5px;margin-bottom:1px}
 .rel-label{cursor:pointer}
 .rel-label rect{fill:var(--ink)}
-.rel-lead{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3;opacity:.5;pointer-events:none}
 .rel-label text{fill:var(--surface);font-family:var(--font-body);font-size:11.5px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .rel-label:hover rect{fill:var(--l1)}
 .rellist{list-style:none;padding:0;margin:0;display:grid;gap:8px}
@@ -13157,16 +13156,17 @@ function linkPath(l){
   const x1 = outX(l.s, l.t.dir), y1 = l.s.py, x2 = inX(l.t), y2 = l.t.py, m = (x1 + x2) / 2;
   return `M${x1},${y1}C${m},${y1} ${m},${y2} ${x2},${y2}`;
 }
-function relGeom(a, b){
+/* 關聯線：二次曲線，bow 是往旁邊彎的程度（正負代表兩側）；不給 bow 就用預設彎度 */
+function relCurve(a, b, bow){
   const ax = a.px + a.w / 2, ay = a.py, bx = b.px + b.w / 2, by = b.py;
-  const dx = bx - ax, dy = by - ay, dist = Math.hypot(dx, dy);
-  if (dist < 1) return null;
-  const bow = Math.min(180, dist * 0.22);
+  const dx = bx - ax, dy = by - ay, dist = Math.hypot(dx, dy); if (dist < 1) return null;
+  if (bow == null) bow = Math.min(180, dist * 0.22);
   const cx = (ax + bx) / 2 - dy / dist * bow, cy = (ay + by) / 2 + dx / dist * bow;
-  return {d: `M${ax},${ay}Q${cx},${cy} ${bx},${by}`, mx: (ax + 2 * cx + bx) / 4, my: (ay + 2 * cy + by) / 4};
+  const at = t => ({x: (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * cx + t * t * bx, y: (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * cy + t * t * by});
+  return {d: `M${ax},${ay}Q${cx},${cy} ${bx},${by}`, at, dist, len: dist + Math.abs(bow)};
 }
-function relPath(a, b){ const g = relGeom(a, b); return g ? g.d : ''; }
-/* ---------- 關聯標籤的位置：絕不壓到節點 ---------- */
+function curvePts(c){ const n = Math.max(16, Math.ceil(c.len / 5)), pts = []; for (let i = 0; i <= n; i++) pts.push(c.at(i / n)); return pts; }
+/* ---------- 關聯標籤：一定放在自己的線上、不壓節點、不被別的線穿過 ---------- */
 const LAB_H = 20, LAB_PAD = 3;
 /* 每個節點佔的範圍：膠囊本身，加上外側的展開圓鈕與左上角的星號 */
 function nodeBoxes(nodes){
@@ -13177,22 +13177,50 @@ function nodeBoxes(nodes){
 }
 function labBox(x, y, w){ return {x0: x - w / 2 - LAB_PAD, x1: x + w / 2 + LAB_PAD, y0: y - LAB_H / 2 - LAB_PAD, y1: y + LAB_H / 2 + LAB_PAD}; }
 const boxHit = (a, b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0;
-/* 找標籤位置：先沿著連線（中間優先）找空位，再上下微移；連線附近都滿了才往外找，並畫一條細線指回連線。
-   回傳 {x, y, far, mx, my}；完全找不到空位就回傳 null（不畫標籤，連線與說明仍在） */
-function labelSpot(a, b, w, obs, placed){
-  const ax = a.px + a.w / 2, ay = a.py, bx = b.px + b.w / 2, by = b.py;
-  const dx = bx - ax, dy = by - ay, dist = Math.hypot(dx, dy); if (dist < 1) return null;
-  const bow = Math.min(180, dist * 0.22), cx = (ax + bx) / 2 - dy / dist * bow, cy = (ay + by) / 2 + dx / dist * bow;
-  const at = t => ({x: (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * cx + t * t * bx, y: (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * cy + t * t * by});
-  const free = (x, y) => { const r = labBox(x, y, w); return !obs.some(o => boxHit(r, o)) && !placed.some(o => boxHit(r, o)); };
-  const ts = [0.5]; for (let k = 1; k <= 8; k++) ts.push(0.5 - k * 0.05, 0.5 + k * 0.05);
-  for (const off of [0, -12, 12, -24, 24]) for (const t of ts) { const p = at(t); if (free(p.x, p.y + off)) return {x: p.x, y: p.y + off, far: false}; }
-  const m = at(0.5);
-  for (let r = 40; r <= 240; r += 20) for (let k = 0; k < 24; k++) {
-    const ang = k / 24 * 2 * Math.PI, x = m.x + Math.cos(ang) * r, y = m.y + Math.sin(ang) * r * 0.7;
-    if (free(x, y)) return {x, y, far: true, mx: m.x, my: m.y};
+const inBox = (q, b) => q.x > b.x0 && q.x < b.x1 && q.y > b.y0 && q.y < b.y1;
+const LAB_TS = [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65, 0.3, 0.7, 0.25, 0.75, 0.2, 0.8, 0.15, 0.85, 0.1, 0.9];
+/* 替每條關聯決定線形與標籤位置。標籤永遠放在自己那條線上（線的中段優先）：
+   預設彎度的線上找不到空位時，改變線的彎度或方向，讓線繞到空白處，標籤就放在繞出去的那段線上。
+   條件：標籤不壓節點、不壓別的標籤、不被別條關聯線穿過，自己的線也不穿過別人的標籤。
+   全都試過仍不行才不畫標籤（線照畫，說明仍在面板與提示裡）。 */
+function planRels(A, items, nodes){
+  /* 多條線互相搶位置時，順序會影響結果：先照原順序排；有放不下的，就讓它們先排再試一次，取放得下比較多的那次 */
+  const obs = nodeBoxes(nodes);
+  let best = planOnce(A, items, obs);
+  for (let round = 0; round < 3; round++) {
+    const miss = items.filter(it => (best.get(it.id) || {}).hide); if (!miss.length) break;
+    const order = [...miss, ...items.filter(it => !miss.includes(it))];
+    const alt = planOnce(A, order, obs), miss2 = order.filter(it => (alt.get(it.id) || {}).hide).length;
+    if (miss2 < miss.length) best = alt; else break;
   }
-  return null;
+  return best;
+}
+function planOnce(A, items, obs){
+  const labs = [], lines = [], plan = new Map();
+  for (const it of items) {
+    const base = it.b && relCurve(A, it.b); if (!base) { plan.set(it.id, {hide: true}); continue; }
+    const b0 = Math.min(180, base.dist * 0.22);
+    const bows = [b0, b0 * 0.6, -b0, b0 * 1.6, -b0 * 1.6, 70, -70, 110, -110, 160, -160, 230, -230, 320, -320, 420, -420, 540, -540, 700, -700, 900, -900];
+    let got = null;
+    for (const bow of bows) {
+      const c = relCurve(A, it.b, bow), pts = curvePts(c);
+      if (labs.some(L => pts.some(q => inBox(q, L)))) continue;
+      for (const t of LAB_TS) {
+        const q = c.at(t), box = labBox(q.x, q.y, it.w);
+        if (obs.some(o => boxHit(box, o)) || labs.some(o => boxHit(box, o)) || lines.some(L => L.some(r => inBox(r, box)))) continue;
+        got = {bow, t, x: q.x, y: q.y, pts}; break;
+      }
+      if (got) break;
+    }
+    if (got) { labs.push(labBox(got.x, got.y, it.w)); lines.push(got.pts); plan.set(it.id, {bow: got.bow, t: got.t, x: got.x, y: got.y, alt: got.bow !== b0}); }
+    else {
+      /* 放不下標籤：線還是要畫，挑一個不穿過別人標籤的彎度 */
+      const bow = bows.find(bw => { const pts = curvePts(relCurve(A, it.b, bw)); return !labs.some(L => pts.some(q => inBox(q, L))); });
+      lines.push(curvePts(relCurve(A, it.b, bow != null ? bow : b0)));
+      plan.set(it.id, {hide: true, bow: bow != null ? bow : b0});
+    }
+  }
+  return plan;
 }
 const LAB_FONT = `700 11.5px ${FONT_B}`;
 
@@ -13230,6 +13258,9 @@ function render(opt = {}){
     .transition().duration(dur).attr('d', linkPath);
 
   const A = P.get(selected);
+  mctx.font = LAB_FONT;
+  const labW = new Map(relEdges.map(e => [e.id, Math.ceil(mctx.measureText(relLabel(selected, e.id)).width) + 14]));
+  const plan = A ? planRels(A, relEdges.map(e => ({id: e.id, b: P.get(e.vis.id), w: labW.get(e.id)})), nodes) : new Map();
   const rp = gRel.selectAll('path.rel-line').data(relEdges, e => e.id);
   rp.exit().remove();
   const rpe = rp.enter().append('path').style('opacity', 0);
@@ -13242,7 +13273,7 @@ function render(opt = {}){
   };
   rpe.merge(rp)
     .attr('class', e => `rel-line${e.far ? ' far' : ''}`)
-    .attr('d', e => relPath(A, P.get(e.vis.id)))
+    .attr('d', e => { const c = A && relCurve(A, P.get(e.vis.id), (plan.get(e.id) || {}).bow); return c ? c.d : ''; })
     .call(s => s.select('title').text(tip))
     .transition().delay(dur).duration(dur ? 220 : 0).style('opacity', 1);
 
@@ -13253,25 +13284,17 @@ function render(opt = {}){
   lpe.append('title'); lpe.append('rect'); lpe.append('text');
   lpe.on('click', (ev, e) => navigate(e.id));
   const lall = lpe.merge(lp);
-  /* 標籤不能壓到任何節點，也不能互相重疊 */
-  const obstacles = A ? nodeBoxes(nodes) : [], placedLab = [], leads = [];
+  /* 標籤位置已在 planRels 決定：一定在自己的線上 */
   lall.each(function(e){
-    const tag = relLabel(selected, e.id);
-    mctx.font = LAB_FONT; const w = Math.ceil(mctx.measureText(tag).width) + 14;
-    const sp = A ? labelSpot(A, P.get(e.vis.id), w, obstacles, placedLab) : null;
-    const s = d3.select(this).attr('display', sp ? null : 'none');
-    if (!sp) return;
-    placedLab.push(labBox(sp.x, sp.y, w));
-    if (sp.far) leads.push({id: e.id, x1: sp.x, y1: sp.y, x2: sp.mx, y2: sp.my});
+    const tag = relLabel(selected, e.id), w = labW.get(e.id), sp = plan.get(e.id);
+    const s = d3.select(this).attr('display', sp && !sp.hide ? null : 'none');
+    if (!sp || sp.hide) return;
     s.attr('transform', `translate(${sp.x},${sp.y})`);
     s.select('rect').attr('x', -w / 2).attr('y', -10).attr('width', w).attr('height', 20).attr('rx', 10);
     s.select('text').text(tag);
     s.select('title').text(tip(e));
   });
   lall.transition().delay(dur).duration(dur ? 220 : 0).style('opacity', 1);
-  /* 標籤離連線較遠時，用細虛線指回連線；畫在節點下層，所以不會蓋到節點 */
-  gRel.selectAll('line.rel-lead').data(leads, l => l.id).join('line').attr('class', 'rel-lead')
-    .attr('x1', l => l.x1).attr('y1', l => l.y1).attr('x2', l => l.x2).attr('y2', l => l.y2);
 
   const ns = gNodes.selectAll('g.node').data(nodes, n => n.data.id);
   ns.exit().remove();
@@ -13323,19 +13346,26 @@ function render(opt = {}){
 if (/relcheck/.test(location.search)) window.__relcheck = () => {
   const {nodes} = layout(), P = new Map(nodes.map(n => [n.data.id, n])), obs = nodeBoxes(nodes);
   const visibleOf = d => { let x = d; while (x && !P.has(x.id)) x = BY[x.p]; return x; };
-  const out = {selected: 0, labels: 0, onLine: 0, far: 0, hidden: 0, nodeHits: 0, labelHits: 0, hiddenList: []};
+  const out = {selected: 0, labels: 0, shown: 0, hidden: 0, altCurve: 0, midThird: 0, offLine: 0, nodeHits: 0, labelHits: 0, crossedByOtherLine: 0, maxMs: 0, hiddenList: []};
+  mctx.font = LAB_FONT;
   nodes.forEach(n => {
-    const id = n.data.id, rels = relsOf(id); if (!rels.length) return;
+    const id = n.data.id, items = relsOf(id).map(r => ({id: r.id, v: visibleOf(r)})).filter(o => o.v && o.v.id !== id)
+      .map(o => ({id: o.id, b: P.get(o.v.id), w: Math.ceil(mctx.measureText(relLabel(id, o.id)).width) + 14}));
+    if (!items.length) return;
     out.selected++;
-    const placed = [];
-    rels.map(r => [r, visibleOf(r)]).filter(([, v]) => v && v.id !== id).forEach(([r, v]) => {
-      const tag = relLabel(id, r.id); mctx.font = LAB_FONT; const w = Math.ceil(mctx.measureText(tag).width) + 14;
-      const sp = labelSpot(n, P.get(v.id), w, obs, placed); out.labels++;
-      if (!sp) { out.hidden++; if (out.hiddenList.length < 20) out.hiddenList.push(id + ' → ' + v.id); return; }
-      const bx = {x0: sp.x - w / 2, x1: sp.x + w / 2, y0: sp.y - 10, y1: sp.y + 10};
+    const t0 = performance.now(), plan = planRels(n, items, nodes); out.maxMs = Math.max(out.maxMs, Math.round(performance.now() - t0));
+    const shown = [], curves = new Map();
+    items.forEach(it => { const p = plan.get(it.id); curves.set(it.id, curvePts(relCurve(n, it.b, p ? p.bow : undefined))); });
+    items.forEach(it => {
+      out.labels++; const p = plan.get(it.id);
+      if (!p || p.hide) { out.hidden++; if (out.hiddenList.length < 20) out.hiddenList.push(id + ' → ' + it.id); return; }
+      out.shown++; if (p.alt) out.altCurve++; if (p.t >= 0.35 && p.t <= 0.65) out.midThird++;
+      const own = relCurve(n, it.b, p.bow).at(p.t); if (Math.hypot(own.x - p.x, own.y - p.y) > 0.5) out.offLine++;
+      const bx = {x0: p.x - it.w / 2, x1: p.x + it.w / 2, y0: p.y - 10, y1: p.y + 10};
       if (obs.some(o => boxHit(bx, o))) out.nodeHits++;
-      if (placed.some(o => boxHit(bx, o))) out.labelHits++;
-      placed.push(labBox(sp.x, sp.y, w)); if (sp.far) out.far++; else out.onLine++;
+      if (shown.some(o => boxHit(bx, o))) out.labelHits++;
+      if ([...curves].some(([k, pts]) => k !== it.id && pts.some(q => inBox(q, bx)))) out.crossedByOtherLine++;
+      shown.push(bx);
     });
   });
   return out;
