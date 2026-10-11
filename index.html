@@ -13460,24 +13460,36 @@ function onNodeClick(id){
 /* 瀏覽紀錄：目前看的東西（節點或步驟） */
 function currentView(){ return stepSel ? {step: {owner: stepSel.owner, i: stepSel.i}} : selected && selected !== 'root' ? {id: selected} : null; }
 function validView(h){ return !!h && (h.step ? !!BY[h.step.owner] && !!flowSteps(BY[h.step.owner])[h.step.i] : !!BY[h.id]); }
-function openView(h){ if (h.step) selectStep(h.step.owner, h.step.i, {fromHist: true}); else navigate(h.id, {fromHist: true}); }
+/* 每筆紀錄連同當時的心智圖一起記：哪些分支展開，以及地圖的位置與縮放 */
+function viewNow(){ const v = currentView(); if (v) v.snap = {exp: [...expanded], rel: [...relOpen], t: d3.zoomTransform(svg.node())}; return v; }
+/* 回到某筆紀錄：選取它（不自動移動地圖），再把當時的展開狀態與地圖位置原封不動套回去，和瀏覽器的上一頁一樣直接回到原樣 */
+function openView(h){
+  const o = {fromHist: true, keepView: !!h.snap, instant: true};
+  if (h.step) selectStep(h.step.owner, h.step.i, o);
+  else if (h.snap) select(h.id, o);
+  else navigate(h.id, {fromHist: true});
+  if (!h.snap) return;
+  expanded = new Set(h.snap.exp); relOpen = new Set(h.snap.rel);
+  render({instant: true});
+  svg.interrupt(); svg.call(zoom.transform, h.snap.t);
+}
 /* 新的跳轉：記下目前的，前進紀錄作廢 */
 function pushHist(){
-  const cur = currentView(); if (!cur) return;
+  const cur = viewNow(); if (!cur) return;
   navHist.push(cur); navFwd = [];
   if (navHist.length > 60) navHist.shift();
 }
 function goBack(){
   while (navHist.length) {
     const h = navHist.pop(); if (!validView(h)) continue;
-    const cur = currentView(); if (cur) navFwd.push(cur);
+    const cur = viewNow(); if (cur) navFwd.push(cur);
     openView(h); return;
   }
 }
 function goForward(){
   while (navFwd.length) {
     const h = navFwd.pop(); if (!validView(h)) continue;
-    const cur = currentView(); if (cur) navHist.push(cur);
+    const cur = viewNow(); if (cur) navHist.push(cur);
     openView(h); return;
   }
 }
@@ -13501,8 +13513,10 @@ function select(id, opt = {}){
   render(opt);
   showDetail(id);
   try { history.replaceState(null, '', '#' + id); } catch (e) {}
-  if (rels.length) frame([id, ...rels.map(r => r.id)], opt.instant);
-  else if (opt.pan) panTo(id, opt.instant);
+  if (!opt.keepView) {
+    if (rels.length) frame([id, ...rels.map(r => r.id)], opt.instant);
+    else if (opt.pan) panTo(id, opt.instant);
+  }
   if (opt.fromMap && narrowMQ.matches) panel.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
 }
 function navigate(id, opt = {}){
@@ -13905,7 +13919,7 @@ function selectStep(owner, i, opt = {}){
   render(opt);
   showStep(owner, i);
   try { history.replaceState(null, '', '#' + owner + '/' + (i + 1)); } catch (e) {}
-  frame(ids, opt.instant);
+  if (!opt.keepView) frame(ids, opt.instant);
 }
 function showStep(owner, i){
   const d = BY[owner], st = flowSteps(d), x = st[i]; if (!x) return;
