@@ -13117,8 +13117,8 @@ const para = html => /^\s*</.test(html) ? html : `<p>${html}</p>`;
 const svg = d3.select('#map');
 const gRoot = svg.append('g');
 const gLinks = gRoot.append('g');
-const gRel = gRoot.append('g');
 const gNodes = gRoot.append('g');
+const gRel = gRoot.append('g');      /* 關聯虛線畫在節點上層：不會被節點蓋住而看起來像連到別的節點 */
 const gRelLab = gRoot.append('g');
 const zoom = d3.zoom().scaleExtent([0.15, 2.4]).on('zoom', e => { gRoot.attr('transform', e.transform); if (e.sourceEvent) userMoved = true; });
 svg.call(zoom).on('dblclick.zoom', null);
@@ -13163,7 +13163,17 @@ function relCurve(a, b, bow){
   if (bow == null) bow = Math.min(180, dist * 0.22);
   const cx = (ax + bx) / 2 - dy / dist * bow, cy = (ay + by) / 2 + dx / dist * bow;
   const at = t => ({x: (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * cx + t * t * bx, y: (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * cy + t * t * by});
-  return {d: `M${ax},${ay}Q${cx},${cy} ${bx},${by}`, at, dist, len: dist + Math.abs(bow)};
+  /* 線在節點上層，所以頭尾切到兩端節點的邊緣，不壓到節點文字 */
+  const inside = (q, n) => q.x > n.px - 2 && q.x < n.px + n.w + 2 && q.y > n.py - n.h / 2 - 2 && q.y < n.py + n.h / 2 + 2;
+  const edge = (lo, hi, n) => { for (let k = 0; k < 22; k++) { const m = (lo + hi) / 2; if (inside(at(m), n)) lo = m; else hi = m; } return hi; };
+  const t0 = inside(at(0), a) ? edge(0, 0.5, a) : 0, t1 = inside(at(1), b) ? edge(1, 0.5, b) : 1;
+  let d = `M${ax},${ay}Q${cx},${cy} ${bx},${by}`;
+  if (t1 > t0 + 0.02) {
+    const q1 = {x: ax + (cx - ax) * t1, y: ay + (cy - ay) * t1}, e = at(t1), u = t0 / t1;
+    const s0 = at(t0), r1 = {x: q1.x + (e.x - q1.x) * u, y: q1.y + (e.y - q1.y) * u};
+    d = `M${s0.x},${s0.y}Q${r1.x},${r1.y} ${e.x},${e.y}`;
+  }
+  return {d, at, dist, len: dist + Math.abs(bow)};
 }
 function curvePts(c){ const n = Math.max(16, Math.ceil(c.len / 5)), pts = []; for (let i = 0; i <= n; i++) pts.push(c.at(i / n)); return pts; }
 /* ---------- 關聯標籤：一定放在自己的線上、不壓節點、不被別的線穿過 ---------- */
